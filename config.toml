@@ -137,6 +137,15 @@ build-mode = "both" # Options 'apk', 'module', or 'both'
 #    'Remove screen capture restriction' \
 #    'Spoof features' \
 #    """
+included-patches = """\
+    'Enable DCIM folders backup control' \
+    'Remove screenshot restriction' \
+    'Remove screen capture restriction' \
+    'Spoof Pixel device' \
+    'Fix DCIM folder classification' \
+    'GmsCore support' \
+    'Spoof features' \
+    """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos"
 uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
