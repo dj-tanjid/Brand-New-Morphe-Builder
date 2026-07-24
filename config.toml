@@ -5,7 +5,7 @@ parallel-jobs = 1
 # see https://github.com/j-hc/revanced-magisk-module/blob/main/CONFIG.md for more detailed explanations
 
 [YouTube-Morphe]
-enabled = false
+enabled = true
 app-name = "YouTube"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -30,7 +30,7 @@ uptodown-dlurl = "https://youtube.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.youtube"
 
 [YT-Music-Morphe]
-enabled = false
+enabled = true
 app-name = "YT Music"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -92,7 +92,7 @@ uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
 
 [Reddit-Morphe]
-enabled = false
+enabled = true
 app-name = "Reddit"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -116,14 +116,14 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/redditinc/reddit"
 uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
 
-[Google-Photos-Rushi]
+[Google-Photos-De-Vanced]
 enabled = true
 app-name = "Google Photos"
-# patches-source = "RookieEnough/De-Vanced"
-patches-source = "rushiranpise/morphe-patches"
+patches-source = "RookieEnough/De-Vanced"
+# patches-source = "rushiranpise/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
-# rv-brand = "De-Vanced"
-rv-brand = "Rushi"
+rv-brand = "De-Vanced"
+# rv-brand = "Rushi"
 arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'universal'
 # version = "auto"
 # version = "7.83.0.943371825"
@@ -131,21 +131,24 @@ arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'un
 version = "7.85.0.952162352"
 build-mode = "both" # Options 'apk', 'module', or 'both'
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+#De-Vanced
+included-patches = """\
+    'Enable DCIM folders backup control' \
+    'Fix DCIM folder classification' \
+    'Remove screenshot restriction' \
+    'Remove screen capture restriction' \
+    'Spoof features' \
+    """
+#Rushi
 # included-patches = """\
 #    'Enable DCIM folders backup control' \
 #    'Remove screenshot restriction' \
 #    'Remove screen capture restriction' \
+#    'Spoof Pixel device' \
+#    'Fix DCIM folder classification' \
+#    'GmsCore support' \
 #    'Spoof features' \
 #    """
-included-patches = """\
-    'Enable DCIM folders backup control' \
-    'Remove screenshot restriction' \
-    'Remove screen capture restriction' \
-    'Spoof Pixel device' \
-    'Fix DCIM folder classification' \
-    'GmsCore support' \
-    'Spoof features' \
-    """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos"
 uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
