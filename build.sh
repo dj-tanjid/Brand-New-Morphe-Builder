@@ -32,7 +32,7 @@ toml_prep "${1:-config.toml}" || abort "could not find config file '${1:-config.
 main_config_t=$(toml_get_table_main)
 COMPRESSION_LEVEL=$(toml_get "$main_config_t" compression-level) || COMPRESSION_LEVEL="9"
 
-# We strictly enforce sequential building to ensure live-streaming output in GA
+# Strictly enforce sequential execution to ensure live-streaming output in GitHub Actions
 PARALLEL_JOBS=1 
 
 REMOVE_RV_INTEGRATIONS_CHECKS=$(toml_get "$main_config_t" remove-rv-integrations-checks) || REMOVE_RV_INTEGRATIONS_CHECKS="true"
@@ -143,12 +143,14 @@ for table_name in $(toml_get_table_names); do
 		app_args[arch]="arm64-v8a"
 		module_prop_name_b=${app_args[module_prop_name]}
 		app_args[module_prop_name]="${module_prop_name_b}-arm64"
+		
 		print_banner "${app_args[table]}"
 		build_rv "$(declare -p app_args)"
 		
 		app_args[table]="$table_name (arm-v7a)"
 		app_args[arch]="arm-v7a"
 		app_args[module_prop_name]="${module_prop_name_b}-arm"
+		
 		print_banner "${app_args[table]}"
 		build_rv "$(declare -p app_args)"
 	else
@@ -157,6 +159,7 @@ for table_name in $(toml_get_table_names); do
 		elif [ "${app_args[arch]}" = "arm-v7a" ]; then
 			app_args[module_prop_name]="${app_args[module_prop_name]}-arm"
 		fi
+		
 		print_banner "${app_args[table]}"
 		build_rv "$(declare -p app_args)"
 	fi
