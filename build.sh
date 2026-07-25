@@ -67,6 +67,13 @@ gh_dl "${MODULE_TEMPLATE_DIR}/bin/arm/cmpr" "https://github.com/j-hc/cmpr/releas
 gh_dl "${MODULE_TEMPLATE_DIR}/bin/x86/cmpr" "https://github.com/j-hc/cmpr/releases/latest/download/cmpr-x86"
 gh_dl "${MODULE_TEMPLATE_DIR}/bin/x64/cmpr" "https://github.com/j-hc/cmpr/releases/latest/download/cmpr-x86_64"
 
+# Terminal banner for clear live logging visibility without breaking stream
+print_banner() {
+	echo -e "\n\033[1;35m========================================================================\033[0m"
+	echo -e "\033[1;36m  🚀 PROCESSING: $1\033[0m"
+	echo -e "\033[1;35m========================================================================\033[0m\n"
+}
+
 for table_name in $(toml_get_table_names); do
 	if [ -z "$table_name" ]; then continue; fi
 	t=$(toml_get_table "$table_name")
@@ -131,27 +138,18 @@ for table_name in $(toml_get_table_names); do
 	table_name_f=${table_name_f// /-}
 	app_args[module_prop_name]=$(toml_get "$t" module-prop-name) || app_args[module_prop_name]="${table_name_f}-jhc"
 
-    # Terminal banner for clear live logging visibility
-    print_banner() {
-        echo -e "\n\033[1;35m========================================================================\033[0m"
-        echo -e "\033[1;36m  🚀 PROCESSING: $1\033[0m"
-        echo -e "\033[1;35m========================================================================\033[0m\n"
-    }
-
 	if [ "${app_args[arch]}" = both ]; then
 		app_args[table]="$table_name (arm64-v8a)"
 		app_args[arch]="arm64-v8a"
 		module_prop_name_b=${app_args[module_prop_name]}
 		app_args[module_prop_name]="${module_prop_name_b}-arm64"
-		
-        print_banner "${app_args[table]}"
+		print_banner "${app_args[table]}"
 		build_rv "$(declare -p app_args)"
 		
 		app_args[table]="$table_name (arm-v7a)"
 		app_args[arch]="arm-v7a"
 		app_args[module_prop_name]="${module_prop_name_b}-arm"
-		
-        print_banner "${app_args[table]}"
+		print_banner "${app_args[table]}"
 		build_rv "$(declare -p app_args)"
 	else
 		if [ "${app_args[arch]}" = "arm64-v8a" ]; then
@@ -159,8 +157,7 @@ for table_name in $(toml_get_table_names); do
 		elif [ "${app_args[arch]}" = "arm-v7a" ]; then
 			app_args[module_prop_name]="${app_args[module_prop_name]}-arm"
 		fi
-		
-        print_banner "${app_args[table]}"
+		print_banner "${app_args[table]}"
 		build_rv "$(declare -p app_args)"
 	fi
 done
