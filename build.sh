@@ -5,14 +5,12 @@ shopt -s nullglob
 
 source utils.sh
 
-# --- Global Environment Export Setup for Asynchronous Background Tasks ---
-# Explicitly registers the key functions to be carried inside subshell spaces
+# --- Global Environment Export Setup ---
 for func_name in _req req gh_req gh_dl build_rv patches_list patches_list_versions toml_get toml_get_table toml_get_table_names toml_get_table_main dl_direct dl_github dl_archive dl_apkmirror dl_uptodown get_direct_vers get_github_vers get_archive_vers get_apkmirror_vers get_uptodown_vers get_direct_pkg_name get_github_pkg_name get_archive_pkg_name get_apkmirror_pkg_name get_uptodown_pkg_name get_direct_resp get_github_resp get_archive_resp get_apkmirror_resp get_uptodown_resp apkmirror_search merge_splits check_sig patch_apk isoneof log get_highest_ver semver_validate get_patch_last_supported_ver list_args join_args module_config module_prop abort epr wpr pr java run_python_backend; do
     export -f "$func_name" 2>/dev/null || true
 done
-# Export core operational paths variables 
 export MODULE_TEMPLATE_DIR CWD TEMP_DIR BIN_DIR BUILD_DIR DL_SRCS GH_HEADER NEXT_VER_CODE OS
-# --------------------------------------------------------------------------
+# ---------------------------------------
 
 trap "abort" INT
 
@@ -34,7 +32,9 @@ toml_prep "${1:-config.toml}" || abort "could not find config file '${1:-config.
 main_config_t=$(toml_get_table_main)
 COMPRESSION_LEVEL=$(toml_get "$main_config_t" compression-level) || COMPRESSION_LEVEL="9"
 
-# Force strict sequential execution for live-streaming logs in GitHub Actions
+# We strictly enforce sequential building to ensure live-streaming output in GA
+PARALLEL_JOBS=1 
+
 REMOVE_RV_INTEGRATIONS_CHECKS=$(toml_get "$main_config_t" remove-rv-integrations-checks) || REMOVE_RV_INTEGRATIONS_CHECKS="true"
 DEF_PATCHES_VER=$(toml_get "$main_config_t" patches-version) || DEF_PATCHES_VER="latest"
 DEF_CLI_VER=$(toml_get "$main_config_t" cli-version) || DEF_CLI_VER="latest"
@@ -131,33 +131,37 @@ for table_name in $(toml_get_table_names); do
 	table_name_f=${table_name_f// /-}
 	app_args[module_prop_name]=$(toml_get "$t" module-prop-name) || app_args[module_prop_name]="${table_name_f}-jhc"
 
+    # Terminal banner for clear live logging visibility
+    print_banner() {
+        echo -e "\n\033[1;35m========================================================================\033[0m"
+        echo -e "\033[1;36m  🚀 PROCESSING: $1\033[0m"
+        echo -e "\033[1;35m========================================================================\033[0m\n"
+    }
+
 	if [ "${app_args[arch]}" = both ]; then
 		app_args[table]="$table_name (arm64-v8a)"
 		app_args[arch]="arm64-v8a"
 		module_prop_name_b=${app_args[module_prop_name]}
 		app_args[module_prop_name]="${module_prop_name_b}-arm64"
-        
-        echo "::group::🚀 Building ${app_args[table]}"
+		
+        print_banner "${app_args[table]}"
 		build_rv "$(declare -p app_args)"
-        echo "::endgroup::"
-        
+		
 		app_args[table]="$table_name (arm-v7a)"
 		app_args[arch]="arm-v7a"
 		app_args[module_prop_name]="${module_prop_name_b}-arm"
-        
-        echo "::group::🚀 Building ${app_args[table]}"
+		
+        print_banner "${app_args[table]}"
 		build_rv "$(declare -p app_args)"
-        echo "::endgroup::"
 	else
 		if [ "${app_args[arch]}" = "arm64-v8a" ]; then
 			app_args[module_prop_name]="${app_args[module_prop_name]}-arm64"
 		elif [ "${app_args[arch]}" = "arm-v7a" ]; then
 			app_args[module_prop_name]="${app_args[module_prop_name]}-arm"
 		fi
-        
-        echo "::group::🚀 Building ${app_args[table]}"
+		
+        print_banner "${app_args[table]}"
 		build_rv "$(declare -p app_args)"
-        echo "::endgroup::"
 	fi
 done
 
