@@ -4,72 +4,189 @@ parallel-jobs = 1
 # add 'enabled = false' for not patching a specific app or remove it from the config
 # see https://github.com/j-hc/revanced-magisk-module/blob/main/CONFIG.md for more detailed explanations
 
-# you can use rvmm-config-gen to generate a config
-
-[YouTube]
-build-mode = "both"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube"
-uptodown-dlurl = "https://youtube.en.uptodown.com/android"
-archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.youtube"
-
 [YouTube-Morphe]
+enabled = true
 app-name = "YouTube"
 patches-source = "MorpheApp/morphe-patches"
-cli-source = "MorpheApp/morphe-cli"
+cli-source = "MorpheApp/morphe-desktop"
 rv-brand = "Morphe"
-build-mode = "both"
+build-mode = "both" # Options 'apk', 'module', or 'both'
+arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'universal'
+# Stable Support #
+# version = "auto" # "21.04.223"
+# Experimental Support #
+# version = "21.26.366"
+# version = "21.28.207"
+version = "21.29.366-SECONDARY"
+excluded-patches = """\
+    'Custom branding name for YouTube' \
+    'Custom branding icon for YouTube' \
+    'Custom branding' \
+    """
+# included-patches = ""
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube"
+uptodown-dlurl = "https://youtube.en.uptodown.com/android"
+# archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.youtube"
+
+[YT-Music-Morphe]
+enabled = true
+app-name = "YT Music"
+patches-source = "MorpheApp/morphe-patches"
+cli-source = "MorpheApp/morphe-desktop"
+rv-brand = "Morphe"
+build-mode = "both" # Options 'apk', 'module', or 'both'
+arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'universal'
+# Stable Support #
+# version = "auto" # "9.15.51"
+# Experimental Support #
+# version = "9.25.50"
+# version = "9.26.56"
+version = "9.28.51"
+excluded-patches = """\
+    'Custom branding name for YouTube Music' \
+    'Custom branding icon for YouTube Music' \
+    'Custom branding' \
+    """
+# included-patches = ""
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube-music"
+uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
+# archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
+
+[YouTube-Anddea]
+enabled = false
+app-name = "YouTube"
+patches-source = "anddea/revanced-patches"
+# patches-source = "inotia00/revanced-patches"
+cli-source = "MorpheApp/morphe-cli"
+# cli-source = "inotia00/revanced-cli"
+rv-brand = "Anddea Extended"
+version = "20.21.37"
+patches-version = "dev"
+build-mode = "both" # Options 'apk', 'module', or 'both'
+excluded-patches = " 'Enable debug logging' "
+# included-patches = ""
+# include-stock = true
+# exclusive-patches = true
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube"
 uptodown-dlurl = "https://youtube.en.uptodown.com/android"
 archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.youtube"
 
-[Music]
-build-mode = "both"
-arch = "both"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube-music"
-uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
-archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
-
-[Music-Morphe]
-app-name = "Music"
-patches-source = "MorpheApp/morphe-patches"
+[YT-Music-Anddea]
+enabled = false
+app-name = "YT Music"
+patches-source = "anddea/revanced-patches"
+# patches-source = "inotia00/revanced-patches"
 cli-source = "MorpheApp/morphe-cli"
-rv-brand = "Morphe"
-build-mode = "both"
-arch = "both"
+# cli-source = "inotia00/revanced-cli"
+rv-brand = "Anddea Extended"
+version = "auto"
+arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'universal'
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+build-mode = "both" # Options 'apk', 'module', or 'both'
+excluded-patches = " 'Enable debug logging' "
+included-patches = " 'Hide player overlay filter' 'Hide overlay filter' 'Disable music video in album' "
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube-music"
 uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
 
 [Reddit-Morphe]
+enabled = true
 app-name = "Reddit"
-rv-brand = "Morphe"
-build-mode = "apk"
 patches-source = "MorpheApp/morphe-patches"
-cli-source = "MorpheApp/morphe-cli"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/redditinc/reddit/"
-archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
+cli-source = "MorpheApp/morphe-desktop"
+rv-brand = "Morphe"
+build-mode = "both" # Options 'apk', 'module', or 'both'
+# Stable Support #
+# version = "auto" # "2026.14.0"
+# Experimental Support #
+# version = "2026.27.0"
+# version = "2026.28.0"
+version = "2026.29.0"
+dpi = "120-640dpi" # Options '120-640dpi', or 'nodpi'
+excluded-patches = """\
+    'Custom branding name for Reddit' \
+    'Custom branding icon for Reddit' \
+    'Custom branding' \
+    """
+# included-patches = ""
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+apkmirror-dlurl = "https://www.apkmirror.com/apk/redditinc/reddit"
 uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
-dpi = "120-640dpi"
+# archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
 
-[Twitter]
+[Google-Photos-De-Vanced]
+enabled = true
+app-name = "Google Photos"
+patches-source = "RookieEnough/De-Vanced"
+# patches-source = "rushiranpise/morphe-patches"
+cli-source = "MorpheApp/morphe-desktop"
+rv-brand = "De-Vanced"
+# rv-brand = "Rushi"
+arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'universal'
+# version = "auto"
+# version = "7.83.0.943371825"
+# version = "7.84.0.949657053"
+version = "7.85.0.952162352"
+build-mode = "both" # Options 'apk', 'module', or 'both'
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+#De-Vanced
+included-patches = """\
+    'Enable DCIM folders backup control' \
+    'Fix DCIM folder classification' \
+    'Remove screenshot restriction' \
+    'Remove screen capture restriction' \
+    'Spoof features' \
+    """
+#Rushi
+# included-patches = """\
+#    'Enable DCIM folders backup control' \
+#    'Remove screenshot restriction' \
+#    'Remove screen capture restriction' \
+#    'Spoof Pixel device' \
+#    'Fix DCIM folder classification' \
+#    'GmsCore support' \
+#    'Spoof features' \
+#    """
+apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos"
+uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
+# archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
+
+[Twitter-Piko]
 enabled = false
+app-name = "Twitter"
 patches-source = "crimera/piko"
 cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Piko"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
+build-mode = "apk" # Options 'apk', 'module', or 'both'
+# version = "auto"
+version = "11.81.0-release.0" # PairIP Free
+include-stock = "split" # Options 'split', 'merged', or 'disable'
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+included-patches = """\
+    'Bring back twitter' \
+    'Dynamic color' \
+    """
+apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter"
+uptodown-dlurl = "https://twitter.en.uptodown.com/android"
 archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
-build-mode = "module"
-version = "11.81.0-release.0"
-include-stock = "split"
 
-[GooglePhotos]
-build-mode = "both"
-arch = "both"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos/"
-uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
-archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
-
-[Twitch]
+[X-Piko]
 enabled = false
-apkmirror-dlurl = "https://www.apkmirror.com/apk/twitch-interactive-inc/twitch/"
-uptodown-dlurl = "https://twitch.en.uptodown.com/android"
+app-name = "X"
+patches-source = "crimera/piko"
+cli-source = "MorpheApp/morphe-cli"
+rv-brand = "Piko"
+build-mode = "apk" # Options 'apk', 'module', or 'both'
+version = "auto"
+# version = "11.81.0-release.0" # PairIP Free
+include-stock = "split" # Options 'split', 'merged', or 'disable'
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+included-patches = """\
+    'Dynamic color' \
+    """
+apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter"
+uptodown-dlurl = "https://twitter.en.uptodown.com/android"
+archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
+
