@@ -57,7 +57,6 @@ abort() {
 	exit 1
 }
 
-# Integrated Java 21 fix 
 java() {
 	if [ "${JAVA_HOME_21_X64-}" ]; then
 		env -i JAVA_HOME="$JAVA_HOME_21_X64" "$JAVA_HOME_21_X64"/bin/java --enable-native-access=ALL-UNNAMED "$@"
@@ -669,7 +668,6 @@ EOF
 	fi
 }
 
-# The -u flag forces Python to bypass the default output block buffering!
 run_python_backend() {
 	python3 -u "$TEMP_DIR/network_engine.py" "$@"
 }
@@ -874,7 +872,7 @@ patch_apk() {
 	local tmp_files
 	tmp_files="$(pwd)/$(mktemp -d -p "$TEMP_DIR")"
 
-	local cmd="java -jar '$cli_jar' patch '$stock_input' --purge -o '$patched_apk' -p '$patches_jar' --keystore=ks.keystore \
+	local cmd="java -jar '$cli_jar' patch '$stock_input' -o '$patched_apk' -p '$patches_jar' --keystore=ks.keystore \
     --keystore-entry-password=123456789 --keystore-password=123456789 --signer=jhc --keystore-entry-alias=jhc -t '$patched_apk-tmp' $patcher_args"
 
 	local cli_name
