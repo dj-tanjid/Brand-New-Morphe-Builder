@@ -15,9 +15,9 @@ arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'un
 # Stable Support #
 # version = "auto" # "21.04.223"
 # Experimental Support #
-# version = "21.26.366"
 # version = "21.28.207"
 version = "21.29.368"
+# version = "21.30.209"
 excluded-patches = """\
     'Custom branding name for YouTube' \
     'Custom branding icon for YouTube' \
@@ -40,7 +40,6 @@ arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'un
 # Stable Support #
 # version = "auto" # "9.15.51"
 # Experimental Support #
-# version = "9.25.50"
 # version = "9.26.56"
 # version = "9.28.51"
 version = "9.29.54"
@@ -105,6 +104,7 @@ build-mode = "both" # Options 'apk', 'module', or 'both'
 # version = "2026.27.0"
 # version = "2026.28.0"
 version = "2026.29.0"
+# version = "2026.30.0"
 dpi = "120-640dpi" # Options '120-640dpi', or 'nodpi'
 excluded-patches = """\
     'Custom branding name for Reddit' \
@@ -118,7 +118,7 @@ uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
 
 [Google-Photos-De-Vanced]
-enabled = false
+enabled = true
 app-name = "Google Photos"
 patches-source = "RookieEnough/De-Vanced"
 # patches-source = "rushiranpise/morphe-patches"
@@ -127,12 +127,12 @@ rv-brand = "De-Vanced"
 # rv-brand = "Rushi"
 arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'universal'
 # version = "auto"
-# version = "7.83.0.943371825"
 # version = "7.84.0.949657053"
-version = "7.85.0.952162352"
+# version = "7.85.0.952162352"
+version = "7.86.0.953689094"
 build-mode = "both" # Options 'apk', 'module', or 'both'
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
-#De-Vanced
+# De-Vanced
 included-patches = """\
     'Enable DCIM folders backup control' \
     'Fix DCIM folder classification' \
@@ -140,7 +140,7 @@ included-patches = """\
     'Remove screen capture restriction' \
     'Spoof features' \
     """
-#Rushi
+# Rushi
 # included-patches = """\
 #    'Enable DCIM folders backup control' \
 #    'Remove screenshot restriction' \
