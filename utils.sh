@@ -257,20 +257,29 @@ gh_dl() {
 }
 
 log() { echo -e "$1  " >>"build.md"; }
+
+# Resolves the SIGPIPE broken pipe error that aborts GitHub Action workflows
 get_highest_ver() {
 	local vers m
 	vers=$(tee)
 	m=$(head -1 <<<"$vers")
-	if ! semver_validate "$m"; then echo "$m"; else sort -s -t- -k1,1Vr <<<"$vers" | head -1; fi
+	if ! semver_validate "$m"; then 
+		echo "$m"
+	else 
+		sort -s -t- -k1,1Vr <<<"$vers" 2>/dev/null | { head -1; cat >/dev/null 2>&1; } || true
+	fi
 }
+
 semver_validate() {
 	local a="${1%-*}"
 	local a="${a#v}"
 	local ac="${a//[.0-9]/}"
 	[[ ${#ac} -eq 0 ]]
 }
+
+# Integrated Upstream PR Changes
 get_patch_last_supported_ver() {
-	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} _exc_sel=${4:-} _exclusive=${5:-}
+	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false}
 	local op
 	if [[ -n "$inc_sel" ]]; then
 		if ! op=$(awk '{$1=$1}1' <<<"$list_patches"); then
@@ -289,7 +298,7 @@ get_patch_last_supported_ver() {
 			return
 		fi
 	fi
-	op=$(patches_list_versions "$cli_jar" "$patches_jar" "$pkg_name") || return 1
+	op=$(patches_list_versions "$cli_jar" "$patches_jar" "$pkg_name" "$is_experimental") || return 1
 	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | awk '{$1=$1}1')
 	if [[ "$op" == "Any" ]]; then return; fi
 	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}
@@ -299,13 +308,18 @@ get_patch_last_supported_ver() {
 	grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || return 1
 }
 
+# Integrated Upstream PR Changes
 patches_list_versions() {
-	local cli_jar=$1 patches_jar=$2 pkg_name=$3 op cmd
+	local cli_jar=$1 patches_jar=$2 pkg_name=$3 is_experimental=$4 op cmd
 	local cmd_base="java -jar '$cli_jar' list-versions"
 
 	local cli_name
 	cli_name=$(basename "$cli_jar")
-	if [[ "${cli_name::8}" == revanced ]]; then cmd_base+=" -b"; fi
+	if [ "${cli_name::8}" = "revanced" ]; then
+		cmd_base+=" -b"
+	elif [ "$is_experimental" = "true" ]; then
+		cmd_base+=" -x"
+	fi
 
 	cmd="${cmd_base} --patches='$patches_jar' -f '$pkg_name'"
 	if op=$(eval "$cmd" 2>&1); then
@@ -322,14 +336,17 @@ patches_list_versions() {
 	epr "Could not list versions ($pkg_name) $cli_jar: '$op'"
 	return 1
 }
+
+# Integrated Upstream PR Changes
 patches_list() {
-	local cli_jar=$1 patches_jar=$2 pkg_name=$3 op
+	local cli_jar=$1 patches_jar=$2 pkg_name=$3 is_experimental=$4 op
 	if ! op=$(java -jar "$cli_jar" list-patches -p "$patches_jar" --filter-package-name "$pkg_name" --versions --packages -b 2>&1); then
-		if ! op=$(java -jar "$cli_jar" list-patches --patches "$patches_jar" -f "$pkg_name" --with-versions --with-packages 2>&1); then
+		local cmd="java -jar '$cli_jar' list-patches --patches '$patches_jar' -f '$pkg_name' --with-versions --with-packages"
+		if [ "$is_experimental" = "true" ]; then cmd+=" -x"; fi
+		if ! op=$(eval "$cmd" 2>&1); then
 			epr "Could not get patches list ($pkg_name) $cli_jar: '$op'"
 			return 1
 		fi
-
 	fi
 	echo "$op"
 }
@@ -923,8 +940,10 @@ patch_apk() {
 
 	if [[ "$OS" == Android ]]; then cmd+=" --custom-aapt2-binary='${AAPT2}'"; fi
 	pr "$cmd"
-	if eval "$cmd"; then [[ -f "$patched_apk" ]]; else
-		rm "$patched_apk" 2>/dev/null || :
+	if (set -o pipefail; eval "$cmd" 2>&1 | grep -vE "INFO: Processing|INFO: Writing|INFO: Wrote|INFO: Stripping|INFO: Compiling"); then
+		[[ -f "$patched_apk" ]]
+	else
+		rm -f "$patched_apk" 2>/dev/null || :
 		return 1
 	fi
 }
@@ -978,22 +997,29 @@ build_rv() {
 		return 0
 	fi
 	pr "Package name of '${table}' is '$pkg_name'"
+
 	local list_patches
-	list_patches=$(patches_list "${args[cli]}" "${args[ptjar]}" "$pkg_name") || return 1
+	local is_experimental="false"
+	if [ "$version_mode" = "experimental" ]; then is_experimental="true"; fi
+	list_patches=$(patches_list "${args[cli]}" "${args[ptjar]}" "$pkg_name" "$is_experimental") || return 1
+
 	local get_latest_ver=false
-	if [[ "$version_mode" == auto ]]; then
-		if ! version=$(get_patch_last_supported_ver "$list_patches" "$pkg_name" \
-			"${args[included_patches]:-}" "${args[excluded_patches]:-}" "${args[exclusive_patches]:-}"); then
+	if isoneof "$version_mode" "auto" "experimental"; then
+		if ! version=$(get_patch_last_supported_ver "$list_patches" "$pkg_name" "${args[included_patches]:-}" "$is_experimental"); then
 			epr "get_patch_last_supported_ver failed '$list_patches'"
 			return
-		elif [[ -z "$version" ]]; then get_latest_ver=true; fi
-	elif isoneof "$version_mode" latest beta; then
-		get_latest_ver=true
+		elif [ -z "$version" ]; then get_latest_ver="true"; fi
+	elif [ "$version_mode" = "latest" ]; then
+		get_latest_ver="true"
+		p_patcher_args+=("-f")
+	elif [ "$version_mode" = "beta" ]; then
+		get_latest_ver="true"
 		p_patcher_args+=("-f")
 	else
 		version=$version_mode
 		p_patcher_args+=("-f")
 	fi
+
 	if [[ $get_latest_ver == true ]]; then
 		if [[ "$version_mode" == beta ]]; then __AAV__="true"; else __AAV__="false"; fi
 		pkgvers=$(get_"${dl_from}"_vers)
