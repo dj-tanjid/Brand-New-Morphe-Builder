@@ -270,8 +270,7 @@ semver_validate() {
 	[[ ${#ac} -eq 0 ]]
 }
 get_patch_last_supported_ver() {
-	local list_patches=$1 pkg_name=$2 inc_sel=$3 is_experimental=$4
-	# _exc_sel=$4 _exclusive=$5
+	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} _exc_sel=${4:-} _exclusive=${5:-}
 	local op
 	if [[ -n "$inc_sel" ]]; then
 		if ! op=$(awk '{$1=$1}1' <<<"$list_patches"); then
@@ -290,33 +289,25 @@ get_patch_last_supported_ver() {
 			return
 		fi
 	fi
-	op=$(patches_list_versions "$cli_jar" "$patches_jar" "$pkg_name" "$is_experimental") || return 1
+	op=$(patches_list_versions "$cli_jar" "$patches_jar" "$pkg_name") || return 1
 	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | awk '{$1=$1}1')
 	if [[ "$op" == "Any" ]]; then return; fi
 	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}
-	if [ -z "$pcount" ]; then
-		if grep -Fq "$pkg_name" <<<"$list_patches"; then
-			return
-		else
-			abort "No patches found for '$pkg_name' in patches '$patches_jar'"
-		fi
+	if [[ -z "$pcount" ]]; then
+		abort "No patches found for '$pkg_name' in patches '$patches_jar'"
 	fi
 	grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || return 1
 }
 
 patches_list_versions() {
-	local cli_jar=$1 patches_jar=$2 pkg_name=$3 is_experimental=$4
+	local cli_jar=$1 patches_jar=$2 pkg_name=$3 op cmd
 	local cmd_base="java -jar '$cli_jar' list-versions"
 
 	local cli_name
 	cli_name=$(basename "$cli_jar")
-	if [ "${cli_name::8}" = "revanced" ]; then
-		cmd_base+=" -b"
-	elif [ "$is_experimental" = "true" ]; then
-		cmd_base+=" -x"
-	fi
+	if [[ "${cli_name::8}" == revanced ]]; then cmd_base+=" -b"; fi
 
-	local cmd="${cmd_base} --patches='$patches_jar' -f '$pkg_name'"
+	cmd="${cmd_base} --patches='$patches_jar' -f '$pkg_name'"
 	if op=$(eval "$cmd" 2>&1); then
 		echo "$op"
 		return
@@ -332,12 +323,9 @@ patches_list_versions() {
 	return 1
 }
 patches_list() {
-	local cli_jar=$1 patches_jar=$2 pkg_name=$3 is_experimental=$4
-	local op
+	local cli_jar=$1 patches_jar=$2 pkg_name=$3 op
 	if ! op=$(java -jar "$cli_jar" list-patches -p "$patches_jar" --filter-package-name "$pkg_name" --versions --packages -b 2>&1); then
-		local cmd="java -jar '$cli_jar' list-patches --patches '$patches_jar' -f '$pkg_name' --with-versions --with-packages"
-		if [ "$is_experimental" = "true" ]; then cmd+=" -x"; fi
-		if ! op=$(eval "$cmd" 2>&1); then
+		if ! op=$(java -jar "$cli_jar" list-patches --patches "$patches_jar" -f "$pkg_name" --with-versions --with-packages 2>&1); then
 			epr "Could not get patches list ($pkg_name) $cli_jar: '$op'"
 			return 1
 		fi
@@ -493,7 +481,7 @@ def main():
         elif "twitter" in url or "x-corp" in url: resolved_pkg = "com.twitter.android"
 
         soup, r = scraper.get_soup(url)
-        if r:
+        if r and r.text:
             m = re.search(r"play\.google\.com/store/apps/details\?id=([\w.]+)", r.text)
             if m: 
                 print(f"PKG:{m.group(1)}")
@@ -524,7 +512,6 @@ def main():
             sys.exit(1)
         
         release_url = None
-        ver_slug = version.replace(".", "-").replace(" ", "-")
         clean_target = re.sub(r'[^a-zA-Z0-9]', '', version.lower())
         
         for a in soup_search.find_all("a", href=re.compile(r"-release/$")):
@@ -597,13 +584,20 @@ def main():
         scraper.download(final_download_url, dest_path, is_bundle, btn_url)
 
     elif mode == "uptodown_pkg":
+        resolved_pkg = None
+        if "youtube-music" in url: resolved_pkg = "com.google.android.apps.youtube.music"
+        elif "youtube" in url: resolved_pkg = "com.google.android.youtube"
+        elif "photos" in url: resolved_pkg = "com.google.android.apps.photos"
+        elif "reddit" in url: resolved_pkg = "com.reddit.frontpage"
+        elif "twitter" in url or "x-corp" in url: resolved_pkg = "com.twitter.android"
+
         soup, _ = scraper.get_soup(f"{url}/download")
         if soup:
-            th = soup.find("th", string="Package Name")
+            th = soup.find("th", string=re.compile("Package Name", re.I))
             if th and th.find_next_sibling("td"):
                 print(f"PKG:{th.find_next_sibling('td').get_text(strip=True)}")
                 return
-        print("PKG:UNKNOWN")
+        print(f"PKG:{resolved_pkg}" if resolved_pkg else "PKG:UNKNOWN")
 
     elif mode == "uptodown_vers":
         soup, _ = scraper.get_soup(f"{url}/versions")
@@ -616,16 +610,26 @@ def main():
         if arch == "arm-v7a": arch = "armeabi-v7a"
         
         soup, _ = scraper.get_soup(f"{url}/versions")
-        if not soup: sys.exit(1)
+        if not soup:
+            log(f"Uptodown versions page failed to load for {url}")
+            sys.exit(1)
         
-        data_code = soup.select_one("#detail-app-name")["data-code"]
+        detail_app = soup.select_one("#detail-app-name")
+        if not detail_app or "data-code" not in detail_app.attrs:
+            log(f"Detail app name not found on Uptodown page for {url}")
+            sys.exit(1)
+            
+        data_code = detail_app["data-code"]
         
         ver_url_data = None
         is_bundle = False
         for i in range(1, 21):
             _, r = scraper.get_soup(f"{url}/apps/{data_code}/versions/{i}")
-            if not r: continue
-            data = json.loads(r.text).get("data", [])
+            if not r or not r.text: continue
+            try:
+                data = json.loads(r.text).get("data", [])
+            except Exception:
+                continue
             for entry in data:
                 if entry.get("version") == version:
                     ver_url_data = entry.get("versionURL", {})
@@ -634,6 +638,7 @@ def main():
             if ver_url_data: break
 
         if not ver_url_data:
+            log(f"Uptodown version {version} not found.")
             sys.exit(1)
 
         ver_url = f"{ver_url_data.get('url', '')}/{ver_url_data.get('extraURL', '')}/{ver_url_data.get('versionID', '')}"
@@ -648,30 +653,36 @@ def main():
 
             base_url = url.rsplit("/", 1)[0]
             _, r_files = scraper.get_soup(f"{base_url}/app/{data_code}/version/{data_version}/files")
-            files_html = json.loads(r_files.text).get("content", "")
+            files_html = json.loads(r_files.text).get("content", "") if r_files else ""
             soup_files = BeautifulSoup(files_html, 'html.parser')
             content = soup_files.select_one(".content")
             
             matched_id = None
-            for child in content.children:
-                if not getattr(child, "name", None): continue
-                if "variant" not in child.get("class", []):
-                    node_arch = child.get_text(strip=True)
-                    continue
-                if not node_arch or node_arch not in apparch:
-                    continue
-                
-                file_type_tag = child.select_one(".v-file > span")
-                is_bundle = file_type_tag.get_text(strip=True) == "xapk" if file_type_tag else False
-                try:
-                    matched_id = child.select_one(".v-report")["data-file-id"]
-                    break
-                except: continue
+            if content:
+                for child in content.children:
+                    if not getattr(child, "name", None): continue
+                    if "variant" not in child.get("class", []):
+                        node_arch = child.get_text(strip=True)
+                        continue
+                    if not node_arch or node_arch not in apparch:
+                        continue
+                    
+                    file_type_tag = child.select_one(".v-file > span")
+                    is_bundle = file_type_tag.get_text(strip=True) == "xapk" if file_type_tag else False
+                    try:
+                        matched_id = child.select_one(".v-report")["data-file-id"]
+                        break
+                    except: continue
 
             if matched_id:
                 soup_ver, _ = scraper.get_soup(f"{url}/download/{matched_id}-x")
 
-        dl_url = soup_ver.select_one("#detail-download-button")["data-url"]
+        dl_btn = soup_ver.select_one("#detail-download-button") if soup_ver else None
+        if not dl_btn or "data-url" not in dl_btn.attrs:
+            log("Uptodown download button missing.")
+            sys.exit(1)
+            
+        dl_url = dl_btn["data-url"]
         scraper.download(f"https://dw.uptodown.com/dwn/{dl_url}", dest_path, is_bundle, None)
 
 if __name__ == "__main__":
@@ -684,7 +695,6 @@ run_python_backend() {
 	python3 -u "$TEMP_DIR/network_engine.py" "$@"
 }
 
-# Ensure the Python setup runs exactly once when utils is sourced
 setup_python_backend
 
 # -------------------- apkmirror wrappers --------------------
@@ -696,8 +706,18 @@ get_apkmirror_resp() {
 
 get_apkmirror_pkg_name() { 
 	local pkg=$(grep -oP '^PKG:\K.*' <<<"$__APKMIRROR_RESP__" | head -1)
-	echo "$pkg"
+	if [ -z "$pkg" ] || [ "$pkg" = "UNKNOWN" ]; then
+		case "${__APKMIRROR_URL__,,}" in
+			*youtube-music*) pkg="com.google.android.apps.youtube.music" ;;
+			*youtube*) pkg="com.google.android.youtube" ;;
+			*photos*) pkg="com.google.android.apps.photos" ;;
+			*reddit*) pkg="com.reddit.frontpage" ;;
+			*twitter*|*x*) pkg="com.twitter.android" ;;
+		esac
+	fi
+	echo "${pkg:-UNKNOWN}"
 }
+
 get_apkmirror_vers() { run_python_backend "apkmirror_vers" "$__APKMIRROR_URL__"; }
 
 dl_apkmirror() {
@@ -715,24 +735,7 @@ dl_apkmirror() {
 	if [[ -f "${output}.is_bundle" && "$(cat "${output}.is_bundle")" == "true" ]] || [[ -f "${output}.apkm.is_bundle" ]]; then
 		merge_splits "${output}.apkm" "${output}"
 	fi
-}
-get_apkmirror_vers() {
-	local vers apkm_resp
-	apkm_resp=$(req "https://www.apkmirror.com/uploads/?appcategory=${__APKMIRROR_CAT__}" -)
-	vers=$(sed -n 's;.*Version:</span><span class="infoSlide-value">\(.*\) </span>.*;\1;p' <<<"$apkm_resp" | awk '{$1=$1}1')
-
-	vers=$(grep -iv "\(beta\|alpha\)" <<<"$vers")
-	local v r_vers=()
-	local IFS=$'\n'
-	for v in $vers; do
-		grep -iq "${v} \(beta\|alpha\)" <<<"$apkm_resp" || r_vers+=("$v")
-	done
-	echo "${r_vers[*]}"
-}
-get_apkmirror_pkg_name() { sed -n 's;.*id=\(.*\)" class="accent_color.*;\1;p' <<<"$__APKMIRROR_RESP__"; }
-get_apkmirror_resp() {
-	__APKMIRROR_RESP__=$(req "${1}" -) || return 1
-	__APKMIRROR_CAT__="${1##*/}"
+	[[ -f "$output" ]]
 }
 
 # -------------------- uptodown wrappers --------------------
@@ -743,8 +746,18 @@ get_uptodown_resp() {
 
 get_uptodown_pkg_name() { 
 	local pkg=$(grep -oP '^PKG:\K.*' <<<"$__UPTODOWN_RESP__" | head -1)
-	echo "$pkg"
+	if [ -z "$pkg" ] || [ "$pkg" = "UNKNOWN" ]; then
+		case "${__UPTODOWN_URL__,,}" in
+			*youtube-music*) pkg="com.google.android.apps.youtube.music" ;;
+			*youtube*) pkg="com.google.android.youtube" ;;
+			*photos*) pkg="com.google.android.apps.photos" ;;
+			*reddit*) pkg="com.reddit.frontpage" ;;
+			*twitter*|*x*) pkg="com.twitter.android" ;;
+		esac
+	fi
+	echo "${pkg:-UNKNOWN}"
 }
+
 get_uptodown_vers() { run_python_backend "uptodown_vers" "$__UPTODOWN_URL__"; }
 
 dl_uptodown() {
@@ -960,30 +973,29 @@ build_rv() {
 		done
 	fi
 
-	if [[ -z "$pkg_name" ]]; then
+	if [[ -z "$pkg_name" || "$pkg_name" == "UNKNOWN" ]]; then
 		epr "empty pkg name, not building ${table}."
 		return 0
 	fi
 	pr "Package name of '${table}' is '$pkg_name'"
 	local list_patches
-
-	local is_experimental="false"
-	if [ "$version_mode" = "experimental" ]; then is_experimental="true"; fi
-	list_patches=$(patches_list "$cli_jar" "$patches_jar" "$pkg_name" "$is_experimental") || return 1
+	list_patches=$(patches_list "${args[cli]}" "${args[ptjar]}" "$pkg_name") || return 1
 	local get_latest_ver=false
-	if isoneof "$version_mode" "auto" "experimental"; then
-		if ! version=$(get_patch_last_supported_ver "$list_patches" "$pkg_name" "${args[included_patches]}" "$is_experimental"); then
+	if [[ "$version_mode" == auto ]]; then
+		if ! version=$(get_patch_last_supported_ver "$list_patches" "$pkg_name" \
+			"${args[included_patches]:-}" "${args[excluded_patches]:-}" "${args[exclusive_patches]:-}"); then
 			epr "get_patch_last_supported_ver failed '$list_patches'"
 			return
-		elif [ -z "$version" ]; then get_latest_ver="true"; fi
-	elif [ "$version_mode" = "latest" ]; then
-		get_latest_ver="true"
+		elif [[ -z "$version" ]]; then get_latest_ver=true; fi
+	elif isoneof "$version_mode" latest beta; then
+		get_latest_ver=true
 		p_patcher_args+=("-f")
 	else
 		version=$version_mode
 		p_patcher_args+=("-f")
 	fi
-	if [ $get_latest_ver = "true" ]; then
+	if [[ $get_latest_ver == true ]]; then
+		if [[ "$version_mode" == beta ]]; then __AAV__="true"; else __AAV__="false"; fi
 		pkgvers=$(get_"${dl_from}"_vers)
 		version=$(get_highest_ver <<<"$pkgvers") || version=$(head -1 <<<"$pkgvers")
 	fi
@@ -1059,7 +1071,6 @@ build_rv() {
 	for build_mode in "${build_mode_arr[@]}"; do
 		patcher_args=("${p_patcher_args[@]}")
 		
-		# --- DYNAMIC BUILD MODE PRINT STATEMENT FIX ---
 		local display_mode
 		if [[ "$build_mode" == "apk" ]]; then
 			display_mode="APK"
