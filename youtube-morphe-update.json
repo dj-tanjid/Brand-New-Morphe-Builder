@@ -1,6 +1,6 @@
 {
-  "version": "v21.31.525 (patches dev.6.mpp)",
-  "versionCode": 150,
-  "zipUrl": "https://github.com/dj-tanjid/Morphe-DeVanced-Builder/releases/download/150/youtube-morphe-module-v21.31.525-arm64-v8a.zip",
+  "version": "v21.31.525 (patches dev.8.mpp)",
+  "versionCode": 151,
+  "zipUrl": "https://github.com/dj-tanjid/Morphe-DeVanced-Builder/releases/download/151/youtube-morphe-module-v21.31.525-arm64-v8a.zip",
   "changelog": "https://raw.githubusercontent.com/dj-tanjid/Morphe-DeVanced-Builder/update/build.md"
 }
