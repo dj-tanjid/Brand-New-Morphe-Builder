@@ -1,4 +1,4 @@
-Reddit-Morphe: 2026.31.0  
+Reddit-Morphe: 2026.31.1  
 YT-Music-Morphe: 9.30.52  
 YouTube-Morphe: 21.31.525  
 
@@ -7,7 +7,7 @@ YouTube-Morphe: 21.31.525
 - (Optional) Import my [**Custom Settings**](../teejay/custom_settings-by_tanjid) into your application. [*How to do this?*](../teejay/?tab=readme-ov-file#import-custom-settings-in-revancedmorphe-applications)  
 
 Patches and CLI Sources :  
-Patches: MorpheApp/patches-1.39.0-dev.8.mpp  
-[Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.39.0-dev.8)
+Patches: MorpheApp/patches-1.39.0-dev.9.mpp  
+[Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.39.0-dev.9)
 
-CLI: MorpheApp/morphe-desktop-1.12.0-all.jar    
+CLI: MorpheApp/morphe-desktop-1.13.0-all.jar    
