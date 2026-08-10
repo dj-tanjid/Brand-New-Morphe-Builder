@@ -1,6 +1,6 @@
 {
-  "version": "v9.31.51 (patches dev.1.mpp)",
-  "versionCode": 153,
-  "zipUrl": "https://github.com/dj-tanjid/Morphe-DeVanced-Builder/releases/download/153/yt-music-morphe-module-v9.31.51-arm64-v8a.zip",
+  "version": "v9.31.54 (patches dev.2.mpp)",
+  "versionCode": 154,
+  "zipUrl": "https://github.com/dj-tanjid/Morphe-DeVanced-Builder/releases/download/154/yt-music-morphe-module-v9.31.54-arm64-v8a.zip",
   "changelog": "https://raw.githubusercontent.com/dj-tanjid/Morphe-DeVanced-Builder/update/build.md"
 }
