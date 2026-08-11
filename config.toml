@@ -101,9 +101,8 @@ build-mode = "both" # Options 'apk', 'module', or 'both'
 # Stable Support #
 # version = "auto" # "2026.14.0"
 # Experimental Support #
-# version = "2026.30.0"
-version = "2026.31.1"
-# version = "2026.32.0"
+# version = "2026.31.1"
+version = "2026.32.0"
 dpi = "120-640dpi" # Options '120-640dpi', or 'nodpi'
 excluded-patches = """\
     'Custom branding name for Reddit' \
