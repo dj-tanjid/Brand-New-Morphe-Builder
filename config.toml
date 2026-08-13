@@ -139,7 +139,7 @@ uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
 [Facebook-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "RookieEnough/De-Vanced"
@@ -152,7 +152,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Messenger-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Facebook Messenger"
 pkg-name = "com.facebook.orca"
 patches-source = "RookieEnough/De-Vanced"
@@ -165,7 +165,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/messe
 uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
 
 [Threads-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Threads"
 pkg-name = "com.instagram.barcelona"
 patches-source = "RookieEnough/De-Vanced"
