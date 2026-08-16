@@ -17,7 +17,7 @@ arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'un
 # Experimental Support #
 # version = "21.28.207" # Version Supporting Miniplayer Type
 # version = "21.31.525"
-version = "21.32.4-SECONDARY"
+version = "21.32.5"
 excluded-patches = """\
     'Custom branding name for YouTube' \
     'Custom branding icon for YouTube' \
@@ -42,7 +42,8 @@ arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'un
 # Experimental Support #
 # version = "9.29.54"
 # version = "9.30.52"
-version = "9.31.54"
+# version = "9.31.56"
+version = "9.32.51"
 excluded-patches = """\
     'Custom branding name for YouTube Music' \
     'Custom branding icon for YouTube Music' \
@@ -65,7 +66,8 @@ build-mode = "both" # Options 'apk', 'module', or 'both'
 # version = "auto" # "2026.14.0"
 # Experimental Support #
 # version = "2026.31.1"
-version = "2026.32.0"
+# version = "2026.32.0"
+version = "2026.33.0"
 dpi = "120-640dpi" # Options '120-640dpi', or 'nodpi'
 excluded-patches = """\
     'Custom branding name for Reddit' \
@@ -79,7 +81,7 @@ uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
 
 [Google-Photos-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Google Photos"
 patches-source = "RookieEnough/De-Vanced"
 cli-source = "MorpheApp/morphe-desktop"
