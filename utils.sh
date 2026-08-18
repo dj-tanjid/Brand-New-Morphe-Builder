@@ -380,7 +380,7 @@ setup_python_backend() {
 	mkdir -p "$TEMP_DIR"
 	if [ ! -f "$TEMP_DIR/network_engine.py" ]; then
 		export PIP_BREAK_SYSTEM_PACKAGES=1
-		python3 -m pip install -q "curl_cffi>=0.7.0" beautifulsoup4 urllib3 2>/dev/null || true
+		python3 -m pip install -q "curl_cffi>=0.7.0" beautifulsoup4 urllib3 requests 2>/dev/null || true
 		cat << 'EOF' > "$TEMP_DIR/network_engine.py"
 import sys, os, re, time, json, random
 from urllib.parse import urljoin
@@ -390,8 +390,9 @@ def log(msg):
     sys.stderr.flush()
 
 try:
-    from curl_cffi import requests
+    from curl_cffi import requests as cffi_requests
     from bs4 import BeautifulSoup
+    import requests # Standard requests for GitHub API
 except ImportError as e:
     log(f"Fatal Import Error: {e}. Missing dependencies.")
     if len(sys.argv) > 1 and sys.argv[1].endswith("_pkg"):
@@ -418,7 +419,7 @@ class Scraper:
         try:
             if os.path.exists(BROWSER_CFG) and os.path.exists(COOKIE_JAR):
                 with open(BROWSER_CFG, "r") as f: self.current_browser = f.read().strip()
-                self.session = requests.Session(impersonate=self.current_browser)
+                self.session = cffi_requests.Session(impersonate=self.current_browser)
                 with open(COOKIE_JAR, "r") as f:
                     for k, v in json.load(f).items():
                         self.session.cookies.set(k, v)
@@ -452,7 +453,7 @@ class Scraper:
         for browser in browsers:
             try:
                 time.sleep(random.uniform(3.5, 6.0))
-                new_session = requests.Session(impersonate=browser)
+                new_session = cffi_requests.Session(impersonate=browser)
                 r = new_session.get(url, headers=headers, timeout=20, allow_redirects=True)
                 
                 if r.status_code in (403, 503) or "Just a moment" in r.text or "cf-browser-verification" in r.text:
@@ -489,7 +490,116 @@ def main():
     
     scraper = Scraper()
     
-    if mode == "apkmirror_pkg":
+    # ------------------ GITHUB HANDLERS ------------------
+    if mode.startswith("github_"):
+        gh_token = os.environ.get("GITHUB_TOKEN", "")
+        gh_headers = {"User-Agent": "Morphe-DeVanced-Builder"}
+        if gh_token:
+            gh_headers["Authorization"] = f"token {gh_token}"
+
+        gh_match = re.search(r"github\.com/([^/]+)/([^/]+)/releases/tags?/([^/]+)", url)
+        if not gh_match:
+            log(f"Invalid GitHub release URL: {url}")
+            sys.exit(1)
+
+        owner, repo, tag = gh_match.groups()
+        api_url = f"https://api.github.com/repos/{owner}/{repo}/releases/tags/{tag}"
+
+        try:
+            r = requests.get(api_url, headers=gh_headers, timeout=20)
+            if r.status_code != 200:
+                log(f"GitHub API error {r.status_code}: {r.text}")
+                sys.exit(1)
+            release_data = r.json()
+        except Exception as e:
+            log(f"Failed to fetch GitHub release: {e}")
+            sys.exit(1)
+
+        arch_suffix = re.compile(r"(?:-(all|arm64-v8a|armeabi-v7a|x86_64|x86))?(?:\.apk\.apkm|\.apk|\.apkm)$", re.I)
+
+        if mode == "github_pkg":
+            pkg_name = release_data.get("name") or release_data.get("tag_name") or "UNKNOWN"
+            print(f"PKG:{pkg_name}")
+
+        elif mode == "github_vers":
+            pkg_name = release_data.get("name") or release_data.get("tag_name") or ""
+            prefix = f"{pkg_name}-"
+            seen = {}
+            for asset in release_data.get("assets", []):
+                name = asset.get("name", "")
+                if name.startswith(prefix) and name.endswith((".apk", ".apkm")):
+                    ver = arch_suffix.sub("", name[len(prefix):])
+                    seen[ver] = None
+            versions = list(seen.keys()) or [release_data.get("tag_name", "")]
+            for v in versions:
+                if v:
+                    print(v)
+
+        elif mode == "github_dl":
+            version = sys.argv[3] if len(sys.argv) > 3 else ""
+            dest_path = sys.argv[4] if len(sys.argv) > 4 else ""
+            arch = sys.argv[5] if len(sys.argv) > 5 else "all"
+            dpi = sys.argv[6] if len(sys.argv) > 6 else ""
+
+            if arch == "arm-v7a":
+                arch = "armeabi-v7a"
+            version_f = version.replace(" ", "").lstrip("v")
+
+            apk_assets = [a for a in release_data.get("assets", []) if a.get("name", "").endswith((".apk", ".apkm"))]
+            target_asset = None
+
+            for a in apk_assets:
+                name = a.get("name", "")
+                if version_f and version_f not in name:
+                    continue
+
+                m = arch_suffix.search(name)
+                file_arch = m.group(1).lower() if m and m.group(1) else "all"
+                if arch in ("all", "both"):
+                    if file_arch != "all":
+                        continue
+                else:
+                    if file_arch not in (arch, "all"):
+                        continue
+
+                target_asset = a
+                break
+
+            # Fallback
+            if not target_asset:
+                for a in apk_assets:
+                    if version_f and version_f in a.get("name", ""):
+                        target_asset = a
+                        break
+
+            if not target_asset and apk_assets:
+                target_asset = apk_assets[0]
+
+            if not target_asset:
+                log(f"No matching GitHub asset found for arch '{arch}' and version '{version}'")
+                sys.exit(1)
+
+            dl_url = target_asset.get("browser_download_url")
+            is_bundle = target_asset.get("name", "").endswith(".apkm")
+            real_dest = f"{dest_path}.apkm" if is_bundle else dest_path
+
+            log(f"Downloading GitHub asset: {target_asset.get('name')}")
+            dl_headers = gh_headers.copy()
+            dl_headers["Accept"] = "application/octet-stream"
+
+            r_file = requests.get(dl_url, headers=dl_headers, timeout=300, allow_redirects=True)
+            if r_file.status_code == 200 and r_file.content.startswith(b"PK"):
+                with open(real_dest, "wb") as f:
+                    f.write(r_file.content)
+                with open(f"{dest_path}.is_bundle", "w") as f:
+                    f.write("true" if is_bundle else "false")
+                log("SUCCESS")
+            else:
+                log(f"Download failed. HTTP {r_file.status_code}")
+                sys.exit(1)
+
+    # ------------------ APKMIRROR HANDLERS ------------------
+    elif mode == "apkmirror_pkg":
         resolved_pkg = None
         if "youtube-music" in url: resolved_pkg = "com.google.android.apps.youtube.music"
         elif "youtube" in url: resolved_pkg = "com.google.android.youtube"
@@ -600,6 +710,7 @@ def main():
         final_download_url = urljoin("https://www.apkmirror.com", dl_link["href"])
         scraper.download(final_download_url, dest_path, is_bundle, btn_url)
 
+    # ------------------ UPTODOWN HANDLERS ------------------
     elif mode == "uptodown_pkg":
         resolved_pkg = None
         if "youtube-music" in url: resolved_pkg = "com.google.android.apps.youtube.music"
@@ -714,6 +825,35 @@ run_python_backend() {
 
 setup_python_backend
 
+# -------------------- github wrappers --------------------
+get_github_resp() {
+	__GITHUB_URL__="${1%/}"
+	__GITHUB_RESP__=$(run_python_backend "github_pkg" "$__GITHUB_URL__") || return 1
+}
+
+get_github_pkg_name() { 
+	local pkg=$(grep -oP '^PKG:\K.*' <<<"$__GITHUB_RESP__" | head -1)
+	echo "${pkg:-UNKNOWN}"
+}
+
+get_github_vers() { 
+	run_python_backend "github_vers" "$__GITHUB_URL__"
+}
+
+dl_github() {
+	local url="${1%/}" version=$2 output=$3 arch=$4 dpi=$5
+	rm -f "${output}.is_bundle" "${output}.apkm.is_bundle"
+
+	if ! run_python_backend "github_dl" "$url" "$version" "$output" "$arch" "$dpi" >/dev/null; then
+		return 1
+	fi
+
+	if [[ -f "${output}.is_bundle" && "$(cat "${output}.is_bundle")" == "true" ]] || [[ -f "${output}.apkm.is_bundle" ]]; then
+		merge_splits "${output}.apkm" "${output}"
+	fi
+	[[ -f "$output" ]]
+}
+
 # -------------------- apkmirror wrappers --------------------
 get_apkmirror_resp() {
 	__APKMIRROR_URL__="${1%/}"
@@ -815,97 +955,6 @@ get_archive_resp() {
 }
 get_archive_vers() { sed 's/^[^-]*-//;s/-\(all\|arm64-v8a\|arm-v7a\)\.apk//g' <<<"$__ARCHIVE_RESP__"; }
 get_archive_pkg_name() { echo "$__ARCHIVE_PKG_NAME__"; }
-
-# -------------------- github --------------------
-get_github_resp() {
-	local url=$1 owner repo tag api_url
-	if [[ "$url" =~ github\.com/([^/]+)/([^/]+)/releases/tag/([^/]+) ]]; then
-		owner="${BASH_REMATCH[1]}"
-		repo="${BASH_REMATCH[2]}"
-		tag="${BASH_REMATCH[3]}"
-	else
-		return 1
-	fi
-	api_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag}"
-	__GITHUB_RESP__=$(gh_req "$api_url" -) || return 1
-}
-get_github_vers() {
-	local name prefix ver versions=()
-	name=$(jq -r '.name // empty' <<<"$__GITHUB_RESP__")
-	[[ -z "$name" ]] && jq -r '.tag_name' <<<"$__GITHUB_RESP__" && return
-	prefix="${name}-"
-	
-	while read -r asset_name; do
-		[[ ! "$asset_name" =~ \.(apk|apkm)$ ]] && continue
-		[[ "$asset_name" != "$prefix"* ]] && continue
-		ver="${asset_name#"$prefix"}"
-		ver=$(sed -E 's/(-(all|arm64-v8a|armeabi-v7a|x86_64|x86))?(\.apk\.apkm|\.apk|\.apkm)$//I' <<<"$ver")
-		versions+=("$ver")
-	done < <(jq -r '.assets[].name' <<<"$__GITHUB_RESP__")
-	
-	if [[ ${#versions[@]} -eq 0 ]]; then
-		jq -r '.tag_name' <<<"$__GITHUB_RESP__"
-	else
-		echo "${versions[@]}" | tr ' ' '\n' | sort -u
-	fi
-}
-get_github_pkg_name() { jq -r '.name // .tag_name' <<<"$__GITHUB_RESP__"; }
-dl_github() {
-	local url=$1 version=$2 output=$3 arch=$4 dpi=$5 is_bundle=false
-	local version_f asset matches=() target_asset=""
-	version_f=$(echo "${version// /}" | sed 's/^v//')
-
-	if [[ "$arch" == "arm-v7a" ]]; then arch="armeabi-v7a"; fi
-
-	while read -r row; do
-		local name url_dl
-		name=$(cut -f1 <<<"$row")
-		url_dl=$(cut -f2 <<<"$row")
-		[[ ! "$name" =~ \.(apk|apkm)$ ]] && continue
-		if [[ -n "$version_f" && "$name" != *"$version_f"* ]]; then continue; fi
-		
-		local file_arch="all"
-		if [[ "$name" =~ -(all|arm64-v8a|armeabi-v7a|x86_64|x86) ]]; then
-			file_arch="${BASH_REMATCH[1]}"
-		fi
-
-		if [[ "$arch" == "all" || "$arch" == "both" ]]; then
-			[[ "$file_arch" == "all" ]] && matches+=("$name|$url_dl")
-		else
-			{ [[ "$file_arch" == "$arch" ]] || [[ "$file_arch" == "all" ]]; } && matches+=("$name|$url_dl")
-		fi
-	done < <(jq -r '.assets[] | \(.name)\t\(.browser_download_url)' <<<"$__GITHUB_RESP__")
-
-	for pair in "${matches[@]}"; do
-		local n="${pair%%|*}" u="${pair#*|}"
-		if [[ "$n" =~ -"$arch" ]] && [[ "$n" =~ \.apk$ ]]; then
-			target_asset="$u"; [[ "$n" == "*.apkm" ]] && is_bundle=true; break
-		fi
-	done
-	if [[ -z "$target_asset" ]]; then
-		for pair in "${matches[@]}"; do
-			local n="${pair%%|*}" u="${pair#*|}"
-			if [[ "$n" =~ \.apk$ ]]; then
-				target_asset="$u"; break
-			fi
-		done
-	fi
-	if [[ -z "$target_asset" && ${#matches[@]} -gt 0 ]]; then
-		local pair="${matches[0]}"
-		local n="${pair%%|*}" u="${pair#*|}"
-		target_asset="$u"
-		[[ "$n" == *.apkm ]] && is_bundle=true
-	fi
-
-	if [[ -z "$target_asset" ]]; then epr "No matching asset variant found on GitHub Release"; return 1; fi
-
-	if [[ "$is_bundle" == true ]]; then
-		gh_dl "${output}.apkm" "$target_asset" || return 1
-		merge_splits "${output}.apkm" "${output}"
-	else
-		gh_dl "${output}" "$target_asset" || return 1
-	fi
-}
 
 # -------------------- direct --------------------
 dl_direct() {
