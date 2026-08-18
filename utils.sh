@@ -1069,11 +1069,32 @@ build_rv() {
 		p_patcher_args+=("-f")
 	fi
 
-	if [[ $get_latest_ver == true ]]; then
+		if [[ $get_latest_ver == true ]]; then
 		if [[ "$version_mode" == beta ]]; then __AAV__="true"; else __AAV__="false"; fi
-		pkgvers=$(get_"${dl_from}"_vers)
-		version=$(get_highest_ver <<<"$pkgvers") || version=$(head -1 <<<"$pkgvers")
+		
+		# Scan through sources in priority order to securely fetch the latest version
+		for dl_p in "${DL_SRCS[@]}"; do
+			if [[ -n "${args[${dl_p}_dlurl]:-}" ]]; then
+				dl_from=$dl_p
+				
+				# Initialize the URL variable to prevent unbound variable errors
+				if [[ "$dl_p" == "apkmirror" ]]; then __APKMIRROR_URL__="${args[${dl_p}_dlurl]}"
+				elif [[ "$dl_p" == "uptodown" ]]; then __UPTODOWN_URL__="${args[${dl_p}_dlurl]}"
+				elif [[ "$dl_p" == "github" ]]; then __GITHUB_URL__="${args[${dl_p}_dlurl]}"
+				elif [[ "$dl_p" == "archive" ]]; then __ARCHIVE_URL__="${args[${dl_p}_dlurl]}"
+				elif [[ "$dl_p" == "direct" ]]; then __DIRECT_APKNAME__=$(awk -F/ '{print $NF}' <<<"${args[${dl_p}_dlurl]}"); fi
+				
+				pkgvers=$(get_"${dl_from}"_vers)
+				version=$(get_highest_ver <<<"$pkgvers") || version=$(head -1 <<<"$pkgvers")
+				
+				# Break out of the loop once a valid version is found
+				if [[ -n "$version" ]]; then 
+					break
+				fi
+			fi
+		done
 	fi
+	
 	if [[ -z "$version" ]]; then
 		epr "empty version, not building ${table}."
 		return 0
