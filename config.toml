@@ -41,8 +41,8 @@ arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'un
 # Stable Support #
 # version = "auto" # "9.15.51"
 # Experimental Support #
-# version = "9.31.56"
-version = "9.32.51"
+# version = "9.32.51"
+version = "9.33.52"
 excluded-patches = """\
     'Custom branding name for YouTube Music' \
     'Custom branding icon for YouTube Music' \
@@ -87,8 +87,8 @@ cli-source = "MorpheApp/morphe-desktop"
 rv-brand = "De-Vanced"
 arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'universal'
 # version = "auto"
-# version = "7.87.0.957333026"
-version = "7.88.0.966185373"
+# version = "7.88.0.966185373"
+version = "7.89.0.966319819"
 build-mode = "both" # Options 'apk', 'module', or 'both'
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
@@ -103,7 +103,7 @@ uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
 [Facebook-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "RookieEnough/De-Vanced"
@@ -118,7 +118,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Messenger-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Facebook Messenger"
 pkg-name = "com.facebook.orca"
 patches-source = "RookieEnough/De-Vanced"
@@ -132,7 +132,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/messe
 uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
 
 [Threads-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Threads"
 pkg-name = "com.instagram.barcelona"
 patches-source = "RookieEnough/De-Vanced"
