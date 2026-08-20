@@ -18,7 +18,7 @@ arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'un
 # version = "21.28.207" # Version Supporting Miniplayer Type
 # version = "21.31.525"
 # version = "21.32.6"
-version = "21.33.323"
+version = "21.33.322-SECONDARY"
 excluded-patches = """\
     'Custom branding name for YouTube' \
     'Custom branding icon for YouTube' \
