@@ -186,3 +186,23 @@ uptodown-dlurl = "https://twitter.en.uptodown.com/android"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
+[Instagram-Piko]
+enabled = false
+app-name = "Instagram"
+patches-source = "crimera/piko"
+cli-source = "MorpheApp/morphe-desktop"
+rv-brand = "Piko"
+build-mode = "apk" # Options 'apk', 'module', or 'both'
+version = "latest"
+# version = "12.15.2-release.0"
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+included-patches = """\
+    'Theme' \
+    """
+excluded-patches = """\
+    'Unlock Plus benefits' \
+    """
+apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram"
+uptodown-dlurl = "https://instagram.en.uptodown.com/android"
+# github-dlurl = "https://github.com/krvstek/uni-storage/releases/tag/instagram"
+github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram.android"
