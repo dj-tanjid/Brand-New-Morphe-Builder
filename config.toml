@@ -18,7 +18,7 @@ arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'un
 # version = "21.28.207" # Version Supporting Miniplayer Type
 # version = "21.31.525"
 # version = "21.32.6"
-version = "21.33.322-SECONDARY"
+version = "21.33.326"
 excluded-patches = """\
     'Custom branding name for YouTube' \
     'Custom branding icon for YouTube' \
@@ -31,7 +31,7 @@ uptodown-dlurl = "https://youtube.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.youtube"
 
 [YT-Music-Morphe]
-enabled = true
+enabled = false
 app-name = "YT Music"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -55,7 +55,7 @@ uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
 
 [Reddit-Morphe]
-enabled = true
+enabled = false
 app-name = "Reddit"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -80,7 +80,7 @@ uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
 
 [Google-Photos-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Google Photos"
 patches-source = "RookieEnough/De-Vanced"
 cli-source = "MorpheApp/morphe-desktop"
