@@ -18,7 +18,7 @@ arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'un
 # version = "21.28.207" # Version Supporting Miniplayer Type
 # version = "21.31.525"
 # version = "21.32.6"
-version = "21.33.322-SECONDARY"
+version = "21.33.326"
 excluded-patches = """\
     'Custom branding name for YouTube' \
     'Custom branding icon for YouTube' \
@@ -65,8 +65,8 @@ build-mode = "both" # Options 'apk', 'module', or 'both'
 # version = "auto" # "2026.14.0"
 # Experimental Support #
 # version = "2026.31.1"
-version = "2026.32.0"
-# version = "2026.33.0"
+# version = "2026.32.0"
+version = "2026.34.0"
 dpi = "120-640dpi" # Options '120-640dpi', or 'nodpi'
 excluded-patches = """\
     'Custom branding name for Reddit' \
@@ -88,7 +88,7 @@ rv-brand = "De-Vanced"
 arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'universal'
 # version = "auto"
 # version = "7.88.0.966185373"
-version = "7.89.0.966319819"
+version = "7.89.0.968035987"
 build-mode = "both" # Options 'apk', 'module', or 'both'
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
