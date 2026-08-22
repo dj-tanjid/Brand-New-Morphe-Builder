@@ -1,4 +1,3 @@
-Instagram-Piko: 444.0.0.26.85  
 Reddit-Morphe: 2026.34.0  
 Twitter-Piko: 12.19.1-release.0  
 X-Piko: 12.19.1-release.0  
