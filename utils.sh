@@ -486,11 +486,11 @@ class Scraper:
         body = (r.text or "").lower()
         return "cf-browser-verification" in body or "just a moment" in body or "attention required" in body
 
-    def get_soup(self, url, referer=None):
+    def get_soup(self, url, referer=None, force_solve=False):
         headers = {"Referer": referer} if referer else {}
-        time.sleep(random.uniform(1.0, 2.5))
+        time.sleep(random.uniform(1.5, 3.0))
         
-        if self.load_state() or self.session:
+        if not force_solve and (self.load_state() or self.session):
             try:
                 r = self.session.get(url, headers=headers, timeout=20, allow_redirects=True)
                 if not self.is_challenge(r):
@@ -499,7 +499,9 @@ class Scraper:
             except Exception:
                 pass
 
-        if self._solve_via_docker_service(url):
+        if force_solve or self._solve_via_docker_service(url):
+            if force_solve:
+                self._solve_via_docker_service(url)
             try:
                 r = self.session.get(url, headers=headers, timeout=20, allow_redirects=True)
                 if not self.is_challenge(r):
@@ -514,7 +516,7 @@ class Scraper:
         
         for browser in browsers:
             try:
-                time.sleep(random.uniform(2.0, 4.0))
+                time.sleep(random.uniform(2.5, 4.5))
                 new_session = self._create_session(browser)
                 r = new_session.get(url, headers=headers, timeout=20, allow_redirects=True)
                 
@@ -695,28 +697,19 @@ def main():
         cat = url.rstrip("/").split("/")[-1]
         log(f"Searching APKMirror for version {version} ({cat})")
         
-        search_term = version.split("-")[0].strip()
-        search_url = f"https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s={cat}+{search_term}"
-        
+        search_url = f"{url.rstrip('/')}/?s={version}"
         soup_search, _ = scraper.get_soup(search_url)
         if not soup_search: 
             sys.exit(1)
         
         release_url = None
-        clean_target = re.sub(r'[^a-zA-Z0-9]', '', version.lower())
-        
-        for a in soup_search.find_all("a", href=re.compile(r"-release/$")):
-            txt = a.text.strip()
-            href = a.get("href", "")
-            
-            clean_slug = re.sub(r'[^a-zA-Z0-9]', '', href.lower())
-            clean_txt = re.sub(r'[^a-zA-Z0-9]', '', txt.lower())
-            
-            if clean_target in clean_slug or clean_target in clean_txt:
-                release_url = urljoin("https://www.apkmirror.com", href)
+        for a in soup_search.select("a.fontBlack[href*='-release/']"):
+            if version in a.get_text() and f"/{cat}/" in a.get("href", ""):
+                release_url = urljoin("https://www.apkmirror.com", a["href"])
                 break
                 
         if not release_url:
+            log("APKMirror release URL not found via app search.")
             sys.exit(1)
             
         soup_rel, r_rel = scraper.get_soup(release_url, referer=search_url)
@@ -814,22 +807,25 @@ def main():
         if arch == "arm-v7a": arch = "armeabi-v7a"
         
         soup, _ = scraper.get_soup(f"{url}/versions")
-        if not soup:
-            log(f"Uptodown versions page failed to load for {url}")
-            sys.exit(1)
         
-        data_code = None
-        detail_app = soup.select_one("#detail-app-name")
-        if detail_app and "data-code" in detail_app.attrs:
-            data_code = detail_app["data-code"]
-        if not data_code:
-            elem = soup.find(attrs={"data-code": True})
+        def get_data_code(s):
+            if not s: return None
+            detail_app = s.select_one("#detail-app-name")
+            if detail_app and "data-code" in detail_app.attrs:
+                return detail_app["data-code"]
+            elem = s.find(attrs={"data-code": True})
             if elem:
-                data_code = elem["data-code"]
-        if not data_code:
-            m = re.search(r'data-code=["\'](\d+)["\']', str(soup))
+                return elem["data-code"]
+            m = re.search(r'data-code=["\'](\d+)["\']', str(s))
             if m:
-                data_code = m.group(1)
+                return m.group(1)
+            return None
+
+        data_code = get_data_code(soup)
+        if not data_code:
+            log(f"Uptodown data-code not found, forcing Cloudflare solver for {url}...")
+            soup, _ = scraper.get_soup(f"{url}/versions", force_solve=True)
+            data_code = get_data_code(soup)
 
         if not data_code:
             log(f"Detail app data-code not found on Uptodown page for {url}")
