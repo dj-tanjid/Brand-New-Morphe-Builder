@@ -448,7 +448,7 @@ class Scraper:
                 pass
 
         self.clear_state()
-        browsers = ["chrome150", "chrome124", "chrome120", "edge99", "safari15_5", "chrome116", "chrome110"]
+        browsers = ["chrome150","chrome146", "chrome124", "chrome120", "edge99", "safari15_5", "chrome116", "chrome110"]
         random.shuffle(browsers)
         
         for browser in browsers:
