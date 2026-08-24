@@ -5,6 +5,13 @@ shopt -s nullglob
 
 source utils.sh
 
+# --- Global Environment Export Setup ---
+for func_name in _req req gh_req gh_dl build_rv patches_list patches_list_versions toml_get toml_get_table toml_get_table_names toml_get_table_main dl_direct dl_github dl_archive dl_apkmirror dl_uptodown get_direct_vers get_github_vers get_archive_vers get_apkmirror_vers get_uptodown_vers get_direct_pkg_name get_github_pkg_name get_archive_pkg_name get_apkmirror_pkg_name get_uptodown_pkg_name get_direct_resp get_github_resp get_archive_resp get_apkmirror_resp get_uptodown_resp apkmirror_search merge_splits check_sig patch_apk isoneof log get_highest_ver semver_validate get_patch_last_supported_ver list_args join_args module_config module_prop abort epr wpr pr java run_python_backend; do
+    export -f "$func_name" 2>/dev/null || true
+done
+export MODULE_TEMPLATE_DIR CWD TEMP_DIR BIN_DIR BUILD_DIR DL_SRCS GH_HEADER NEXT_VER_CODE OS
+# ---------------------------------------
+
 trap "abort" INT
 
 if [ "${1-}" = "clean" ]; then
@@ -24,10 +31,10 @@ vtf() { if ! isoneof "${1}" "true" "false"; then abort "ERROR: '${1}' is not a v
 toml_prep "${1:-config.toml}" || abort "could not find config file '${1:-config.toml}'\n\tUsage: $0 <config.toml>"
 main_config_t=$(toml_get_table_main)
 COMPRESSION_LEVEL=$(toml_get "$main_config_t" compression-level) || COMPRESSION_LEVEL="9"
-if ! PARALLEL_JOBS=$(toml_get "$main_config_t" parallel-jobs); then
-	if [ "$OS" = Android ]; then PARALLEL_JOBS=1; else PARALLEL_JOBS=$(nproc); fi
-fi
-PARALLEL_JOBS=1 # TODO: multiple jobs were broken by recent cli versions. and i cant bother to fix it so instead, i disable it.
+
+# Strictly enforce sequential execution to ensure live-streaming output in GitHub Actions
+PARALLEL_JOBS=1 
+
 REMOVE_RV_INTEGRATIONS_CHECKS=$(toml_get "$main_config_t" remove-rv-integrations-checks) || REMOVE_RV_INTEGRATIONS_CHECKS="true"
 DEF_PATCHES_VER=$(toml_get "$main_config_t" patches-version) || DEF_PATCHES_VER="latest"
 DEF_CLI_VER=$(toml_get "$main_config_t" cli-version) || DEF_CLI_VER="latest"
@@ -60,17 +67,19 @@ gh_dl "${MODULE_TEMPLATE_DIR}/bin/arm/cmpr" "https://github.com/j-hc/cmpr/releas
 gh_dl "${MODULE_TEMPLATE_DIR}/bin/x86/cmpr" "https://github.com/j-hc/cmpr/releases/latest/download/cmpr-x86"
 gh_dl "${MODULE_TEMPLATE_DIR}/bin/x64/cmpr" "https://github.com/j-hc/cmpr/releases/latest/download/cmpr-x86_64"
 
-idx=0
+# Terminal banner for clear live logging visibility without breaking stream
+print_banner() {
+	echo -e "\n\033[1;35m===============================================================\033[0m"
+	echo -e "\033[1;36m  🚀 PROCESSING : $1\033[0m"
+	echo -e "\033[1;35m===============================================================\033[0m\n"
+}
+
 for table_name in $(toml_get_table_names); do
 	if [ -z "$table_name" ]; then continue; fi
 	t=$(toml_get_table "$table_name")
 	enabled=$(toml_get "$t" enabled) || enabled=true
 	vtf "$enabled" "enabled"
 	if [ "$enabled" = false ]; then continue; fi
-	if ((idx >= PARALLEL_JOBS)); then
-		wait -n
-		idx=$((idx - 1))
-	fi
 
 	declare -A app_args
 	patches_src=$(toml_get "$t" patches-source) || patches_src=$DEF_PATCHES_SRC
@@ -134,34 +143,35 @@ for table_name in $(toml_get_table_names); do
 		app_args[arch]="arm64-v8a"
 		module_prop_name_b=${app_args[module_prop_name]}
 		app_args[module_prop_name]="${module_prop_name_b}-arm64"
-		idx=$((idx + 1))
-		build_rv "$(declare -p app_args)" &
+		
+		print_banner "${app_args[table]}"
+		build_rv "$(declare -p app_args)"
+		
 		app_args[table]="$table_name (arm-v7a)"
 		app_args[arch]="arm-v7a"
 		app_args[module_prop_name]="${module_prop_name_b}-arm"
-		if ((idx >= PARALLEL_JOBS)); then
-			wait -n
-			idx=$((idx - 1))
-		fi
-		idx=$((idx + 1))
-		build_rv "$(declare -p app_args)" &
+		
+		print_banner "${app_args[table]}"
+		build_rv "$(declare -p app_args)"
 	else
 		if [ "${app_args[arch]}" = "arm64-v8a" ]; then
 			app_args[module_prop_name]="${app_args[module_prop_name]}-arm64"
 		elif [ "${app_args[arch]}" = "arm-v7a" ]; then
 			app_args[module_prop_name]="${app_args[module_prop_name]}-arm"
 		fi
-		idx=$((idx + 1))
-		build_rv "$(declare -p app_args)" &
+		
+		print_banner "${app_args[table]}"
+		build_rv "$(declare -p app_args)"
 	fi
 done
-wait
+
 _clean_tmp
 if [ -z "$(ls -A1 "${BUILD_DIR}")" ]; then abort "All builds failed."; fi
 
-log "\nInstall [Microg](https://github.com/MorpheApp/MicroG-RE/) for non-root YouTube and YT Music APKs"
-log "Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music modules from Play Store"
-log "\n[revanced-magisk-module](https://github.com/j-hc/revanced-magisk-module)\n"
+log "\n- Install [ReVanced GmsCore](https://github.com/ReVanced/GmsCore/releases/latest) or [Morphe MicroG-RE](https://github.com/MorpheApp/MicroG-RE/releases/latest) for non-root YouTube, YT Music and Google Photos APKs."
+log "- (Optional) Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music modules from Google Play Store."
+log "- (Optional) Import my [**Custom Settings**](../teejay/custom_settings-by_tanjid) into your application. [*How to do this?*](../teejay/?tab=readme-ov-file#import-custom-settings-in-revancedmorphe-applications)"
+log "\nPatches and CLI Sources :"
 log "$(cat "$TEMP_DIR"/*/changelog.md)"
 
 SKIPPED=$(cat "$TEMP_DIR"/skipped 2>/dev/null || :)
