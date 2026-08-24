@@ -200,6 +200,7 @@ rv-brand = "Piko"
 build-mode = "apk" # Options 'apk', 'module', or 'both'
 # version = "latest"
 version = "443.0.0.48.82"
+include-stock = "split" # Options 'split', 'merged', or 'disable'
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'Theme' \
