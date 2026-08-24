@@ -5,7 +5,8 @@ CWD=$(pwd)
 TEMP_DIR="temp"
 BIN_DIR="bin"
 BUILD_DIR="build"
-DL_SRCS=("direct" "github" "archive" "apkmirror" "uptodown")
+# Prioritized source list: APKMirror -> Uptodown -> GitHub -> Direct override -> Archive
+DL_SRCS=("apkmirror" "uptodown" "github" "direct" "archive")
 
 if [ "${GITHUB_TOKEN-}" ]; then GH_HEADER="Authorization: token ${GITHUB_TOKEN}"; else GH_HEADER=; fi
 NEXT_VER_CODE=${NEXT_VER_CODE:-$(date +'%Y%m%d')}
