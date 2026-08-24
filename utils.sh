@@ -407,7 +407,7 @@ BROWSER_CFG = "/tmp/apkmirror_browser.txt"
 class Scraper:
     def __init__(self):
         self.session = None
-        self.current_browser = "chrome120"
+        self.current_browser = "chrome150"
         
     def save_state(self):
         if self.session and self.current_browser:
@@ -448,7 +448,7 @@ class Scraper:
                 pass
 
         self.clear_state()
-        browsers = ["chrome124", "chrome120", "edge99", "safari15_5", "chrome116", "chrome110"]
+        browsers = ["chrome150", "chrome124", "chrome120", "edge99", "safari15_5", "chrome116", "chrome110"]
         random.shuffle(browsers)
         
         for browser in browsers:
