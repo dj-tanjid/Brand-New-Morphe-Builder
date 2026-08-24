@@ -144,7 +144,6 @@ rv-brand = "De-Vanced"
 arch = "arm64-v8a"
 version = "latest"
 build-mode = "apk"
-include-stock = "split" # Options 'split', 'merged', or 'disable'
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram.barcelona"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads-an-instagram-app"
@@ -200,7 +199,7 @@ rv-brand = "Piko"
 build-mode = "apk" # Options 'apk', 'module', or 'both'
 # version = "latest"
 version = "443.0.0.48.82"
-include-stock = "split" # Options 'split', 'merged', or 'disable'
+arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'universal'
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'Theme' \
