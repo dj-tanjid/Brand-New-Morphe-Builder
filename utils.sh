@@ -258,7 +258,6 @@ gh_dl() {
 
 log() { echo -e "$1  " >>"build.md"; }
 
-# Resolves the SIGPIPE broken pipe error that aborts GitHub Action workflows
 get_highest_ver() {
 	local vers m
 	vers=$(tee)
@@ -277,7 +276,6 @@ semver_validate() {
 	[[ ${#ac} -eq 0 ]]
 }
 
-# Integrated Upstream PR Changes
 get_patch_last_supported_ver() {
 	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false}
 	local op
@@ -303,12 +301,15 @@ get_patch_last_supported_ver() {
 	if [[ "$op" == "Any" ]]; then return; fi
 	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}
 	if [[ -z "$pcount" ]]; then
-		abort "No patches found for '$pkg_name' in patches '$patches_jar'"
+		if grep -Fq "$pkg_name" <<<"$list_patches"; then
+			return
+		else
+			abort "No patches found for '$pkg_name' in patches '$patches_jar'"
+		fi
 	fi
 	grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || return 1
 }
 
-# Integrated Upstream PR Changes
 patches_list_versions() {
 	local cli_jar=$1 patches_jar=$2 pkg_name=$3 is_experimental=$4 op cmd
 	local cmd_base="java -jar '$cli_jar' list-versions"
@@ -337,7 +338,6 @@ patches_list_versions() {
 	return 1
 }
 
-# Integrated Upstream PR Changes
 patches_list() {
 	local cli_jar=$1 patches_jar=$2 pkg_name=$3 is_experimental=$4 op
 	if ! op=$(java -jar "$cli_jar" list-patches -p "$patches_jar" --filter-package-name "$pkg_name" --versions --packages -b 2>&1); then
@@ -392,7 +392,7 @@ def log(msg):
 try:
     from curl_cffi import requests as cffi_requests
     from bs4 import BeautifulSoup
-    import requests # Standard requests for GitHub API
+    import requests
 except ImportError as e:
     log(f"Fatal Import Error: {e}. Missing dependencies.")
     if len(sys.argv) > 1 and sys.argv[1].endswith("_pkg"):
@@ -435,7 +435,7 @@ class Scraper:
 
     def get_soup(self, url, referer=None):
         headers = {"Referer": referer} if referer else {}
-        time.sleep(random.uniform(2.0, 4.0))
+        time.sleep(random.uniform(1.5, 3.0))
         
         if self.load_state() or self.session:
             try:
@@ -443,7 +443,7 @@ class Scraper:
                 if r.status_code < 400 and "cf-browser-verification" not in r.text and "Just a moment" not in r.text:
                     self.save_state()
                     return BeautifulSoup(r.text, 'html.parser'), r
-            except Exception as e:
+            except Exception:
                 pass
 
         self.clear_state()
@@ -452,7 +452,7 @@ class Scraper:
         
         for browser in browsers:
             try:
-                time.sleep(random.uniform(3.5, 6.0))
+                time.sleep(random.uniform(2.5, 4.5))
                 new_session = cffi_requests.Session(impersonate=browser)
                 r = new_session.get(url, headers=headers, timeout=20, allow_redirects=True)
                 
@@ -463,7 +463,7 @@ class Scraper:
                 self.current_browser = browser
                 self.save_state()
                 return BeautifulSoup(r.text, 'html.parser'), r
-            except Exception as e:
+            except Exception:
                 time.sleep(1)
                 
         log("All browsers failed Cloudflare checks.")
@@ -565,7 +565,6 @@ def main():
                 target_asset = a
                 break
 
-            # Fallback
             if not target_asset:
                 for a in apk_assets:
                     if version_f and version_f in a.get("name", ""):
@@ -606,6 +605,9 @@ def main():
         elif "photos" in url: resolved_pkg = "com.google.android.apps.photos"
         elif "reddit" in url: resolved_pkg = "com.reddit.frontpage"
         elif "twitter" in url or "x-corp" in url: resolved_pkg = "com.twitter.android"
+        elif "messenger" in url: resolved_pkg = "com.facebook.orca"
+        elif "facebook" in url: resolved_pkg = "com.facebook.katana"
+        elif "threads" in url: resolved_pkg = "com.instagram.barcelona"
 
         soup, r = scraper.get_soup(url)
         if r and r.text:
@@ -718,12 +720,21 @@ def main():
         elif "photos" in url: resolved_pkg = "com.google.android.apps.photos"
         elif "reddit" in url: resolved_pkg = "com.reddit.frontpage"
         elif "twitter" in url or "x-corp" in url: resolved_pkg = "com.twitter.android"
+        elif "messenger" in url: resolved_pkg = "com.facebook.orca"
+        elif "facebook" in url: resolved_pkg = "com.facebook.katana"
+        elif "threads" in url: resolved_pkg = "com.instagram.barcelona"
 
         soup, _ = scraper.get_soup(f"{url}/download")
         if soup:
-            th = soup.find("th", string=re.compile("Package Name", re.I))
+            th = soup.find(lambda e: e.name in ("th", "td") and "package name" in e.text.lower())
             if th and th.find_next_sibling("td"):
-                print(f"PKG:{th.find_next_sibling('td').get_text(strip=True)}")
+                pkg = th.find_next_sibling("td").get_text(strip=True)
+                if pkg and "." in pkg:
+                    print(f"PKG:{pkg}")
+                    return
+            m = re.search(r'play\.google\.com/store/apps/details\?id=([\w.]+)', str(soup))
+            if m:
+                print(f"PKG:{m.group(1)}")
                 return
         print(f"PKG:{resolved_pkg}" if resolved_pkg else "PKG:UNKNOWN")
 
@@ -742,13 +753,23 @@ def main():
             log(f"Uptodown versions page failed to load for {url}")
             sys.exit(1)
         
+        data_code = None
         detail_app = soup.select_one("#detail-app-name")
-        if not detail_app or "data-code" not in detail_app.attrs:
-            log(f"Detail app name not found on Uptodown page for {url}")
+        if detail_app and "data-code" in detail_app.attrs:
+            data_code = detail_app["data-code"]
+        if not data_code:
+            elem = soup.find(attrs={"data-code": True})
+            if elem:
+                data_code = elem["data-code"]
+        if not data_code:
+            m = re.search(r'data-code=["\'](\d+)["\']', str(soup))
+            if m:
+                data_code = m.group(1)
+
+        if not data_code:
+            log(f"Detail app data-code not found on Uptodown page for {url}")
             sys.exit(1)
             
-        data_code = detail_app["data-code"]
-        
         ver_url_data = None
         is_bundle = False
         for i in range(1, 21):
@@ -832,12 +853,12 @@ get_github_resp() {
 }
 
 get_github_pkg_name() { 
-	local pkg=$(grep -oP '^PKG:\K.*' <<<"$__GITHUB_RESP__" | head -1)
+	local pkg=$(grep -oP '^PKG:\K.*' <<<"${__GITHUB_RESP__:-}" | head -1)
 	echo "${pkg:-UNKNOWN}"
 }
 
 get_github_vers() { 
-	run_python_backend "github_vers" "$__GITHUB_URL__"
+	run_python_backend "github_vers" "${__GITHUB_URL__:-}"
 }
 
 dl_github() {
@@ -862,7 +883,7 @@ get_apkmirror_resp() {
 }
 
 get_apkmirror_pkg_name() { 
-	local pkg=$(grep -oP '^PKG:\K.*' <<<"$__APKMIRROR_RESP__" | head -1)
+	local pkg=$(grep -oP '^PKG:\K.*' <<<"${__APKMIRROR_RESP__:-}" | head -1)
 	if [ -z "$pkg" ] || [ "$pkg" = "UNKNOWN" ]; then
 		case "${__APKMIRROR_URL__,,}" in
 			*youtube-music*) pkg="com.google.android.apps.youtube.music" ;;
@@ -870,12 +891,15 @@ get_apkmirror_pkg_name() {
 			*photos*) pkg="com.google.android.apps.photos" ;;
 			*reddit*) pkg="com.reddit.frontpage" ;;
 			*twitter*|*x*) pkg="com.twitter.android" ;;
+			*messenger*) pkg="com.facebook.orca" ;;
+			*facebook*) pkg="com.facebook.katana" ;;
+			*threads*) pkg="com.instagram.barcelona" ;;
 		esac
 	fi
 	echo "${pkg:-UNKNOWN}"
 }
 
-get_apkmirror_vers() { run_python_backend "apkmirror_vers" "$__APKMIRROR_URL__"; }
+get_apkmirror_vers() { run_python_backend "apkmirror_vers" "${__APKMIRROR_URL__:-}"; }
 
 dl_apkmirror() {
 	local url="${1%/}" version=$2 output=$3 arch=$4 dpi=$5
@@ -902,7 +926,7 @@ get_uptodown_resp() {
 }
 
 get_uptodown_pkg_name() { 
-	local pkg=$(grep -oP '^PKG:\K.*' <<<"$__UPTODOWN_RESP__" | head -1)
+	local pkg=$(grep -oP '^PKG:\K.*' <<<"${__UPTODOWN_RESP__:-}" | head -1)
 	if [ -z "$pkg" ] || [ "$pkg" = "UNKNOWN" ]; then
 		case "${__UPTODOWN_URL__,,}" in
 			*youtube-music*) pkg="com.google.android.apps.youtube.music" ;;
@@ -910,12 +934,15 @@ get_uptodown_pkg_name() {
 			*photos*) pkg="com.google.android.apps.photos" ;;
 			*reddit*) pkg="com.reddit.frontpage" ;;
 			*twitter*|*x*) pkg="com.twitter.android" ;;
+			*messenger*) pkg="com.facebook.orca" ;;
+			*facebook*) pkg="com.facebook.katana" ;;
+			*threads*) pkg="com.instagram.barcelona" ;;
 		esac
 	fi
 	echo "${pkg:-UNKNOWN}"
 }
 
-get_uptodown_vers() { run_python_backend "uptodown_vers" "$__UPTODOWN_URL__"; }
+get_uptodown_vers() { run_python_backend "uptodown_vers" "${__UPTODOWN_URL__:-}"; }
 
 dl_uptodown() {
 	local url="${1%/}" version=$2 output=$3 arch=$4 dpi=$5
@@ -942,8 +969,13 @@ dl_archive() {
 		return 0
 	fi
 
-	if ! path=$(grep -m1 "${version_f#v}-${arch// /}" <<<"$__ARCHIVE_RESP__"); then
-		path=$(grep -m1 "${version_f#v}-all" <<<"$__ARCHIVE_RESP__") || return 1
+	local arch_query="${arch// /}"
+	if [ "$arch_query" = "arm-v7a" ]; then arch_query="armeabi-v7a"; fi
+
+	if ! path=$(grep -m1 "${version_f}-${arch_query}" <<<"${__ARCHIVE_RESP__:-}"); then
+		if ! path=$(grep -m1 "${version_f}-${arch// /}" <<<"${__ARCHIVE_RESP__:-}"); then
+			path=$(grep -m1 "${version_f}-all" <<<"${__ARCHIVE_RESP__:-}") || return 1
+		fi
 	fi
 
 	if [ "${path##*.}" = "apkm" ]; then
@@ -955,17 +987,18 @@ dl_archive() {
 }
 get_archive_resp() {
 	local r
-	r=$(req "$1" -)
-	if [ -z "$r" ]; then return 1; else __ARCHIVE_RESP__=$(sed -n 's;^<a href="\(.*\)"[^"]*;\1;p' <<<"$r"); fi
+	r=$(req "$1" -) || return 1
+	__ARCHIVE_RESP__=$(sed -n 's;^<a href="\(.*\)"[^"]*;\1;p' <<<"$r")
 	__ARCHIVE_PKG_NAME__=$(awk -F/ '{print $NF}' <<<"$1")
 }
-get_archive_vers() { sed 's/^[^-]*-//;s/-\(all\|arm64-v8a\|arm-v7a\)\.apk//g' <<<"$__ARCHIVE_RESP__"; }
-get_archive_pkg_name() { echo "$__ARCHIVE_PKG_NAME__"; }
+get_archive_vers() { sed 's/^[^-]*-//;s/-\(all\|arm64-v8a\|arm-v7a\|armeabi-v7a\|x86_64\|x86\)\.apk//g' <<<"${__ARCHIVE_RESP__:-}"; }
+get_archive_pkg_name() { echo "${__ARCHIVE_PKG_NAME__:-UNKNOWN}"; }
 
 # -------------------- direct --------------------
 dl_direct() {
 	local url=$1 version=${2// /-} output=$3 arch=$4 _dpi=$5
-	if ! grep -q "${version_f#v}-${arch// /}" <<<"$url"; then
+	local version_f=${version#v}
+	if ! grep -q "${version_f}-${arch// /}" <<<"$url"; then
 		epr "Given direct-dlurl for $output is not compatible. Set proper 'arch' and 'version' options."
 		return 1
 	fi
@@ -976,8 +1009,8 @@ dl_direct() {
 		req "$url" "${output}" || return 1
 	fi
 }
-get_direct_vers() { cut -d- -f2 <<<"$__DIRECT_APKNAME__"; }
-get_direct_pkg_name() { cut -d- -f1 <<<"$__DIRECT_APKNAME__"; }
+get_direct_vers() { cut -d- -f2 <<<"${__DIRECT_APKNAME__:-}"; }
+get_direct_pkg_name() { cut -d- -f1 <<<"${__DIRECT_APKNAME__:-}"; }
 get_direct_resp() { __DIRECT_APKNAME__=$(awk -F/ '{print $NF}' <<<"$1"); }
 # --------------------------------------------------
 
@@ -1075,7 +1108,7 @@ build_rv() {
 		p_patcher_args+=("-f")
 	fi
 
-		if [[ $get_latest_ver == true ]]; then
+	if [[ $get_latest_ver == true ]]; then
 		if [[ "$version_mode" == beta ]]; then __AAV__="true"; else __AAV__="false"; fi
 		
 		# Scan through sources in priority order to securely fetch the latest version
@@ -1090,6 +1123,9 @@ build_rv() {
 				elif [[ "$dl_p" == "archive" ]]; then __ARCHIVE_URL__="${args[${dl_p}_dlurl]}"
 				elif [[ "$dl_p" == "direct" ]]; then __DIRECT_APKNAME__=$(awk -F/ '{print $NF}' <<<"${args[${dl_p}_dlurl]}"); fi
 				
+				if ! get_${dl_p}_resp "${args[${dl_p}_dlurl]}"; then
+					continue
+				fi
 				pkgvers=$(get_"${dl_from}"_vers)
 				version=$(get_highest_ver <<<"$pkgvers") || version=$(head -1 <<<"$pkgvers")
 				
