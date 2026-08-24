@@ -381,7 +381,7 @@ setup_python_backend() {
 	mkdir -p "$TEMP_DIR"
 	if [ ! -f "$TEMP_DIR/network_engine.py" ]; then
 		export PIP_BREAK_SYSTEM_PACKAGES=1
-		python3 -m pip install -q "curl_cffi>=0.16.1" "beautifulsoup4>=4.15.0" urllib3 requests 2>/dev/null || true
+		python3 -m pip install -q "curl_cffi>=0.7.0" beautifulsoup4 urllib3 requests 2>/dev/null || true
 		cat << 'EOF' > "$TEMP_DIR/network_engine.py"
 import sys, os, re, time, json, random
 from urllib.parse import urljoin
@@ -403,61 +403,122 @@ except ImportError as e:
 
 COOKIE_JAR = "/tmp/apkmirror_cookies.json"
 BROWSER_CFG = "/tmp/apkmirror_browser.txt"
+SOLVER_URL = os.getenv("CF_SOLVER_URL", "http://localhost:8000")
 
 class Scraper:
     def __init__(self):
         self.session = None
-        self.current_browser = "chrome150"
+        self.current_browser = "chrome120"
         
+    def _create_session(self, browser):
+        sess = cffi_requests.Session(impersonate=browser)
+        sess.headers.update({
+            "Accept-Language": "en-US,en;q=0.9",
+            "Sec-Ch-Ua-Mobile": "?0",
+            "Sec-Fetch-Dest": "document",
+            "Sec-Fetch-Mode": "navigate",
+            "Sec-Fetch-Site": "none",
+            "Sec-Fetch-User": "?1",
+            "Upgrade-Insecure-Requests": "1"
+        })
+        return sess
+
     def save_state(self):
         if self.session and self.current_browser:
             try:
                 with open(BROWSER_CFG, "w") as f: f.write(self.current_browser)
                 with open(COOKIE_JAR, "w") as f: json.dump(self.session.cookies.get_dict(), f)
-            except: pass
+            except Exception: pass
 
     def load_state(self):
         try:
             if os.path.exists(BROWSER_CFG) and os.path.exists(COOKIE_JAR):
                 with open(BROWSER_CFG, "r") as f: self.current_browser = f.read().strip()
-                self.session = cffi_requests.Session(impersonate=self.current_browser)
+                self.session = self._create_session(self.current_browser)
                 with open(COOKIE_JAR, "r") as f:
                     for k, v in json.load(f).items():
                         self.session.cookies.set(k, v)
                 return True
-        except: pass
+        except Exception: pass
         return False
 
     def clear_state(self):
         try:
             if os.path.exists(BROWSER_CFG): os.remove(BROWSER_CFG)
             if os.path.exists(COOKIE_JAR): os.remove(COOKIE_JAR)
-        except: pass
+        except Exception: pass
+
+    def _solve_via_docker_service(self, url):
+        try:
+            log(f"Attempting Cloudflare solve via local API for {url}...")
+            resp = requests.get(f"{SOLVER_URL}/cookies", params={"url": url}, timeout=60)
+            if resp.status_code != 200:
+                return False
+            data = resp.json()
+            cookies = data.get("cookies", {})
+            user_agent = data.get("user_agent")
+            if not cookies or not user_agent:
+                return False
+
+            self.clear_state()
+            self.current_browser = "chrome120"
+            sess = self._create_session("chrome120")
+            
+            if isinstance(cookies, dict):
+                for k, v in cookies.items():
+                    sess.cookies.set(k, v)
+            elif isinstance(cookies, list):
+                for c in cookies:
+                    if isinstance(c, dict) and "name" in c and "value" in c:
+                        sess.cookies.set(c["name"], c["value"])
+
+            sess.headers["User-Agent"] = user_agent
+            self.session = sess
+            self.save_state()
+            log("Cloudflare bypass cookies synchronized successfully.")
+            return True
+        except Exception:
+            return False
+
+    def is_challenge(self, r):
+        if not r: return True
+        if r.status_code in (403, 503, 429): return True
+        body = (r.text or "").lower()
+        return "cf-browser-verification" in body or "just a moment" in body or "attention required" in body
 
     def get_soup(self, url, referer=None):
         headers = {"Referer": referer} if referer else {}
-        time.sleep(random.uniform(1.5, 3.0))
+        time.sleep(random.uniform(1.0, 2.5))
         
         if self.load_state() or self.session:
             try:
                 r = self.session.get(url, headers=headers, timeout=20, allow_redirects=True)
-                if r.status_code < 400 and "cf-browser-verification" not in r.text and "Just a moment" not in r.text:
+                if not self.is_challenge(r):
+                    self.save_state()
+                    return BeautifulSoup(r.text, 'html.parser'), r
+            except Exception:
+                pass
+
+        if self._solve_via_docker_service(url):
+            try:
+                r = self.session.get(url, headers=headers, timeout=20, allow_redirects=True)
+                if not self.is_challenge(r):
                     self.save_state()
                     return BeautifulSoup(r.text, 'html.parser'), r
             except Exception:
                 pass
 
         self.clear_state()
-        browsers = ["chrome150","chrome146", "chrome124", "chrome120", "edge99", "safari15_5", "chrome116", "chrome110"]
+        browsers = ["chrome124", "chrome120", "edge99", "safari15_5", "chrome116", "chrome110"]
         random.shuffle(browsers)
         
         for browser in browsers:
             try:
-                time.sleep(random.uniform(2.5, 4.5))
-                new_session = cffi_requests.Session(impersonate=browser)
+                time.sleep(random.uniform(2.0, 4.0))
+                new_session = self._create_session(browser)
                 r = new_session.get(url, headers=headers, timeout=20, allow_redirects=True)
                 
-                if r.status_code in (403, 503) or "Just a moment" in r.text or "cf-browser-verification" in r.text:
+                if self.is_challenge(r):
                     continue
                     
                 self.session = new_session
@@ -622,8 +683,8 @@ def main():
         cat = url.rstrip("/").split("/")[-1]
         soup, _ = scraper.get_soup(f"https://www.apkmirror.com/uploads/?appcategory={cat}")
         if soup:
-            for a in soup.find_all("a", href=re.compile(r"-release/$")):
-                txt = a.text.strip()
+            for a in soup.select("#primary a.fontBlack[href*='-release/']"):
+                txt = a.get_text(strip=True)
                 if txt and "beta" not in txt.lower() and "alpha" not in txt.lower():
                     print(txt.split()[-1])
 
@@ -662,7 +723,9 @@ def main():
         if not soup_rel:
             sys.exit(1)
             
-        rows = [r for r in soup_rel.select("div.table-row") if len(r.select("div.table-cell")) >= 4]
+        rows = soup_rel.select("div.table-row.headerFont")
+        if not rows:
+            rows = [r for r in soup_rel.select("div.table-row") if len(r.select("div.table-cell")) >= 4]
         
         apparch = {"universal", "noarch", "arm64-v8a + armeabi-v7a", "arm64-v8a + armeabi"}
         if arch != "all": apparch.add(arch)
@@ -673,6 +736,7 @@ def main():
         for target_type in ["APK", "BUNDLE"]:
             for row in reversed(rows):
                 cells = row.select("div.table-cell")
+                if len(cells) < 4: continue
                 badge = cells[0].select_one(".apkm-badge")
                 b_type = badge.get_text(strip=True).upper() if badge else "APK"
                 
@@ -681,7 +745,7 @@ def main():
                 arch_text = cells[1].get_text(strip=True)
                 dpi_text = cells[3].get_text(strip=True)
                 
-                dpi_ok = not dpi_text or "nodpi" in dpi_text or "anydpi" in dpi_text or (dpi and dpi in dpi_text)
+                dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
                 if arch_text in apparch and dpi_ok:
                     link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
                     if link and link.get("href"):
@@ -822,7 +886,7 @@ def main():
                     try:
                         matched_id = child.select_one(".v-report")["data-file-id"]
                         break
-                    except: continue
+                    except Exception: continue
 
             if matched_id:
                 soup_ver, _ = scraper.get_soup(f"{url}/download/{matched_id}-x")
