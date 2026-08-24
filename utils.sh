@@ -942,10 +942,16 @@ dl_archive() {
 		return 0
 	fi
 
-	path=$(grep -m1 "${version_f}-${arch// /}" <<<"$__ARCHIVE_RESP__" || grep -m1 "${version_f}" <<<"$__ARCHIVE_RESP__") || return 1
-	if [[ "${path##*.}" == "apkm" ]]; then output_m="${output}.apkm"; else output_m=$output; fi
-	_req "${url}/${path}" "$output_m" || return 1
-	if [[ "${path##*.}" == "apkm" ]]; then merge_splits "$output_m" "$output"; fi
+	if ! path=$(grep -m1 "${version_f#v}-${arch// /}" <<<"$__ARCHIVE_RESP__"); then
+		path=$(grep -m1 "${version_f#v}-all" <<<"$__ARCHIVE_RESP__") || return 1
+	fi
+
+	if [ "${path##*.}" = "apkm" ]; then
+		req "${url}/${path}" "${output}.apkm" || return 1
+		merge_splits "${output}.apkm" "$output"
+	else
+		req "${url}/${path}" "${output}" || return 1
+	fi
 }
 get_archive_resp() {
 	local r
