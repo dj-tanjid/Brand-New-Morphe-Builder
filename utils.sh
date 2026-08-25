@@ -381,7 +381,7 @@ setup_python_backend() {
 	mkdir -p "$TEMP_DIR"
 	if [ ! -f "$TEMP_DIR/network_engine.py" ]; then
 		export PIP_BREAK_SYSTEM_PACKAGES=1
-		python3 -m pip install -q "curl_cffi>=0.16.1" "beautifulsoup4>=4.15.0" "urllib3>=2.7.0" requests 2>/dev/null || true
+		python3 -m pip install -q "curl_cffi>=0.16.2" "beautifulsoup4>=4.15.0" "urllib3>=2.7.0" requests 2>/dev/null || true
 		cat << 'EOF' > "$TEMP_DIR/network_engine.py"
 import sys, os, re, time, json, random
 from urllib.parse import urljoin
