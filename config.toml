@@ -135,7 +135,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/messe
 uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
 
 [Threads-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Treads"
 pkg-name = "com.instagram.barcelona"
 patches-source = "RookieEnough/De-Vanced"
@@ -150,7 +150,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads-an-instagram-
 uptodown-dlurl = "https://threads.en.uptodown.com/android"
 
 [Twitter-Piko]
-enabled = false
+enabled = true
 app-name = "Twitter"
 patches-source = "crimera/piko"
 cli-source = "MorpheApp/morphe-desktop"
@@ -171,16 +171,18 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko]
-enabled = false
+enabled = true
 app-name = "X"
-patches-source = "crimera/piko"
-cli-source = "MorpheApp/morphe-desktop"
+# patches-source = "crimera/piko"
+patches-source = ["github:crimera/piko", "gitlab:inotia00/x-shim"]
+cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Piko"
 build-mode = "apk" # Options 'apk', 'module', or 'both'
 version = "latest" # 'auto', 'experimental', 'latest' or a version number
 # version = "12.15.2-release.0"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = ["dev", "latest"] # Or "dev" to apply to both
 included-patches = """\
     'Dynamic color' \
     'Browse tweet object' \
@@ -191,7 +193,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [Instagram-Piko]
-enabled = true
+enabled = false
 app-name = "Instagram"
 patches-source = "crimera/piko"
 cli-source = "MorpheApp/morphe-desktop"
