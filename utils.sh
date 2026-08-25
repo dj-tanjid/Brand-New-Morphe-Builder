@@ -408,7 +408,7 @@ SOLVER_URL = os.getenv("CF_SOLVER_URL", "http://localhost:8000")
 class Scraper:
     def __init__(self):
         self.session = None
-        self.current_browser = "chrome120"
+        self.current_browser = "chrome150"
         
     def _create_session(self, browser):
         sess = cffi_requests.Session(impersonate=browser)
@@ -461,8 +461,8 @@ class Scraper:
                 return False
 
             self.clear_state()
-            self.current_browser = "chrome120"
-            sess = self._create_session("chrome120")
+            self.current_browser = "chrome150"
+            sess = self._create_session("chrome150")
             
             if isinstance(cookies, dict):
                 for k, v in cookies.items():
@@ -511,7 +511,7 @@ class Scraper:
                 pass
 
         self.clear_state()
-        browsers = ["chrome124", "chrome120", "edge99", "safari15_5", "chrome116", "chrome110"]
+        browsers = ["chrome150", "chrome146", "chrome124", "chrome120", "edge99", "safari15_5", "chrome116", "chrome110"]
         random.shuffle(browsers)
         
         for browser in browsers:
