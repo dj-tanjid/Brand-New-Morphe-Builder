@@ -134,13 +134,13 @@ If you are experiencing issues with the classic Magisk/KernelSU mount method for
 
 Special thanks to the open-source developers who make this ecosystem possible:
 
-* [j-hc](https://github.com/j-hc) — Original creator of the ReVanced Magisk Module builder.
-* [Peter Noël Muller](https://github.com/peternmuller) & [Nguyễn Văn Bằng](https://github.com/nvbangg) — For foundational scripts and inspirations.
-* [Morphe Team](https://github.com/MorpheApp) — Next-generation patcher and desktop CLI.
-* [crimera](https://github.com/crimera) — Developer of the Piko patches for Twitter/X and Instagram.
-* [Aaron Veil (anddea)](https://github.com/anddea) — ReVanced Extended ecosystem patches.
-* [Sarthak Sinha (RookieEnough)](https://github.com/RookieEnough/) — De-Vanced patches.
-* [ReVanced Team](https://github.com/ReVanced) — Original patcher framework and bytecode tooling.
+* [j-hc](https://github.com/j-hc) : Original creator of the ReVanced Magisk Module builder.
+* [Peter Noël Muller](https://github.com/peternmuller) & [Nguyễn Văn Bằng](https://github.com/nvbangg) : For foundational scripts and inspirations.
+* [Morphe Team](https://github.com/MorpheApp) : Next-generation patcher and desktop CLI.
+* [crimera](https://github.com/crimera) : Developer of the Piko patches for Twitter/X and Instagram.
+* [Aaron Veil (anddea)](https://github.com/anddea) : ReVanced Extended ecosystem patches.
+* [Sarthak Sinha (RookieEnough)](https://github.com/RookieEnough/) : De-Vanced patches.
+* [ReVanced Team](https://github.com/ReVanced) : Original patcher framework and bytecode tooling.
 
 ---
 
