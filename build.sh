@@ -15,7 +15,7 @@ export MODULE_TEMPLATE_DIR CWD TEMP_DIR BIN_DIR BUILD_DIR DL_SRCS GH_HEADER NEXT
 trap "abort" INT
 
 if [ "${1-}" = "clean" ]; then
-	rm -r "$TEMP_DIR" "$BUILD_DIR" build.md
+	rm -rf "$TEMP_DIR" "$BUILD_DIR" build.md
 	exit 0
 fi
 
@@ -38,8 +38,8 @@ PARALLEL_JOBS=1
 REMOVE_RV_INTEGRATIONS_CHECKS=$(toml_get "$main_config_t" remove-rv-integrations-checks) || REMOVE_RV_INTEGRATIONS_CHECKS="true"
 DEF_PATCHES_VER=$(toml_get "$main_config_t" patches-version) || DEF_PATCHES_VER="latest"
 DEF_CLI_VER=$(toml_get "$main_config_t" cli-version) || DEF_CLI_VER="latest"
-DEF_PATCHES_SRC=$(toml_get "$main_config_t" patches-source) || DEF_PATCHES_SRC="ReVanced/revanced-patches"
-DEF_CLI_SRC=$(toml_get "$main_config_t" cli-source) || DEF_CLI_SRC="ReVanced/revanced-cli"
+DEF_PATCHES_SRC=$(toml_get "$main_config_t" patches-source) || DEF_PATCHES_SRC="github:MorpheApp/morphe-patches"
+DEF_CLI_SRC=$(toml_get "$main_config_t" cli-source) || DEF_CLI_SRC="github:MorpheApp/morphe-desktop"
 DEF_RV_BRAND=$(toml_get "$main_config_t" rv-brand) || DEF_RV_BRAND="ReVanced"
 mkdir -p "$TEMP_DIR" "$BUILD_DIR"
 
@@ -91,7 +91,13 @@ for table_name in $(toml_get_table_names); do
 		epr "Could not get prebuilts"
 		continue
 	fi
-	read -r patches_jar cli_jar <<<"$PREBUILTS"
+
+	# Parse prebuilts dynamically (handles 1 or more patch jars + CLI jar as last element)
+	read -r -a pb_all <<<"$PREBUILTS"
+	cli_jar="${pb_all[-1]}"
+	unset 'pb_all[-1]'
+	patches_jar="${pb_all[*]}"
+
 	app_args[cli]=$cli_jar
 	app_args[ptjar]=$patches_jar
 	app_args[rv_brand]=$(toml_get "$t" rv-brand) || app_args[rv_brand]=$DEF_RV_BRAND
@@ -172,7 +178,7 @@ log "\n- Install [ReVanced GmsCore](https://github.com/ReVanced/GmsCore/releases
 log "- (Optional) Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music modules from Google Play Store."
 log "- (Optional) Import my [**Custom Settings**](../teejay/custom_settings-by_tanjid) into your application. [*How to do this?*](../teejay/?tab=readme-ov-file#import-custom-settings-in-revancedmorphe-applications)"
 log "\nPatches and CLI Sources :"
-log "$(cat "$TEMP_DIR"/*/changelog.md)"
+log "$(cat "$TEMP_DIR"/*/changelog.md 2>/dev/null || true)"
 
 SKIPPED=$(cat "$TEMP_DIR"/skipped 2>/dev/null || :)
 if [ -n "$SKIPPED" ]; then
