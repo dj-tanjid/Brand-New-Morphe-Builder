@@ -27,7 +27,6 @@ This builder is an advanced, hardened fork of [j-hc's revanced-magisk-module](ht
 * **Multi-Bundle Patch Support**: Combine multiple independent patch repositories (e.g., `crimera/piko` + `inotia00/x-shim`) in a single compilation run for an app target.
 * **5-Tier Resilient Download Engine**: Automatically resolves APKs using an intelligent fallback pipeline:
   $$\text{APKMirror} \longrightarrow \text{Uptodown} \longrightarrow \text{GitHub Releases} \longrightarrow \text{Direct DL} \longrightarrow \text{Archive.org}$$
-* **Dockerized Cloudflare Challenge Solver**: Integrated background bypass solver capable of resolving Cloudflare Turnstile and interactive JS challenges dynamically.
 * **Explicit Package ID Overrides (`pkg-name`)**: Eliminates scraping dependencies and guarantees continuous builds even during anti-bot protection updates.
 * **Multi-Architecture Matrix Compilation (`arch = "both"`)**: Concurrently packages architecture-tailored APKs and universal root modules (`arm64-v8a`, `armeabi-v7a`, `x86_64`) with automated odex optimization.
 
