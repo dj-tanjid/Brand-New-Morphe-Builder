@@ -12,6 +12,9 @@ if [ "${GITHUB_TOKEN-}" ]; then GH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 NEXT_VER_CODE=${NEXT_VER_CODE:-$(date +'%Y%m%d')}
 OS=$(uname -o)
 
+DEF_PATCHES_SRC="github:MorpheApp/morphe-patches"
+DEF_CLI_SRC="github:MorpheApp/morphe-desktop"
+
 toml_prep() {
 	if [ ! -f "$1" ]; then return 1; fi
 	if [ "${1##*.}" == toml ]; then
@@ -25,7 +28,7 @@ toml_get_table_main() { jq -r -e 'to_entries | map(select(.value | type != "obje
 toml_get_table() { jq -r -e ".\"${1}\"" <<<"$__TOML__"; }
 toml_get() {
 	local op quote_placeholder=$'\001'
-	op=$(jq -r ".\"${2}\" | values" <<<"$1" 2>/dev/null)
+	op=$(jq -r ".\"${2}\" | if type == \"array\" then join(\" \") else . end | values" <<<"$1" 2>/dev/null)
 	if [[ -n "$op" && "$op" != "null" ]]; then
 		op=$(echo "$op" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 		op=${op//\\\'/$quote_placeholder}
@@ -67,73 +70,110 @@ java() {
 }
 
 get_prebuilts() {
-	local cli_src=${1:-} cli_ver=${2:-latest} patches_src=${3:-} patches_ver=${4:-latest}
-	pr "Getting prebuilts (${patches_src%/*})" >&2
-	local cl_dir=${patches_src%/*}
-	cl_dir=${TEMP_DIR}/${cl_dir,,}-rv
-	[[ -d "$cl_dir" ]] || mkdir -p "$cl_dir"
+	local cli_src=${1:-$DEF_CLI_SRC} cli_ver=${2:-latest}
+	local patches_src=${3:-$DEF_PATCHES_SRC} patches_ver=${4:-latest}
 
-	for src_ver in "Patches $patches_src $patches_ver" "CLI $cli_src $cli_ver"; do
-		set -- $src_ver
-		local tag=$1 src=$2 ver=${3-}
+	read -r -a p_src_arr <<< "$(echo "$patches_src" | tr ',' ' ')"
+	read -r -a p_ver_arr <<< "$(echo "$patches_ver" | tr ',' ' ')"
 
-		local dir=${src%/*}
-		dir=${TEMP_DIR}/${dir,,}-rv
+	local collected_patch_files=()
+
+	for i in "${!p_src_arr[@]}"; do
+		local raw_p_src="${p_src_arr[$i]}"
+		local p_ver="${p_ver_arr[$i]:-${p_ver_arr[0]:-latest}}"
+
+		local host="github"
+		local clean_src="$raw_p_src"
+		if [[ "$raw_p_src" =~ ^gitlab:(.+) ]]; then
+			host="gitlab"
+			clean_src="${BASH_REMATCH[1]}"
+		elif [[ "$raw_p_src" =~ ^github:(.+) ]]; then
+			host="github"
+			clean_src="${BASH_REMATCH[1]}"
+		fi
+
+		local org="${clean_src%/*}"
+		local dir="${TEMP_DIR}/${org,,}-rv"
 		[[ -d "$dir" ]] || mkdir -p "$dir"
 
-		local rv_rel="https://api.github.com/repos/${src}/releases" name_ver
-		if [[ "$ver" == "dev" ]]; then
-			local resp
-			resp=$(gh_req "$rv_rel" -) || return 1
-			ver=$(jq -e -r '.[] | .tag_name' <<<"$resp" | get_highest_ver) || return 1
-		fi
-		if [[ "$ver" == "latest" ]]; then
-			rv_rel+="/latest"
-			name_ver="*"
-		else
-			rv_rel+="/tags/${ver}"
-			name_ver="$ver"
+		pr "Getting prebuilts (${clean_src})" >&2
+
+		local name_ver="*"
+		if [[ "$p_ver" != "latest" ]]; then
+			name_ver="$p_ver"
 		fi
 
-		local file
-		if [ "$tag" = "CLI" ]; then
-			file=$(find "$dir" -maxdepth 1 -name "*cli-${name_ver#v}*.jar" -o -name "*desktop-${name_ver#v}*.jar" -type f 2>/dev/null)
-			local grab_cl=false
-		elif [ "$tag" = "Patches" ]; then
-			file=$(find "$dir" -maxdepth 1 -name "*patches-${name_ver#v}.*" -type f 2>/dev/null)
-			local grab_cl=true
-		else abort unreachable; fi
-
-		local url tag_name matches
-		if [ "$ver" = "latest" ]; then
-			file=$(grep -v '/[^/]*dev[^/]*$' <<<"$file" | head -1)
-		else
-			file=$(grep "/[^/]*${ver#v}[^/]*\$" <<<"$file" | head -1)
+		local file=""
+		file=$(find "$dir" -maxdepth 1 -name "*patches-${name_ver#v}.*" -type f 2>/dev/null)
+		if [[ -n "$file" ]]; then
+			if [ "$p_ver" = "latest" ]; then
+				file=$(grep -v '/[^/]*dev[^/]*$' <<<"$file" | head -1)
+			else
+				file=$(grep "/[^/]*${p_ver#v}[^/]*\$" <<<"$file" | head -1)
+			fi
 		fi
+
+		local grab_cl=true
 		if [[ -z "$file" ]]; then
-			local resp asset name
-			resp=$(gh_req "$rv_rel" -) || return 1
-			tag_name=$(jq -r '.tag_name' <<<"$resp") || return 1
-			matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp") || return 1
+			local resp="" matches="" asset="" name="" tag_name=""
+			if [ "$host" = "gitlab" ]; then
+				local project_enc="${clean_src//\//%2F}"
+				local gl_rel="https://gitlab.com/api/v4/projects/${project_enc}/releases"
+				if [[ "$p_ver" == "dev" ]]; then
+					resp=$(req "$gl_rel" -) || return 1
+					p_ver=$(jq -e -r '.[].tag_name' <<<"$resp" | get_highest_ver) || return 1
+				fi
+				if [[ "$p_ver" == "latest" ]]; then
+					resp=$(req "${gl_rel}/permalink/latest" -) || return 1
+				else
+					resp=$(req "${gl_rel}/${p_ver}" -) || return 1
+				fi
+				tag_name=$(jq -r '.tag_name // empty' <<<"$resp") || return 1
+				matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp") || return 1
+			else
+				local gh_rel="https://api.github.com/repos/${clean_src}/releases"
+				if [[ "$p_ver" == "dev" ]]; then
+					resp=$(gh_req "$gh_rel" -) || return 1
+					p_ver=$(jq -e -r '.[] | .tag_name' <<<"$resp" | get_highest_ver) || return 1
+				fi
+				if [[ "$p_ver" == "latest" ]]; then
+					gh_rel+="/latest"
+				else
+					gh_rel+="/tags/${p_ver}"
+				fi
+				resp=$(gh_req "$gh_rel" -) || return 1
+				tag_name=$(jq -r '.tag_name' <<<"$resp") || return 1
+				matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp") || return 1
+			fi
+
 			if [[ "$(jq 'length' <<<"$matches")" -gt 1 ]]; then
 				local matches_new
-				matches_new=$(jq -e -r 'map(select(.name | contains("-dev") | not))' <<<"$matches")
+				matches_new=$(jq -e -r 'map(select(.name | contains("-dev") | not))' <<<"$matches" 2>/dev/null)
 				if [[ "$(jq 'length' <<<"$matches_new")" -eq 1 ]]; then
 					matches=$matches_new
 				fi
 			fi
+
 			if [[ "$(jq 'length' <<<"$matches")" -eq 0 ]]; then
-				epr "No asset was found"
+				epr "No patch asset was found for ${raw_p_src}"
 				return 1
-			elif [[ "$(jq 'length' <<<"$matches")" -ne 1 ]]; then
-				wpr "More than 1 asset was found for this release. Falling back to the first one found..."
 			fi
+
 			asset=$(jq -r ".[0]" <<<"$matches")
-			url=$(jq -r .url <<<"$asset")
-			name=$(jq -r .name <<<"$asset")
+			name=$(jq -r '.name' <<<"$asset")
 			file="${dir}/${name}"
-			gh_dl "$file" >&2 "$url" || return 1
-			echo "$tag: $(cut -d/ -f1 <<<"$src")/${name}  " >>"${cl_dir}/changelog.md"
+
+			if [ "$host" = "gitlab" ]; then
+				local url
+				url=$(jq -r '.direct_asset_url // .url' <<<"$asset")
+				pr "Getting '$file' from '$url'" >&2
+				_req "$url" "$file" || return 1
+			else
+				local url
+				url=$(jq -r '.url' <<<"$asset")
+				gh_dl "$file" >&2 "$url" || return 1
+			fi
+			echo "Patches: ${org}/${name}  " >>"${dir}/changelog.md"
 		else
 			grab_cl=false
 			name=$(basename "$file")
@@ -141,11 +181,19 @@ get_prebuilts() {
 			tag_name=v${tag_name%.*}
 		fi
 
-		if [[ "$tag" == "Patches" ]]; then
-			if [[ "$grab_cl" == true ]]; then echo -e "[Changelog](https://github.com/${src}/releases/tag/${tag_name})\n" >>"${cl_dir}/changelog.md"; fi
-			if [[ "${REMOVE_RV_INTEGRATIONS_CHECKS:-}" == true ]]; then
-				local extensions_ext
-				extensions_ext=$(unzip -l "${file}" "extensions/shared.*" | grep -o "shared\..*") extensions_ext="${extensions_ext#*.}"
+		if [[ "$grab_cl" == true ]]; then
+			if [ "$host" = "gitlab" ]; then
+				echo -e "[Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name})\n" >>"${dir}/changelog.md"
+			else
+				echo -e "[Changelog](https://github.com/${clean_src}/releases/tag/${tag_name})\n" >>"${dir}/changelog.md"
+			fi
+		fi
+
+		if [[ "${REMOVE_RV_INTEGRATIONS_CHECKS:-}" == true ]]; then
+			local extensions_ext
+			extensions_ext=$(unzip -l "${file}" "extensions/shared.*" 2>/dev/null | grep -o "shared\..*") || true
+			extensions_ext="${extensions_ext#*.}"
+			if [[ -n "$extensions_ext" ]]; then
 				if ! (
 					mkdir -p "${file}-zip" || return 1
 					unzip -qo "${file}" -d "${file}-zip" || return 1
@@ -157,12 +205,104 @@ get_prebuilts() {
 				) >&2; then
 					echo >&2 "Patching revanced-integrations failed"
 				fi
-				rm -r "${file}-zip" || :
+				rm -rf "${file}-zip" || :
 			fi
 		fi
-		echo -n "$file "
+
+		collected_patch_files+=("$file")
 	done
-	echo
+
+	# Fetch CLI
+	local cli_host="github"
+	local clean_cli="$cli_src"
+	if [[ "$cli_src" =~ ^gitlab:(.+) ]]; then
+		cli_host="gitlab"
+		clean_cli="${BASH_REMATCH[1]}"
+	elif [[ "$cli_src" =~ ^github:(.+) ]]; then
+		cli_host="github"
+		clean_cli="${BASH_REMATCH[1]}"
+	fi
+
+	local cli_org="${clean_cli%/*}"
+	local cli_dir="${TEMP_DIR}/${cli_org,,}-rv"
+	[[ -d "$cli_dir" ]] || mkdir -p "$cli_dir"
+
+	local cli_name_ver="*"
+	if [[ "$cli_ver" != "latest" ]]; then
+		cli_name_ver="$cli_ver"
+	fi
+
+	local cli_file=""
+	cli_file=$(find "$cli_dir" -maxdepth 1 -name "*cli-${cli_name_ver#v}*.jar" -o -name "*desktop-${cli_name_ver#v}*.jar" -type f 2>/dev/null)
+	if [[ -n "$cli_file" ]]; then
+		if [ "$cli_ver" = "latest" ]; then
+			cli_file=$(grep -v '/[^/]*dev[^/]*$' <<<"$cli_file" | head -1)
+		else
+			cli_file=$(grep "/[^/]*${cli_ver#v}[^/]*\$" <<<"$cli_file" | head -1)
+		fi
+	fi
+
+	if [[ -z "$cli_file" ]]; then
+		local resp="" matches="" asset="" name=""
+		if [ "$cli_host" = "gitlab" ]; then
+			local project_enc="${clean_cli//\//%2F}"
+			local gl_rel="https://gitlab.com/api/v4/projects/${project_enc}/releases"
+			if [[ "$cli_ver" == "dev" ]]; then
+				resp=$(req "$gl_rel" -) || return 1
+				cli_ver=$(jq -e -r '.[].tag_name' <<<"$resp" | get_highest_ver) || return 1
+			fi
+			if [[ "$cli_ver" == "latest" ]]; then
+				resp=$(req "${gl_rel}/permalink/latest" -) || return 1
+			else
+				resp=$(req "${gl_rel}/${cli_ver}" -) || return 1
+			fi
+			matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp") || return 1
+		else
+			local gh_rel="https://api.github.com/repos/${clean_cli}/releases"
+			if [[ "$cli_ver" == "dev" ]]; then
+				resp=$(gh_req "$gh_rel" -) || return 1
+				cli_ver=$(jq -e -r '.[] | .tag_name' <<<"$resp" | get_highest_ver) || return 1
+			fi
+			if [[ "$cli_ver" == "latest" ]]; then
+				gh_rel+="/latest"
+			else
+				gh_rel+="/tags/${cli_ver}"
+			fi
+			resp=$(gh_req "$gh_rel" -) || return 1
+			matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp") || return 1
+		fi
+
+		if [[ "$(jq 'length' <<<"$matches")" -gt 1 ]]; then
+			local matches_new
+			matches_new=$(jq -e -r 'map(select(.name | contains("-dev") | not))' <<<"$matches" 2>/dev/null)
+			if [[ "$(jq 'length' <<<"$matches_new")" -eq 1 ]]; then
+				matches=$matches_new
+			fi
+		fi
+
+		if [[ "$(jq 'length' <<<"$matches")" -eq 0 ]]; then
+			epr "No CLI asset was found for ${cli_src}"
+			return 1
+		fi
+
+		asset=$(jq -r ".[0]" <<<"$matches")
+		name=$(jq -r '.name' <<<"$asset")
+		cli_file="${cli_dir}/${name}"
+
+		if [ "$cli_host" = "gitlab" ]; then
+			local url
+			url=$(jq -r '.direct_asset_url // .url' <<<"$asset")
+			pr "Getting '$cli_file' from '$url'" >&2
+			_req "$url" "$cli_file" || return 1
+		else
+			local url
+			url=$(jq -r '.url' <<<"$asset")
+			gh_dl "$cli_file" >&2 "$url" || return 1
+		fi
+		echo "CLI: ${cli_org}/${name}  " >>"${cli_dir}/changelog.md"
+	fi
+
+	echo "${collected_patch_files[*]} ${cli_file}"
 }
 
 set_prebuilts() {
@@ -186,34 +326,73 @@ config_update() {
 		t=$(toml_get_table "$table_name")
 		enabled=$(toml_get "$t" enabled) || enabled=true
 		if [ "$enabled" = "false" ]; then continue; fi
+
 		PATCHES_SRC=$(toml_get "$t" patches-source) || PATCHES_SRC=$DEF_PATCHES_SRC
 		PATCHES_VER=$(toml_get "$t" patches-version) || PATCHES_VER=$DEF_PATCHES_VER
-		if [[ -v sources["$PATCHES_SRC/$PATCHES_VER"] ]]; then
-			if [ "${sources["$PATCHES_SRC/$PATCHES_VER"]}" = 1 ]; then upped+=("$table_name"); fi
-		else
-			sources["$PATCHES_SRC/$PATCHES_VER"]=0
-			local rv_rel="https://api.github.com/repos/${PATCHES_SRC}/releases"
-			if [ "$PATCHES_VER" = "dev" ]; then
-				last_patches=$(gh_req "$rv_rel" - | jq -e -r '.[0]') || continue
-			elif [ "$PATCHES_VER" = "latest" ]; then
-				last_patches=$(gh_req "$rv_rel/latest" -) || continue
+
+		read -r -a p_src_arr <<< "$(echo "$PATCHES_SRC" | tr ',' ' ')"
+		read -r -a p_ver_arr <<< "$(echo "$PATCHES_VER" | tr ',' ' ')"
+
+		for i in "${!p_src_arr[@]}"; do
+			local raw_src="${p_src_arr[$i]}"
+			local p_ver="${p_ver_arr[$i]:-${p_ver_arr[0]:-latest}}"
+
+			local host="github"
+			local clean_src="$raw_src"
+			if [[ "$raw_src" =~ ^gitlab:(.+) ]]; then
+				host="gitlab"
+				clean_src="${BASH_REMATCH[1]}"
+			elif [[ "$raw_src" =~ ^github:(.+) ]]; then
+				host="github"
+				clean_src="${BASH_REMATCH[1]}"
+			fi
+			local org="${clean_src%/*}"
+
+			if [[ -v sources["$raw_src/$p_ver"] ]]; then
+				if [ "${sources["$raw_src/$p_ver"]}" = 1 ]; then upped+=("$table_name"); fi
 			else
-				last_patches=$(gh_req "$rv_rel/tags/${PATCHES_VER}" -) || continue
-			fi
-			if ! last_patches=$(jq -e -r '.assets[] | select(.name | (endswith("asc") or endswith("json")) | not) | .name' <<<"$last_patches"); then
-				abort "config_update error: '$last_patches'"
-			fi
-			if [ "$last_patches" ]; then
-				if ! OP=$(grep "^Patches: ${PATCHES_SRC%%/*}/" build.md | grep -m1 "$last_patches"); then
-					sources["$PATCHES_SRC/$PATCHES_VER"]=1
-					prcfg=true
-					upped+=("$table_name")
+				sources["$raw_src/$p_ver"]=0
+				local last_patches=""
+				if [ "$host" = "gitlab" ]; then
+					local project_enc="${clean_src//\//%2F}"
+					local gl_rel="https://gitlab.com/api/v4/projects/${project_enc}/releases"
+					if [ "$p_ver" = "dev" ]; then
+						last_patches=$(req "$gl_rel" - | jq -e -r '.[0]') || continue
+					elif [ "$p_ver" = "latest" ]; then
+						last_patches=$(req "$gl_rel/permalink/latest" -) || continue
+					else
+						last_patches=$(req "$gl_rel/${p_ver}" -) || continue
+					fi
+					if ! last_patches=$(jq -e -r '.assets.links[]? | select(.name | (endswith("asc") or endswith("json")) | not) | .name' <<<"$last_patches"); then
+						continue
+					fi
 				else
-					echo "$OP" >>"$TEMP_DIR"/skipped
+					local rv_rel="https://api.github.com/repos/${clean_src}/releases"
+					if [ "$p_ver" = "dev" ]; then
+						last_patches=$(gh_req "$rv_rel" - | jq -e -r '.[0]') || continue
+					elif [ "$p_ver" = "latest" ]; then
+						last_patches=$(gh_req "$rv_rel/latest" -) || continue
+					else
+						last_patches=$(gh_req "$rv_rel/tags/${p_ver}" -) || continue
+					fi
+					if ! last_patches=$(jq -e -r '.assets[] | select(.name | (endswith("asc") or endswith("json")) | not) | .name' <<<"$last_patches"); then
+						continue
+					fi
+				fi
+
+				if [ -n "$last_patches" ]; then
+					if ! OP=$(grep "^Patches: ${org}/" build.md 2>/dev/null | grep -m1 "$last_patches"); then
+						sources["$raw_src/$p_ver"]=1
+						prcfg=true
+						upped+=("$table_name")
+					else
+						echo "$OP" >>"$TEMP_DIR"/skipped
+					fi
 				fi
 			fi
-		fi
+		done
 	done
+
 	if [ "$prcfg" = true ]; then
 		local query=""
 		for table in "${upped[@]}"; do
@@ -297,7 +476,7 @@ get_patch_last_supported_ver() {
 			return
 		fi
 	fi
-	op=$(patches_list_versions "$cli_jar" "$patches_jar" "$pkg_name" "$is_experimental") || return 1
+	op=$(patches_list_versions "${args[cli]}" "${args[ptjar]}" "$pkg_name" "$is_experimental") || return 1
 	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | awk '{$1=$1}1')
 	if [[ "$op" == "Any" ]]; then return; fi
 	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}
@@ -305,16 +484,15 @@ get_patch_last_supported_ver() {
 		if grep -Fq "$pkg_name" <<<"$list_patches"; then
 			return
 		else
-			abort "No patches found for '$pkg_name' in patches '$patches_jar'"
+			abort "No patches found for '$pkg_name' in patches '${args[ptjar]}'"
 		fi
 	fi
 	grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || return 1
 }
 
 patches_list_versions() {
-	local cli_jar=$1 patches_jar=$2 pkg_name=$3 is_experimental=$4 op cmd
-	local cmd_base="java -jar '$cli_jar' list-versions"
-
+	local cli_jar=$1 patches_jars=$2 pkg_name=$3 is_experimental=$4
+	local combined_op="" op="" cmd cmd_base="java -jar '$cli_jar' list-versions"
 	local cli_name
 	cli_name=$(basename "$cli_jar")
 	if [ "${cli_name::8}" = "revanced" ]; then
@@ -323,33 +501,46 @@ patches_list_versions() {
 		cmd_base+=" -x"
 	fi
 
-	cmd="${cmd_base} --patches='$patches_jar' -f '$pkg_name'"
-	if op=$(eval "$cmd" 2>&1); then
-		echo "$op"
-		return
-	fi
+	for pj in $patches_jars; do
+		cmd="${cmd_base} --patches='$pj' -f '$pkg_name'"
+		if op=$(eval "$cmd" 2>&1); then
+			combined_op+="$op"$'\n'
+			continue
+		fi
+		cmd="${cmd_base} '$pj' -f '$pkg_name'"
+		if op=$(eval "$cmd" 2>&1); then
+			combined_op+="$op"$'\n'
+		fi
+	done
 
-	cmd="${cmd_base} '$patches_jar' -f '$pkg_name'"
-	if op=$(eval "$cmd" 2>&1); then
-		echo "$op"
-		return
+	if [[ -n "$combined_op" ]]; then
+		echo "$combined_op"
+		return 0
 	fi
-
-	epr "Could not list versions ($pkg_name) $cli_jar: '$op'"
+	epr "Could not list versions ($pkg_name) $cli_jar"
 	return 1
 }
 
 patches_list() {
-	local cli_jar=$1 patches_jar=$2 pkg_name=$3 is_experimental=$4 op
-	if ! op=$(java -jar "$cli_jar" list-patches -p "$patches_jar" --filter-package-name "$pkg_name" --versions --packages -b 2>&1); then
-		local cmd="java -jar '$cli_jar' list-patches --patches '$patches_jar' -f '$pkg_name' --with-versions --with-packages"
-		if [ "$is_experimental" = "true" ]; then cmd+=" -x"; fi
-		if ! op=$(eval "$cmd" 2>&1); then
-			epr "Could not get patches list ($pkg_name) $cli_jar: '$op'"
-			return 1
+	local cli_jar=$1 patches_jars=$2 pkg_name=$3 is_experimental=$4
+	local combined_op="" op=""
+	for pj in $patches_jars; do
+		if op=$(java -jar "$cli_jar" list-patches -p "$pj" --filter-package-name "$pkg_name" --versions --packages -b 2>&1); then
+			combined_op+="$op"$'\n'
+		else
+			local cmd="java -jar '$cli_jar' list-patches --patches '$pj' -f '$pkg_name' --with-versions --with-packages"
+			if [ "$is_experimental" = "true" ]; then cmd+=" -x"; fi
+			if op=$(eval "$cmd" 2>&1); then
+				combined_op+="$op"$'\n'
+			fi
 		fi
+	done
+
+	if [[ -z "$combined_op" ]]; then
+		epr "Could not get patches list ($pkg_name) $cli_jar"
+		return 1
 	fi
-	echo "$op"
+	echo "$combined_op"
 }
 
 isoneof() {
@@ -381,7 +572,7 @@ setup_python_backend() {
 	mkdir -p "$TEMP_DIR"
 	if [ ! -f "$TEMP_DIR/network_engine.py" ]; then
 		export PIP_BREAK_SYSTEM_PACKAGES=1
-		python3 -m pip install -q "curl_cffi>=0.16.2" "beautifulsoup4>=4.15.0" "urllib3>=2.7.0" requests 2>/dev/null || true
+		python3 -m pip install -q "curl_cffi>=0.7.0" beautifulsoup4 urllib3 requests 2>/dev/null || true
 		cat << 'EOF' > "$TEMP_DIR/network_engine.py"
 import sys, os, re, time, json, random
 from urllib.parse import urljoin
@@ -408,7 +599,7 @@ SOLVER_URL = os.getenv("CF_SOLVER_URL", "http://localhost:8000")
 class Scraper:
     def __init__(self):
         self.session = None
-        self.current_browser = "chrome150"
+        self.current_browser = "chrome120"
         
     def _create_session(self, browser):
         sess = cffi_requests.Session(impersonate=browser)
@@ -461,8 +652,8 @@ class Scraper:
                 return False
 
             self.clear_state()
-            self.current_browser = "chrome150"
-            sess = self._create_session("chrome150")
+            self.current_browser = "chrome120"
+            sess = self._create_session("chrome120")
             
             if isinstance(cookies, dict):
                 for k, v in cookies.items():
@@ -511,7 +702,7 @@ class Scraper:
                 pass
 
         self.clear_state()
-        browsers = ["chrome150", "chrome146", "chrome124", "chrome120", "edge99", "safari15_5", "chrome116", "chrome110"]
+        browsers = ["chrome124", "chrome120", "edge99", "safari15_5", "chrome116", "chrome110"]
         random.shuffle(browsers)
         
         for browser in browsers:
@@ -672,6 +863,7 @@ def main():
         elif "messenger" in url: resolved_pkg = "com.facebook.orca"
         elif "facebook" in url: resolved_pkg = "com.facebook.katana"
         elif "threads" in url: resolved_pkg = "com.instagram.barcelona"
+        elif "instagram" in url: resolved_pkg = "com.instagram.android"
 
         soup, r = scraper.get_soup(url)
         if r and r.text:
@@ -781,6 +973,7 @@ def main():
         elif "messenger" in url: resolved_pkg = "com.facebook.orca"
         elif "facebook" in url: resolved_pkg = "com.facebook.katana"
         elif "threads" in url: resolved_pkg = "com.instagram.barcelona"
+        elif "instagram" in url: resolved_pkg = "com.instagram.android"
 
         soup, _ = scraper.get_soup(f"{url}/download")
         if soup:
@@ -955,6 +1148,7 @@ get_apkmirror_pkg_name() {
 			*messenger*) pkg="com.facebook.orca" ;;
 			*facebook*) pkg="com.facebook.katana" ;;
 			*threads*) pkg="com.instagram.barcelona" ;;
+			*instagram*) pkg="com.instagram.android" ;;
 		esac
 	fi
 	echo "${pkg:-UNKNOWN}"
@@ -998,6 +1192,7 @@ get_uptodown_pkg_name() {
 			*messenger*) pkg="com.facebook.orca" ;;
 			*facebook*) pkg="com.facebook.katana" ;;
 			*threads*) pkg="com.instagram.barcelona" ;;
+			*instagram*) pkg="com.instagram.android" ;;
 		esac
 	fi
 	echo "${pkg:-UNKNOWN}"
@@ -1076,11 +1271,16 @@ get_direct_resp() { __DIRECT_APKNAME__=$(awk -F/ '{print $NF}' <<<"$1"); }
 # --------------------------------------------------
 
 patch_apk() {
-	local stock_input=$1 patched_apk=$2 patcher_args=$3 cli_jar=$4 patches_jar=$5
+	local stock_input=$1 patched_apk=$2 patcher_args=$3 cli_jar=$4 patches_jars=$5
 	local tmp_files
 	tmp_files="$(pwd)/$(mktemp -d -p "$TEMP_DIR")"
 
-	local cmd="java -jar '$cli_jar' patch '$stock_input' -o '$patched_apk' -p '$patches_jar' --keystore=ks.keystore \
+	local p_flags=()
+	for pj in $patches_jars; do
+		p_flags+=("-p" "$pj")
+	done
+
+	local cmd="java -jar '$cli_jar' patch '$stock_input' -o '$patched_apk' "${p_flags[@]}" --keystore=ks.keystore \
     --keystore-entry-password=123456789 --keystore-password=123456789 --signer=jhc --keystore-entry-alias=jhc -t '$patched_apk-tmp' $patcher_args"
 
 	local cli_name
@@ -1333,7 +1533,12 @@ build_rv() {
 
 		module_config "$base_template" "$pkg_name" "$version" "$arch"
 
-		local patches_ver="${args[ptjar]##*-}"
+		local p_vers=()
+		for pj in ${args[ptjar]}; do
+			p_vers+=("${pj##*-}")
+		done
+		local patches_ver="${p_vers[*]}"
+
 		module_prop \
 			"${args[module_prop_name]:-}" \
 			"${app_name} ${args[rv_brand]:-}" \
