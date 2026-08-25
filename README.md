@@ -23,6 +23,7 @@
 
 This builder is an advanced, hardened fork of [j-hc's revanced-magisk-module](https://github.com/j-hc/revanced-magisk-module) engineered by **TanJid Creations**, featuring extended scraping engines and multi-source patch support:
 
+* **Custom Root Module Banners**: Includes exclusive, custom-designed banners created by me for Magisk, KernelSU, and APatch root managers. Currently available for **YouTube**, **YouTube Music**, **Reddit**, and **Google Photos** modules.
 * **Dual-Host Toolchain Fetching (`github:` & `gitlab:`)**: Fetch patch bundles and CLI binaries across both **GitHub Releases** and **GitLab API** endpoints with unified prefix formatting.
 * **Multi-Bundle Patch Support**: Combine multiple independent patch repositories (e.g., `crimera/piko` + `inotia00/x-shim`) in a single compilation run for an app target.
 * **5-Tier Resilient Download Engine**: Automatically resolves APKs using an intelligent fallback pipeline:
