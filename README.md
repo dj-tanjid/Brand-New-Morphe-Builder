@@ -1,96 +1,160 @@
+<div align="center">
+
+# ⚡ Morphe x De-Vanced Builder
+
 <p align="center">
- <p align="center">⚠️⚠️⚠️</p>
- <p align="center"><b>Avoid downloading APKs or modules from untrusted websites, as they may be harmful and impersonate official Morphe/Piko/De-Vanced projects. Always download builds from official sources or trusted open-source builders like this one.</b></p>
+  <b>Automated, high-performance CI/CD pipeline for building root Magisk/KernelSU modules and non-root APKs.</b><br>
+  Powered by <a href="https://github.com/MorpheApp">Morphe</a>, <a href="https://github.com/RookieEnough/De-Vanced">De-Vanced</a>, <a href="https://github.com/crimera/piko">Piko</a>, and <a href="https://github.com/anddea/revanced-patches">ReVanced Extended</a>.
 </p>
 
-<h1>Morphe x De-Vanced Builder</h1>
-
-<div align="center">
-  
-[![GitHub License](https://img.shields.io/github/license/dj-tanjid/Morphe-DeVanced-Builder?logo=github&label=License&link=https%3A%2F%2Fgithub.com%2Fdj-tanjid%2FMorphe-DeVanced-Builder%2Fblob%2Fmain%2FLICENSE)](https://github.com/dj-tanjid/Morphe-DeVanced-Builder/blob/main/LICENSE)
-[![Latest Release](https://img.shields.io/github/v/release/dj-tanjid/Morphe-DeVanced-Builder?label=Latest%20Release&logo=android)](../../releases/latest)
-[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/dj-tanjid/Morphe-DeVanced-Builder/total?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48cGF0aCBkPSJNNC43NSAxNy4yNWEuNzUuNzUgMCAwIDEgLjc1Ljc1djIuMjVjMCAuMTM4LjExMi4yNS4yNS4yNWgxMi41YS4yNS4yNSAwIDAgMCAuMjUtLjI1VjE4YS43NS43NSAwIDAgMSAxLjUgMHYyLjI1QTEuNzUgMS43NSAwIDAgMSAxOC4yNSAyMkg1Ljc1QTEuNzUgMS43NSAwIDAgMSA0IDIwLjI1VjE4YS43NS43NSAwIDAgMSAuNzUtLjc1WiIgZmlsbD0iI0ZGRkZGRiI+PC9wYXRoPjxwYXRoIGQ9Ik01LjIyIDkuOTdhLjc0OS43NDkgMCAwIDEgMS4wNiAwbDQuOTcgNC45NjlWMi43NWEuNzUuNzUgMCAwIDEgMS41IDB2MTIuMTg5bDQuOTctNC45NjlhLjc0OS43NDkgMCAxIDEgMS4wNiAxLjA2bC02LjI1IDYuMjVhLjc0OS43NDkgMCAwIDEtMS4wNiAwbC02LjI1LTYuMjVhLjc0OS43NDkgMCAwIDEgMC0xLjA2WiIgZmlsbD0iI0ZGRkZGRiI+PC9wYXRoPjwvc3ZnPg==&label=Downloads&link=https%3A%2F%2Fgithub.com%2Fdj-tanjid%2FMorphe-DeVanced-Builder%2Freleases)](https://github.com/dj-tanjid/Morphe-DeVanced-Builder/releases)
+[![GitHub License](https://img.shields.io/github/license/dj-tanjid/Morphe-DeVanced-Builder?logo=github&label=License&color=blue)](https://github.com/dj-tanjid/Morphe-DeVanced-Builder/blob/main/LICENSE)
+[![Latest Release](https://img.shields.io/github/v/release/dj-tanjid/Morphe-DeVanced-Builder?label=Latest%20Release&logo=android&color=success)](../../releases/latest)
+[![GitHub Downloads](https://img.shields.io/github/downloads/dj-tanjid/Morphe-DeVanced-Builder/total?logo=github&label=Downloads&color=orange)](https://github.com/dj-tanjid/Morphe-DeVanced-Builder/releases)
+[![Build Workflow](https://img.shields.io/github/actions/workflow/status/dj-tanjid/Morphe-DeVanced-Builder/build.yml?label=Build%20Status&logo=githubactions&logoColor=white)](../../actions/workflows/build.yml)
 
 </div>
 
-A fork of j-hc's [ReVanced Builder](https://github.com/j-hc/revanced-magisk-module) by **TanJid Creations**
+> [!CAUTION]
+> **Security Notice:** Avoid downloading modified APKs or Magisk modules from untrusted third-party websites or Telegram channels. They may contain malicious code and impersonate official projects. Always build your own or download directly from trusted open-source repositories like this one.
 
-This Morphe and De-Vanced builder creates both APKs and [Magisk](https://github.com/topjohnwu/Magisk)/[KernelSU](https://github.com/tiann/KernelSU) modules for [Morphe](https://github.com/MorpheApp), [De-ReVanced](https://github.com/RookieEnough/De-ReVanced) & [ReVanced Extended by Anddea](https://github.com/anddea/revanced-patches) versions of **YouTube**, **YouTube Music**, **Google Photos** & **Reddit**.
+---
 
-<details><summary><big><b>&nbsp;Features</b></big></summary>
-<ul>
- <li> Supports all present and future Morphe & De-Vanced apps (including projects implementing the same API)</li>
- <li> Can build root Modules and non-root APKs</li>
- <li> Updated daily with the latest versions of apps and patches</li>
- <li> Optimizes APKs and modules for size</li>
- <li> Modules</li>
-    <ul>
-     <li> recompile invalidated odex for faster usage</li>
-     <li> receive updates from Magisk/KSU app</li>
-     <li> do not break safetynet or trigger root detections</li>
-     <li> handle installation of the correct version of the stock app and all that</li>
-     <li> support Magisk and KernelSU</li>
-     <li> have custom banner</li>
-    </ul>
-</ul>
-</details>
+## 🌟 Unique Features of this Fork
 
-## Installation
-### Non-root users
-- Install [ReVanced GmsCore](https://github.com/ReVanced/GmsCore/releases/latest) or [Morphe MicroG-RE](https://github.com/MorpheApp/MicroG-RE/releases/latest).
-- Download the APK files you want to install from the [releases page](../../releases/latest).
-- (Optional) Import one of my [**Custom Settings**](../teejay/custom_settings-by_tanjid) into your application. [*How to do this?*](../teejay/?tab=readme-ov-file#import-custom-settings-in-revancedmorphe-applications)
-- Enjoy!
+This builder is an advanced, hardened fork of [j-hc's revanced-magisk-module](https://github.com/j-hc/revanced-magisk-module) engineered by **TanJid Creations**, featuring extended scraping engines, anti-bot solvers, and multi-source patch support:
 
-### Root users
-- Download the ZIP files you want to flash from the [releases page](../../releases/latest).
-- (Optional) Import one of my [**Custom Settings**](../teejay/custom_settings-by_tanjid) into your application. [*How to do this?*](../teejay/?tab=readme-ov-file#import-custom-settings-in-revancedmorphe-applications)
-- (Optional) Use [**zygisk-detach**](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music from Play Store if you are using magisk modules.
-- Enjoy!
+* **Dual-Host Toolchain Fetching (`github:` & `gitlab:`)**: Fetch patch bundles and CLI binaries across both **GitHub Releases** and **GitLab API** endpoints with unified prefix formatting.
+* **Multi-Bundle Patch Support**: Combine multiple independent patch repositories (e.g., `crimera/piko` + `inotia00/x-shim`) in a single compilation run for an app target.
+* **5-Tier Resilient Download Engine**: Automatically resolves APKs using an intelligent fallback pipeline:
+  $$\text{APKMirror} \longrightarrow \text{Uptodown} \longrightarrow \text{GitHub Releases} \longrightarrow \text{Direct DL} \longrightarrow \text{Archive.org}$$
+* **Dockerized Cloudflare Challenge Solver**: Integrated background bypass solver capable of resolving Cloudflare Turnstile and interactive JS challenges dynamically.
+* **Explicit Package ID Overrides (`pkg-name`)**: Eliminates scraping dependencies and guarantees continuous builds even during anti-bot protection updates.
+* **Multi-Architecture Matrix Compilation (`arch = "both"`)**: Concurrently packages architecture-tailored APKs and universal root modules (`arm64-v8a`, `armeabi-v7a`, `x86_64`) with automated odex optimization.
 
-## Import custom settings in ReVanced/Morphe applications
-I personally like my YouTube and YouTube Music applications to be as close as possible to the original look, but less cluttered, easier, and less annoying to use. If you feel the same, I highly recommend importing [my custom settings files](../teejay/custom_settings-by_tanjid).
+---
 
-**To do this, go to YouTube Settings &rarr; ReVanced/ReVanced Extended/Morphe &rarr; Miscellaneous &rarr; Import&nbsp;/&nbsp;Export settings.**
+## 📱 Supported Applications
 
-## To include/exclude patches or patch other apps
+<table>
+  <tr>
+    <th>Application</th>
+    <th>Patches Source</th>
+    <th>Variants Built</th>
+  </tr>
+  <tr>
+    <td><b>YouTube</b></td>
+    <td>Morphe / Anddea</td>
+    <td>Non-Root APK + Magisk/KSU Module</td>
+  </tr>
+  <tr>
+    <td><b>YouTube Music</b></td>
+    <td>Morphe / Anddea</td>
+    <td>Non-Root APK + Magisk/KSU Module</td>
+  </tr>
+  <tr>
+    <td><b>Google Photos</b></td>
+    <td>De-Vanced / Rushi</td>
+    <td>Non-Root APK + Magisk/KSU Module</td>
+  </tr>
+  <tr>
+    <td><b>Reddit</b></td>
+    <td>Morphe</td>
+    <td>Non-Root APK + Magisk/KSU Module</td>
+  </tr>
+  <tr>
+    <td><b>Twitter / X</b></td>
+    <td>Piko / Morphe</td>
+    <td>Non-Root APK</td>
+  </tr>
+  <tr>
+    <td><b>Instagram</b></td>
+    <td>Piko</td>
+    <td>Non-Root APK</td>
+  </tr>
+  <tr>
+    <td><b>Facebook & Messenger</b></td>
+    <td>De-Vanced / Rushi</td>
+    <td>Non-Root APK</td>
+  </tr>
+  <tr>
+    <td><b>Threads</b></td>
+    <td>De-Vanced</td>
+    <td>Non-Root APK</td>
+  </tr>
+</table>
 
- * Star the repo :eyes:
- * Use the repo as a [template](https://github.com/new?template_name=revanced-magisk-module&template_owner=j-hc)
- * Customize [`config.toml`](./config.toml) using [rvmm-config-gen](https://j-hc.github.io/rvmm-config-gen/)
- * Run the build [workflow](../../actions/workflows/build.yml)
- * Grab your modules and APKs from [releases](../../releases)
+---
 
-also see here [`CONFIG.md`](./CONFIG.md)
+## 🚀 Installation Guide
 
-## If you are having trouble with the classic mount method of the modules
-such as,
-- **"Reflash needed"** error after reboots
-- **"Suspicious mount detected"** warnings from root detector apps
+### 🔹 Non-Root Users
+1. Download and install [ReVanced GmsCore](https://github.com/ReVanced/GmsCore/releases/latest) or [Morphe MicroG-RE](https://github.com/MorpheApp/MicroG-RE/releases/latest).
+2. Download your preferred patched APK from the [Releases Page](../../releases/latest).
+3. *(Optional)* Import custom clean settings via the in-app settings menu.
 
-You can consider using [rvmm-zygisk-mount](https://github.com/j-hc/rvmm-zygisk-mount)
+### 🔹 Root Users (Magisk / KernelSU / APatch)
+1. Flash the generated `.zip` module from the [Releases Page](../../releases/latest) in Magisk, KernelSU, or APatch.
+2. Reboot your device.
+3. *(Optional)* Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music from Google Play Store auto-updates.
 
-## Credits
-- [j-hc](https://github.com/j-hc) for creating this amazing builder.
-- [Peter Noël Muller](https://github.com/peternmuller) and [Nguyễn Văn Bằng](https://github.com/nvbangg) for their work and inspirations.
-- And of course, [Morphe Team](https://github.com/MorpheApp), [Aaron Veil](https://github.com/anddea), [ReVanced Team](https://github.com/ReVanced) and [Sarthak Sinha](https://github.com/RookieEnough/) for their work on the Morphe/De-Vanced apps!
+---
 
-<h1></h1>
-<p align="center">⭐ Star <a href="https://github.com/dj-tanjid/Morphe-DeVanced-Builder">This Repo</a> if useful</p>
-<p align="center">Maintained with ❤️ by <a href="https://github.com/dj-tanjid">TanJid Creations</a></p>
+## ⚙️ Custom Settings Import
 
-## License
-    Copyright (C) 2024-2026 Tanjidul Hossain
+If you prefer clean, uncluttered interfaces with optimal playback and layout defaults, you can import custom preset settings:
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+1. Open the application (**YouTube** or **YouTube Music**).
+2. Navigate to: **Settings** &rarr; **Morphe / ReVanced Extended** &rarr; **Miscellaneous** &rarr; **Import/Export Settings**.
+3. Import the preset from [custom_settings-by_tanjid](../teejay/custom_settings-by_tanjid).
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+---
 
-    You should have received a copy of the GNU General Public License
-    along with this program. If not, see <https://www.gnu.org/licenses/>.
+## 🛠️ Build Your Own
+
+1. Fork this repository or click **Use this template**.
+2. Customize your build matrix in [`config.toml`](./config.toml) (see [`CONFIG.md`](./CONFIG.md) for documentation).
+3. Go to **Actions** &rarr; **Build Modules** &rarr; **Run workflow**.
+4. Download your custom binaries directly from your GitHub Releases tab!
+
+---
+
+## 🤝 Credits
+
+Special thanks to the open-source developers who make this ecosystem possible:
+
+* [j-hc](https://github.com/j-hc) — Original creator of the ReVanced Magisk Module builder.
+* [Peter Noël Muller](https://github.com/peternmuller) & [Nguyễn Văn Bằng](https://github.com/nvbangg) — For foundational scripts and inspirations.
+* [Morphe Team](https://github.com/MorpheApp) — Next-generation patcher and desktop CLI.
+* [crimera](https://github.com/crimera) — Developer of the Piko patches for Twitter/X and Instagram.
+* [Aaron Veil (anddea)](https://github.com/anddea) — ReVanced Extended ecosystem patches.
+* [Sarthak Sinha (RookieEnough)](https://github.com/RookieEnough/) — De-Vanced patches.
+* [ReVanced Team](https://github.com/ReVanced) — Original patcher framework and bytecode tooling.
+
+---
+
+<div align="center">
+
+⭐ **Star this repository if you find it helpful!**  
+Maintained with ❤️ by [TanJid Creations](https://github.com/dj-tanjid)
+
+</div>
+
+---
+
+## 📄 License
+
+```text
+Copyright (C) 2024-2026 Tanjidul Hossain (TanJid Creations)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see [https://www.gnu.org/licenses/](https://www.gnu.org/licenses/).
