@@ -183,12 +183,12 @@ get_prebuilts() {
 		if [[ "$grab_cl" == true ]]; then
 			local cl_str=""
 			if [ "$host" = "gitlab" ]; then
-				cl_str="> ⚙️ » Patches: \`${org}/${name}\` ([🔗 » Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name}))"
+				cl_str="⚙️ » Patches: \`${org}/${name}\` ([🔗 » Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name}))"
 			else
-				cl_str="> ⚙️ » Patches: \`${org}/${name}\` ([🔗 » Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
+				cl_str="⚙️ » Patches: \`${org}/${name}\` ([🔗 » Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
 			fi
 			if ! grep -qF "\`${org}/${name}\`" "${TEMP_DIR}/patches_changelog.md" 2>/dev/null; then
-				echo -e "$cl_str\n" >>"${TEMP_DIR}/patches_changelog.md"
+				echo -e "$cl_str" >>"${TEMP_DIR}/patches_changelog.md"
 			fi
 		fi
 
@@ -307,20 +307,10 @@ get_prebuilts() {
 	fi
 
 	if ! grep -qF "CLI: \`${cli_org}/${name}\`" "${TEMP_DIR}/cli_changelog.md" 2>/dev/null; then
-		echo -e "> ⚙️ » CLI: \`${cli_org}/${name}\`\n" >>"${TEMP_DIR}/cli_changelog.md"
+		echo -e "> ⚙️ » CLI: \`${cli_org}/${name}\`" >>"${TEMP_DIR}/cli_changelog.md"
 	fi
 
 	echo "${collected_patch_files[*]} ${cli_file}"
-}
-
-set_prebuilts() {
-	APKSIGNER="${BIN_DIR}/apksigner.jar"
-	local arch
-	arch=$(uname -m)
-	if [ "$arch" = aarch64 ]; then arch=arm64; elif [ "${arch:0:5}" = "armv7" ]; then arch=arm; fi
-	HTMLQ="${BIN_DIR}/htmlq/htmlq-${arch}"
-	AAPT2="${BIN_DIR}/aapt2/aapt2-${arch}"
-	TOML="${BIN_DIR}/toml/tq-${arch}"
 }
 
 config_update() {
@@ -465,6 +455,8 @@ semver_validate() {
 }
 
 __TARGET_VERSION_CODE__=""
+__TARGET_VERSION__=""
+
 get_patch_last_supported_ver() {
 	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false} arch=${5:-arm64-v8a}
 	local op
@@ -493,7 +485,7 @@ get_patch_last_supported_ver() {
 					__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
 				local clean_ver="${best_ver%%\[*}"
-				echo "${clean_ver}" | tr -d '[:space:]'
+				__TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
 				return 0
 			fi
 		fi
@@ -515,7 +507,7 @@ get_patch_last_supported_ver() {
 			__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 		fi
 		local clean_ver="${best_ver%%\[*}"
-		echo "${clean_ver}" | tr -d '[:space:]'
+		__TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
 		return 0
 	fi
 	return 1
@@ -830,6 +822,7 @@ def main():
 
             if arch == "arm-v7a":
                 arch = "armeabi-v7a"
+            version_f = version.replace(" ", "").lstrip("v")
 
             apk_assets = [a for a in release_data.get("assets", []) if a.get("name", "").endswith((".apk", ".apkm"))]
             target_asset = None
@@ -838,7 +831,7 @@ def main():
             if version_code:
                 for a in apk_assets:
                     name = a.get("name", "")
-                    if version not in name or version_code not in name:
+                    if version_f not in name or version_code not in name:
                         continue
                     m = arch_suffix.search(name)
                     file_arch = m.group(1).lower() if m and m.group(1) else "all"
@@ -851,7 +844,7 @@ def main():
             if not target_asset:
                 for a in apk_assets:
                     name = a.get("name", "")
-                    if version and version not in name:
+                    if version_f and version_f not in name:
                         continue
                     m = arch_suffix.search(name)
                     file_arch = m.group(1).lower() if m and m.group(1) else "all"
@@ -859,6 +852,9 @@ def main():
                     if arch not in ("all", "both") and file_arch not in (arch, "all"): continue
                     target_asset = a
                     break
+
+            if not target_asset and apk_assets:
+                target_asset = apk_assets[0]
 
             if not target_asset:
                 log(f"No matching GitHub asset found for arch '{arch}' and version '{version}'")
@@ -1107,25 +1103,19 @@ def main():
             
         ver_url_data = None
         is_bundle = False
-
-        def find_version(match_code=True):
-            for i in range(1, 21):
-                _, r = scraper.get_soup(f"{url}/apps/{data_code}/versions/{i}")
-                if not r or not r.text: continue
-                try:
-                    data = json.loads(r.text).get("data", [])
-                except Exception:
-                    continue
-                for entry in data:
-                    if entry.get("version") == version:
-                        if match_code and version_code and str(entry.get("versionCode", "")) != str(version_code):
-                            continue
-                        return entry.get("versionURL", {}), (entry.get("kindFile") == "xapk")
-            return None, False
-
-        ver_url_data, is_bundle = find_version(match_code=True)
-        if not ver_url_data and version_code:
-            ver_url_data, is_bundle = find_version(match_code=False)
+        for i in range(1, 21):
+            _, r = scraper.get_soup(f"{url}/apps/{data_code}/versions/{i}")
+            if not r or not r.text: continue
+            try:
+                data = json.loads(r.text).get("data", [])
+            except Exception:
+                continue
+            for entry in data:
+                if entry.get("version") == version:
+                    ver_url_data = entry.get("versionURL", {})
+                    is_bundle = (entry.get("kindFile") == "xapk")
+                    break
+            if ver_url_data: break
 
         if not ver_url_data:
             log(f"Uptodown version {version} not found.")
@@ -1395,6 +1385,8 @@ check_sig() {
 }
 
 __TARGET_VERSION_CODE__=""
+__TARGET_VERSION__=""
+
 get_patch_last_supported_ver() {
 	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false} arch=${5:-arm64-v8a}
 	local op
@@ -1423,7 +1415,7 @@ get_patch_last_supported_ver() {
 					__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
 				local clean_ver="${best_ver%%\[*}"
-				echo "${clean_ver}" | tr -d '[:space:]'
+				__TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
 				return 0
 			fi
 		fi
@@ -1445,7 +1437,7 @@ get_patch_last_supported_ver() {
 			__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 		fi
 		local clean_ver="${best_ver%%\[*}"
-		echo "${clean_ver}" | tr -d '[:space:]'
+		__TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
 		return 0
 	fi
 	return 1
@@ -1507,6 +1499,7 @@ patches_list() {
 build_rv() {
 	eval "declare -A args=${1#*=}"
 	__TARGET_VERSION_CODE__=""
+	__TARGET_VERSION__=""
 	local version="" pkg_name=""
 	local mode_arg=${args[build_mode]:-} version_mode=${args[version]:-}
 	local app_name=${args[app_name]:-}
@@ -1552,10 +1545,14 @@ build_rv() {
 
 	local get_latest_ver=false
 	if isoneof "$version_mode" "auto" "experimental"; then
-		if ! version=$(get_patch_last_supported_ver "$list_patches" "$pkg_name" "${args[included_patches]:-}" "$is_experimental" "${args[arch]}"); then
+		if ! get_patch_last_supported_ver "$list_patches" "$pkg_name" "${args[included_patches]:-}" "$is_experimental" "${args[arch]}"; then
 			epr "get_patch_last_supported_ver failed '$list_patches'"
 			return
-		elif [ -z "$version" ]; then get_latest_ver="true"; fi
+		elif [[ -z "$__TARGET_VERSION__" ]]; then 
+			get_latest_ver="true"
+		else
+			version="$__TARGET_VERSION__"
+		fi
 	elif [ "$version_mode" = "latest" ]; then
 		get_latest_ver="true"
 		p_patcher_args+=("-f")
@@ -1659,7 +1656,7 @@ build_rv() {
 		fi
 	fi
 	
-	log "🟢 » **${table}** (${arch_f}): \`${version_f}\`  "
+	log "📱 » **${table}** (${arch_f}): \`${version_f}\`  "
 
 	local microg_patch
 	microg_patch=$(grep "^Name: " <<<"$list_patches" | grep -i "gmscore\|microg" || :) microg_patch=${microg_patch#*: }
