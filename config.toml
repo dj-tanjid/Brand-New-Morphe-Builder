@@ -135,7 +135,7 @@ uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
 
 [Threads-Chiggi]
 enabled = true
-app-name = "Treads"
+app-name = "Threads"
 pkg-name = "com.instagram.barcelona"
 patches-source = "github:durgesh0505/chiggi_morphe_patches"
 cli-source = "MorpheApp/morphe-desktop"
