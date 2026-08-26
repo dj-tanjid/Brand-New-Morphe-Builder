@@ -101,6 +101,24 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos"
 uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
+[Facebook-De-Vanced]
+enabled = true
+app-name = "Facebook"
+pkg-name = "com.facebook.katana"
+patches-source = "github:RookieEnough/De-Vanced"
+cli-source = "MorpheApp/morphe-desktop"
+rv-brand = "De-Vanced"
+arch = "arm64-v8a"
+# version = "latest"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+# version = "573.0.0.37.74"
+build-mode = "apk"
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
+uptodown-dlurl = "https://facebook.en.uptodown.com/android"
+
+
 [Facebook-Froggo]
 enabled = true
 app-name = "Facebook"
@@ -119,7 +137,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Messenger-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Facebook Messenger"
 pkg-name = "com.facebook.orca"
 patches-source = "RookieEnough/De-Vanced"
