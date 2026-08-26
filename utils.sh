@@ -183,9 +183,9 @@ get_prebuilts() {
 		if [[ "$grab_cl" == true ]]; then
 			local cl_str=""
 			if [ "$host" = "gitlab" ]; then
-				cl_str="> ⚙️ » Patches: \`${org}/${name}\` ([🔗 » Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name}))"
+				cl_str="> ⚙️ » Patches: \`${org}/${name}\` ([Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name}))"
 			else
-				cl_str="> ⚙️ » Patches: \`${org}/${name}\` ([🔗 » Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
+				cl_str="> ⚙️ » Patches: \`${org}/${name}\` ([Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
 			fi
 			if ! grep -qF "\`${org}/${name}\`" "${TEMP_DIR}/patches_changelog.md" 2>/dev/null; then
 				echo -e "$cl_str\n" >>"${TEMP_DIR}/patches_changelog.md"
