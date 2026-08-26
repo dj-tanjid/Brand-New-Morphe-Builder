@@ -15,7 +15,7 @@ export MODULE_TEMPLATE_DIR CWD TEMP_DIR BIN_DIR BUILD_DIR DL_SRCS GH_HEADER NEXT
 trap "abort" INT
 
 if [ "${1-}" = "clean" ]; then
-	rm -rf "$TEMP_DIR" "$BUILD_DIR" build.md
+	rm -r "$TEMP_DIR" "$BUILD_DIR" build.md
 	exit 0
 fi
 
@@ -57,9 +57,7 @@ fi
 if ((COMPRESSION_LEVEL > 9)) || ((COMPRESSION_LEVEL < 0)); then abort "compression-level must be within 0-9"; fi
 
 rm -rf module/bin/*/tmp.*
-for file in "$TEMP_DIR"/*/changelog.md; do
-	[ -f "$file" ] && : >"$file"
-done
+rm -f "${TEMP_DIR}/patches_changelog.md" "${TEMP_DIR}/cli_changelog.md"
 
 mkdir -p ${MODULE_TEMPLATE_DIR}/bin/arm64 ${MODULE_TEMPLATE_DIR}/bin/arm ${MODULE_TEMPLATE_DIR}/bin/x86 ${MODULE_TEMPLATE_DIR}/bin/x64
 gh_dl "${MODULE_TEMPLATE_DIR}/bin/arm64/cmpr" "https://github.com/j-hc/cmpr/releases/latest/download/cmpr-arm64-v8a"
@@ -177,8 +175,11 @@ if [ -z "$(ls -A1 "${BUILD_DIR}")" ]; then abort "All builds failed."; fi
 log "\n- Install [ReVanced GmsCore](https://github.com/ReVanced/GmsCore/releases/latest) or [Morphe MicroG-RE](https://github.com/MorpheApp/MicroG-RE/releases/latest) for non-root YouTube, YT Music and Google Photos APKs."
 log "- (Optional) Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music modules from Google Play Store."
 log "- (Optional) Import my [**Custom Settings**](../teejay/custom_settings-by_tanjid) into your application. [*How to do this?*](../teejay/?tab=readme-ov-file#import-custom-settings-in-revancedmorphe-applications)"
-log "\nPatches and CLI Sources :"
-log "$(cat "$TEMP_DIR"/*/changelog.md 2>/dev/null || true)"
+
+log "\nPatches Sources :"
+cat "${TEMP_DIR}/patches_changelog.md" 2>/dev/null >> build.md || true
+log "\nCLI Source :"
+cat "${TEMP_DIR}/cli_changelog.md" 2>/dev/null >> build.md || true
 
 SKIPPED=$(cat "$TEMP_DIR"/skipped 2>/dev/null || :)
 if [ -n "$SKIPPED" ]; then
