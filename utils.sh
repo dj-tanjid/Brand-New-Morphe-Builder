@@ -188,7 +188,7 @@ get_prebuilts() {
 				cl_str="⚙️ » Patches: \`${org}/${name}\` ([🔗 » Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
 			fi
 			if ! grep -qF "\`${org}/${name}\`" "${TEMP_DIR}/patches_changelog.md" 2>/dev/null; then
-				echo -e "$cl_str" >>"${TEMP_DIR}/patches_changelog.md"
+				echo "$cl_str" >>"${TEMP_DIR}/patches_changelog.md"
 			fi
 		fi
 
@@ -307,7 +307,7 @@ get_prebuilts() {
 	fi
 
 	if ! grep -qF "CLI: \`${cli_org}/${name}\`" "${TEMP_DIR}/cli_changelog.md" 2>/dev/null; then
-		echo -e "> ⚙️ » CLI: \`${cli_org}/${name}\`" >>"${TEMP_DIR}/cli_changelog.md"
+		echo "⚙️ » CLI: \`${cli_org}/${name}\`" >>"${TEMP_DIR}/cli_changelog.md"
 	fi
 
 	echo "${collected_patch_files[*]} ${cli_file}"
@@ -454,9 +454,6 @@ semver_validate() {
 	[[ ${#ac} -eq 0 ]]
 }
 
-__TARGET_VERSION_CODE__=""
-__TARGET_VERSION__=""
-
 get_patch_last_supported_ver() {
 	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false} arch=${5:-arm64-v8a}
 	local op
@@ -482,15 +479,17 @@ get_patch_last_supported_ver() {
 			local best_ver=$(get_highest_ver <<<"$vers")
 			if [[ -n "$best_ver" ]]; then
 				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
-					__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
+					export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
 				local clean_ver="${best_ver%%\[*}"
-				__TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
+				export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
 				return 0
 			fi
 		fi
 	fi
-	op=$(patches_list_versions "${args[cli]}" "${args[ptjar]}" "$pkg_name" "$is_experimental") || return 1
+	if ! op=$(patches_list_versions "${args[cli]}" "${args[ptjar]}" "$pkg_name" "$is_experimental"); then
+		return 1
+	fi
 	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | awk '{$1=$1}1')
 	if [[ "$op" == "Any" ]]; then return; fi
 	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}
@@ -504,10 +503,10 @@ get_patch_last_supported_ver() {
 	local best_ver=$(grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || true)
 	if [[ -n "$best_ver" ]]; then
 		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
-			__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
+			export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 		fi
 		local clean_ver="${best_ver%%\[*}"
-		__TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
+		export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
 		return 0
 	fi
 	return 1
@@ -920,33 +919,36 @@ def main():
         cat = url.rstrip("/").split("/")[-1]
         
         release_url = None
+        search_url = f"{url.rstrip('/')}/?s={version}"
         
-        # 1st Pass: Search exact version code if provided
-        if version_code:
-            log(f"Searching APKMirror for version code {version_code} ({cat})")
-            search_url = f"https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s={cat}+{version}+{version_code}"
-            soup_search, _ = scraper.get_soup(search_url)
-            if soup_search:
-                for a in soup_search.select("a.fontBlack[href*='-release/']"):
-                    if version in a.get_text() and f"/{cat}/" in a.get("href", ""):
-                        release_url = urljoin("https://www.apkmirror.com", a["href"])
-                        break
+        log(f"Searching APKMirror for version {version} ({cat})")
+        soup_search, _ = scraper.get_soup(search_url)
         
-        # 2nd Pass: Fallback to version string
-        if not release_url:
-            log(f"Searching APKMirror for version {version} ({cat})")
-            search_url = f"https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s={cat}+{version}"
-            soup_search, _ = scraper.get_soup(search_url)
-            if not soup_search: 
-                sys.exit(1)
-            
+        if soup_search:
             for a in soup_search.select("a.fontBlack[href*='-release/']"):
                 if version in a.get_text() and f"/{cat}/" in a.get("href", ""):
                     release_url = urljoin("https://www.apkmirror.com", a["href"])
                     break
-                
+                    
+        # Fallback to global search if exact URL failed
         if not release_url:
-            log("APKMirror release URL not found via app search.")
+            log("APKMirror release URL not found via exact app search, trying global search...")
+            search_term = version.split("-")[0].strip()
+            global_search_url = f"https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s={cat}+{search_term}"
+            soup_search, _ = scraper.get_soup(global_search_url)
+            if soup_search:
+                clean_target = re.sub(r'[^a-zA-Z0-9]', '', version.lower())
+                for a in soup_search.select("a.fontBlack[href*='-release/']"):
+                    txt = a.get_text(strip=True)
+                    href = a.get("href", "")
+                    clean_slug = re.sub(r'[^a-zA-Z0-9]', '', href.lower())
+                    clean_txt = re.sub(r'[^a-zA-Z0-9]', '', txt.lower())
+                    if clean_target in clean_slug or clean_target in clean_txt:
+                        release_url = urljoin("https://www.apkmirror.com", href)
+                        break
+
+        if not release_url:
+            log("APKMirror release URL not found.")
             sys.exit(1)
             
         soup_rel, r_rel = scraper.get_soup(release_url, referer=search_url)
@@ -1103,19 +1105,25 @@ def main():
             
         ver_url_data = None
         is_bundle = False
-        for i in range(1, 21):
-            _, r = scraper.get_soup(f"{url}/apps/{data_code}/versions/{i}")
-            if not r or not r.text: continue
-            try:
-                data = json.loads(r.text).get("data", [])
-            except Exception:
-                continue
-            for entry in data:
-                if entry.get("version") == version:
-                    ver_url_data = entry.get("versionURL", {})
-                    is_bundle = (entry.get("kindFile") == "xapk")
-                    break
-            if ver_url_data: break
+
+        def find_version(match_code=True):
+            for i in range(1, 21):
+                _, r = scraper.get_soup(f"{url}/apps/{data_code}/versions/{i}")
+                if not r or not r.text: continue
+                try:
+                    data = json.loads(r.text).get("data", [])
+                except Exception:
+                    continue
+                for entry in data:
+                    if entry.get("version") == version:
+                        if match_code and version_code and str(entry.get("versionCode", "")) != str(version_code):
+                            continue
+                        return entry.get("versionURL", {}), (entry.get("kindFile") == "xapk")
+            return None, False
+
+        ver_url_data, is_bundle = find_version(match_code=True)
+        if not ver_url_data and version_code:
+            ver_url_data, is_bundle = find_version(match_code=False)
 
         if not ver_url_data:
             log(f"Uptodown version {version} not found.")
@@ -1384,12 +1392,14 @@ check_sig() {
 	fi
 }
 
-__TARGET_VERSION_CODE__=""
-__TARGET_VERSION__=""
+export __TARGET_VERSION_CODE__=""
+export __TARGET_VERSION__=""
 
 get_patch_last_supported_ver() {
 	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false} arch=${5:-arm64-v8a}
 	local op
+	__TARGET_VERSION_CODE__=""
+	__TARGET_VERSION__=""
 
 	local arch_key="ARM64_V8A"
 	if [[ "$arch" == "arm-v7a" ]]; then arch_key="ARMEABI_V7A"
@@ -1420,7 +1430,9 @@ get_patch_last_supported_ver() {
 			fi
 		fi
 	fi
-	op=$(patches_list_versions "${args[cli]}" "${args[ptjar]}" "$pkg_name" "$is_experimental") || return 1
+	if ! op=$(patches_list_versions "${args[cli]}" "${args[ptjar]}" "$pkg_name" "$is_experimental"); then
+		return 1
+	fi
 	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | awk '{$1=$1}1')
 	if [[ "$op" == "Any" ]]; then return; fi
 	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}
@@ -1498,8 +1510,8 @@ patches_list() {
 
 build_rv() {
 	eval "declare -A args=${1#*=}"
-	__TARGET_VERSION_CODE__=""
-	__TARGET_VERSION__=""
+	export __TARGET_VERSION_CODE__=""
+	export __TARGET_VERSION__=""
 	local version="" pkg_name=""
 	local mode_arg=${args[build_mode]:-} version_mode=${args[version]:-}
 	local app_name=${args[app_name]:-}
@@ -1545,10 +1557,8 @@ build_rv() {
 
 	local get_latest_ver=false
 	if isoneof "$version_mode" "auto" "experimental"; then
-		if ! get_patch_last_supported_ver "$list_patches" "$pkg_name" "${args[included_patches]:-}" "$is_experimental" "${args[arch]}"; then
-			epr "get_patch_last_supported_ver failed '$list_patches'"
-			return
-		elif [[ -z "$__TARGET_VERSION__" ]]; then 
+		get_patch_last_supported_ver "$list_patches" "$pkg_name" "${args[included_patches]:-}" "$is_experimental" "${args[arch]}" || true
+		if [[ -z "$__TARGET_VERSION__" ]]; then 
 			get_latest_ver="true"
 		else
 			version="$__TARGET_VERSION__"
