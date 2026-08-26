@@ -115,7 +115,7 @@ version = "573.0.0.37.74"
 build-mode = "apk"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
+# apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Messenger-De-Vanced]
