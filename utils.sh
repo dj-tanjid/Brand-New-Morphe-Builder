@@ -307,7 +307,7 @@ get_prebuilts() {
 	fi
 
 	if ! grep -qF "CLI: \`${cli_org}/${name}\`" "${TEMP_DIR}/cli_changelog.md" 2>/dev/null; then
-		echo -e "> ⚙️ » CLI: \`${cli_org}/${name}\`  \n" >>"${TEMP_DIR}/cli_changelog.md"
+		echo -e "> ⚙️ » CLI: \`${cli_org}/${name}\`\n" >>"${TEMP_DIR}/cli_changelog.md"
 	fi
 
 	echo "${collected_patch_files[*]} ${cli_file}"
@@ -830,7 +830,6 @@ def main():
 
             if arch == "arm-v7a":
                 arch = "armeabi-v7a"
-            version_f = version.replace(" ", "").lstrip("v")
 
             apk_assets = [a for a in release_data.get("assets", []) if a.get("name", "").endswith((".apk", ".apkm"))]
             target_asset = None
@@ -839,7 +838,7 @@ def main():
             if version_code:
                 for a in apk_assets:
                     name = a.get("name", "")
-                    if version_f not in name or version_code not in name:
+                    if version not in name or version_code not in name:
                         continue
                     m = arch_suffix.search(name)
                     file_arch = m.group(1).lower() if m and m.group(1) else "all"
@@ -852,7 +851,7 @@ def main():
             if not target_asset:
                 for a in apk_assets:
                     name = a.get("name", "")
-                    if version_f and version_f not in name:
+                    if version and version not in name:
                         continue
                     m = arch_suffix.search(name)
                     file_arch = m.group(1).lower() if m and m.group(1) else "all"
@@ -860,9 +859,6 @@ def main():
                     if arch not in ("all", "both") and file_arch not in (arch, "all"): continue
                     target_asset = a
                     break
-
-            if not target_asset and apk_assets:
-                target_asset = apk_assets[0]
 
             if not target_asset:
                 log(f"No matching GitHub asset found for arch '{arch}' and version '{version}'")
@@ -926,18 +922,32 @@ def main():
         if arch == "arm-v7a": arch = "armeabi-v7a"
         
         cat = url.rstrip("/").split("/")[-1]
-        log(f"Searching APKMirror for version {version} ({cat})")
-        
-        search_url = f"{url.rstrip('/')}/?s={version}"
-        soup_search, _ = scraper.get_soup(search_url)
-        if not soup_search: 
-            sys.exit(1)
         
         release_url = None
-        for a in soup_search.select("a.fontBlack[href*='-release/']"):
-            if version in a.get_text() and f"/{cat}/" in a.get("href", ""):
-                release_url = urljoin("https://www.apkmirror.com", a["href"])
-                break
+        
+        # 1st Pass: Search exact version code if provided
+        if version_code:
+            log(f"Searching APKMirror for version code {version_code} ({cat})")
+            search_url = f"https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s={cat}+{version}+{version_code}"
+            soup_search, _ = scraper.get_soup(search_url)
+            if soup_search:
+                for a in soup_search.select("a.fontBlack[href*='-release/']"):
+                    if version in a.get_text() and f"/{cat}/" in a.get("href", ""):
+                        release_url = urljoin("https://www.apkmirror.com", a["href"])
+                        break
+        
+        # 2nd Pass: Fallback to version string
+        if not release_url:
+            log(f"Searching APKMirror for version {version} ({cat})")
+            search_url = f"https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s={cat}+{version}"
+            soup_search, _ = scraper.get_soup(search_url)
+            if not soup_search: 
+                sys.exit(1)
+            
+            for a in soup_search.select("a.fontBlack[href*='-release/']"):
+                if version in a.get_text() and f"/{cat}/" in a.get("href", ""):
+                    release_url = urljoin("https://www.apkmirror.com", a["href"])
+                    break
                 
         if not release_url:
             log("APKMirror release URL not found via app search.")
@@ -957,40 +967,39 @@ def main():
         dl_sub_url = None
         is_bundle = False
         
-        # 1st Pass: Match version code explicitly
-        for target_type in ["APK", "BUNDLE"]:
-            for row in reversed(rows):
-                cells = row.select("div.table-cell")
-                if len(cells) < 4: continue
-                badge = cells[0].select_one(".apkm-badge")
-                b_type = badge.get_text(strip=True).upper() if badge else "APK"
-                
-                if b_type != target_type: continue
-                
-                arch_text = cells[1].get_text(strip=True)
-                dpi_text = cells[3].get_text(strip=True)
-                row_text = row.get_text()
-                
-                dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
-                vcode_ok = True if not version_code else version_code in row_text
-
-                if arch_text in apparch and dpi_ok and vcode_ok:
-                    link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
-                    if link and link.get("href"):
-                        dl_sub_url = urljoin("https://www.apkmirror.com", link["href"])
-                        is_bundle = (target_type == "BUNDLE")
-                        break
-            if dl_sub_url: break
-
-        # 2nd Pass: Fallback matching version string only
-        if not dl_sub_url and version_code:
+        # 1st Pass: Match version code explicitly from row text
+        if version_code:
             for target_type in ["APK", "BUNDLE"]:
                 for row in reversed(rows):
                     cells = row.select("div.table-cell")
                     if len(cells) < 4: continue
                     badge = cells[0].select_one(".apkm-badge")
                     b_type = badge.get_text(strip=True).upper() if badge else "APK"
+                    if b_type != target_type: continue
                     
+                    arch_text = cells[1].get_text(strip=True)
+                    dpi_text = cells[3].get_text(strip=True)
+                    row_text = row.get_text()
+                    
+                    dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
+                    vcode_ok = version_code in row_text
+
+                    if arch_text in apparch and dpi_ok and vcode_ok:
+                        link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
+                        if link and link.get("href"):
+                            dl_sub_url = urljoin("https://www.apkmirror.com", link["href"])
+                            is_bundle = (target_type == "BUNDLE")
+                            break
+                if dl_sub_url: break
+
+        # 2nd Pass: Fallback matching version string only
+        if not dl_sub_url:
+            for target_type in ["APK", "BUNDLE"]:
+                for row in reversed(rows):
+                    cells = row.select("div.table-cell")
+                    if len(cells) < 4: continue
+                    badge = cells[0].select_one(".apkm-badge")
+                    b_type = badge.get_text(strip=True).upper() if badge else "APK"
                     if b_type != target_type: continue
                     
                     arch_text = cells[1].get_text(strip=True)
@@ -1650,7 +1659,7 @@ build_rv() {
 		fi
 	fi
 	
-	log "- 🟢 » **${table}** (${arch_f}): \`${version_f}\`  "
+	log "🟢 » **${table}** (${arch_f}): \`${version_f}\`  "
 
 	local microg_patch
 	microg_patch=$(grep "^Name: " <<<"$list_patches" | grep -i "gmscore\|microg" || :) microg_patch=${microg_patch#*: }
