@@ -15,7 +15,7 @@ export MODULE_TEMPLATE_DIR CWD TEMP_DIR BIN_DIR BUILD_DIR DL_SRCS GH_HEADER NEXT
 trap "abort" INT
 
 if [ "${1-}" = "clean" ]; then
-	rm -r "$TEMP_DIR" "$BUILD_DIR" build.md
+	rm -rf "$TEMP_DIR" "$BUILD_DIR" build.md
 	exit 0
 fi
 
@@ -176,10 +176,15 @@ log "\n- Install [ReVanced GmsCore](https://github.com/ReVanced/GmsCore/releases
 log "- (Optional) Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music modules from Google Play Store."
 log "- (Optional) Import my [**Custom Settings**](../teejay/custom_settings-by_tanjid) into your application. [*How to do this?*](../teejay/?tab=readme-ov-file#import-custom-settings-in-revancedmorphe-applications)"
 
-log "\nPatches Sources :"
-cat "${TEMP_DIR}/patches_changelog.md" 2>/dev/null >> build.md || true
-log "\nCLI Source :"
-cat "${TEMP_DIR}/cli_changelog.md" 2>/dev/null >> build.md || true
+if [ -s "${TEMP_DIR}/patches_changelog.md" ]; then
+	log "\nPatches Sources :"
+	cat "${TEMP_DIR}/patches_changelog.md" >> build.md || true
+fi
+
+if [ -s "${TEMP_DIR}/cli_changelog.md" ]; then
+	log "\nCLI Source :"
+	cat "${TEMP_DIR}/cli_changelog.md" >> build.md || true
+fi
 
 SKIPPED=$(cat "$TEMP_DIR"/skipped 2>/dev/null || :)
 if [ -n "$SKIPPED" ]; then
