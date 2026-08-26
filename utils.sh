@@ -492,7 +492,8 @@ get_patch_last_supported_ver() {
 				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 					__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
-				echo "${best_ver%%\[*}"
+				local clean_ver="${best_ver%%\[*}"
+				echo "${clean_ver// /}"
 				return 0
 			fi
 		fi
@@ -513,7 +514,8 @@ get_patch_last_supported_ver() {
 		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 			__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 		fi
-		echo "${best_ver%%\[*}"
+		local clean_ver="${best_ver%%\[*}"
+		echo "${clean_ver// /}"
 		return 0
 	fi
 	return 1
@@ -1411,7 +1413,8 @@ get_patch_last_supported_ver() {
 				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 					__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
-				echo "${best_ver%%\[*}"
+				local clean_ver="${best_ver%%\[*}"
+				echo "${clean_ver// /}"
 				return 0
 			fi
 		fi
@@ -1432,7 +1435,8 @@ get_patch_last_supported_ver() {
 		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 			__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 		fi
-		echo "${best_ver%%\[*}"
+		local clean_ver="${best_ver%%\[*}"
+		echo "${clean_ver// /}"
 		return 0
 	fi
 	return 1
