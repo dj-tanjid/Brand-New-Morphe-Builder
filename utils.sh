@@ -493,7 +493,7 @@ get_patch_last_supported_ver() {
 					__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
 				local clean_ver="${best_ver%%\[*}"
-				echo "${clean_ver// /}"
+				echo "${clean_ver}" | tr -d '[:space:]'
 				return 0
 			fi
 		fi
@@ -515,7 +515,7 @@ get_patch_last_supported_ver() {
 			__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 		fi
 		local clean_ver="${best_ver%%\[*}"
-		echo "${clean_ver// /}"
+		echo "${clean_ver}" | tr -d '[:space:]'
 		return 0
 	fi
 	return 1
@@ -822,11 +822,11 @@ def main():
                     print(v)
 
         elif mode == "github_dl":
-            version = sys.argv[3] if len(sys.argv) > 3 else ""
-            dest_path = sys.argv[4] if len(sys.argv) > 4 else ""
-            arch = sys.argv[5] if len(sys.argv) > 5 else "all"
-            dpi = sys.argv[6] if len(sys.argv) > 6 else ""
-            version_code = sys.argv[7] if len(sys.argv) > 7 else ""
+            version = sys.argv[3].strip() if len(sys.argv) > 3 else ""
+            dest_path = sys.argv[4].strip() if len(sys.argv) > 4 else ""
+            arch = sys.argv[5].strip() if len(sys.argv) > 5 else "all"
+            dpi = sys.argv[6].strip() if len(sys.argv) > 6 else ""
+            version_code = sys.argv[7].strip() if len(sys.argv) > 7 else ""
 
             if arch == "arm-v7a":
                 arch = "armeabi-v7a"
@@ -918,11 +918,11 @@ def main():
                     print(txt.split()[-1])
 
     elif mode == "apkmirror_dl":
-        version = sys.argv[3] if len(sys.argv) > 3 else ""
-        dest_path = sys.argv[4] if len(sys.argv) > 4 else ""
-        arch = sys.argv[5] if len(sys.argv) > 5 else "all"
-        dpi = sys.argv[6] if len(sys.argv) > 6 else ""
-        version_code = sys.argv[7] if len(sys.argv) > 7 else ""
+        version = sys.argv[3].strip() if len(sys.argv) > 3 else ""
+        dest_path = sys.argv[4].strip() if len(sys.argv) > 4 else ""
+        arch = sys.argv[5].strip() if len(sys.argv) > 5 else "all"
+        dpi = sys.argv[6].strip() if len(sys.argv) > 6 else ""
+        version_code = sys.argv[7].strip() if len(sys.argv) > 7 else ""
         if arch == "arm-v7a": arch = "armeabi-v7a"
         
         cat = url.rstrip("/").split("/")[-1]
@@ -1064,11 +1064,11 @@ def main():
                 if t := el.get_text(strip=True): print(t)
 
     elif mode == "uptodown_dl":
-        version = sys.argv[3] if len(sys.argv) > 3 else ""
-        dest_path = sys.argv[4] if len(sys.argv) > 4 else ""
-        arch = sys.argv[5] if len(sys.argv) > 5 else "all"
-        dpi = sys.argv[6] if len(sys.argv) > 6 else ""
-        version_code = sys.argv[7] if len(sys.argv) > 7 else ""
+        version = sys.argv[3].strip() if len(sys.argv) > 3 else ""
+        dest_path = sys.argv[4].strip() if len(sys.argv) > 4 else ""
+        arch = sys.argv[5].strip() if len(sys.argv) > 5 else "all"
+        dpi = sys.argv[6].strip() if len(sys.argv) > 6 else ""
+        version_code = sys.argv[7].strip() if len(sys.argv) > 7 else ""
         if arch == "arm-v7a": arch = "armeabi-v7a"
         
         soup, _ = scraper.get_soup(f"{url}/versions")
@@ -1414,7 +1414,7 @@ get_patch_last_supported_ver() {
 					__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
 				local clean_ver="${best_ver%%\[*}"
-				echo "${clean_ver// /}"
+				echo "${clean_ver}" | tr -d '[:space:]'
 				return 0
 			fi
 		fi
@@ -1436,7 +1436,7 @@ get_patch_last_supported_ver() {
 			__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 		fi
 		local clean_ver="${best_ver%%\[*}"
-		echo "${clean_ver// /}"
+		echo "${clean_ver}" | tr -d '[:space:]'
 		return 0
 	fi
 	return 1
@@ -1604,9 +1604,9 @@ build_rv() {
 	version_f=${version_f#v}
 
 	if [[ -n "${__TARGET_VERSION_CODE__:-}" ]]; then
-		pr "Choosing version '${version}' (Code: ${__TARGET_VERSION_CODE__}) for ${table}"
+		pr "Choosing version '${version_f}' (Code: ${__TARGET_VERSION_CODE__}) for ${table}"
 	else
-		pr "Choosing version '${version}' for ${table}"
+		pr "Choosing version '${version_f}' for ${table}"
 	fi
 
 	local stock_apk="${TEMP_DIR}/${pkg_name}-${version_f}-${arch_f}.apk"
@@ -1620,8 +1620,8 @@ build_rv() {
 					continue
 				fi
 			fi
-			if ! dl_${dl_p} "${args[${dl_p}_dlurl]}" "$version" "$stock_apk" "$arch" "${args[dpi]:-}" "${__TARGET_VERSION_CODE__:-}"; then
-				epr "ERROR: Could not download '${table}' from '${dl_p}' with version '${version}', arch '${arch}', dpi '${args[dpi]:-}'"
+			if ! dl_${dl_p} "${args[${dl_p}_dlurl]}" "$version_f" "$stock_apk" "$arch" "${args[dpi]:-}" "${__TARGET_VERSION_CODE__:-}"; then
+				epr "ERROR: Could not download '${table}' from '${dl_p}' with version '${version_f}', arch '${arch}', dpi '${args[dpi]:-}'"
 				continue
 			fi
 			break
@@ -1650,7 +1650,7 @@ build_rv() {
 		fi
 	fi
 	
-	log "- 🟢 » **${table}** (${arch_f}): \`${version_f}\`"
+	log "- 🟢 » **${table}** (${arch_f}): \`${version_f}\`  "
 
 	local microg_patch
 	microg_patch=$(grep "^Name: " <<<"$list_patches" | grep -i "gmscore\|microg" || :) microg_patch=${microg_patch#*: }
@@ -1727,7 +1727,7 @@ build_rv() {
 		cp -a $MODULE_TEMPLATE_DIR/. "$base_template"
 		local upj="${table,,}-update.json"
 
-		module_config "$base_template" "$pkg_name" "$version" "$arch"
+		module_config "$base_template" "$pkg_name" "$version_f" "$arch"
 
 		local p_vers=()
 		for pj in ${args[ptjar]}; do
@@ -1738,7 +1738,7 @@ build_rv() {
 		module_prop \
 			"${args[module_prop_name]:-}" \
 			"${app_name} ${args[rv_brand]:-}" \
-			"${version} (patches ${patches_ver})" \
+			"${version_f} (patches ${patches_ver})" \
 			"${app_name} ${args[rv_brand]:-} module" \
 			"https://raw.githubusercontent.com/${GITHUB_REPOSITORY-}/update/${upj}" \
 			"$base_template"
