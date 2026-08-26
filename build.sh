@@ -172,16 +172,18 @@ done
 _clean_tmp
 if [ -z "$(ls -A1 "${BUILD_DIR}")" ]; then abort "All builds failed."; fi
 
-log "\n▶️ » Install [MicroG-RE](https://github.com/MorpheApp/MicroG-RE/releases) or [GmsCore](https://github.com/ReVanced/GmsCore/releases) to enable Google account sign-in for supported apps."
-log "▶️ » (Optional) Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music modules from Play Store."
-log "▶️ » (Optional) Import my [**Custom Settings**](../teejay/custom_settings-by_tanjid) into your application. [*How?*](../teejay/?tab=readme-ov-file#import-custom-settings-in-revancedmorphe-applications)\n"
+log ""
+log "- Install [\`MicroG-RE\`](https://github.com/MorpheApp/MicroG-RE/releases) or [\`GmsCore\`](https://github.com/ReVanced/GmsCore/releases) to enable Google account sign-in for supported apps."
+log "- (Optional) Use [\`zygisk-detach\`](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music modules from Google Play Store."
+log "- (Optional) Import my [\`Custom Settings\`](../teejay/custom_settings-by_tanjid) into your application. [\`How?\`](../teejay/?tab=readme-ov-file#import-custom-settings-in-revancedmorphe-applications)"
 
 if [ -s "${TEMP_DIR}/patches_changelog.md" ]; then
+    log ""
 	cat "${TEMP_DIR}/patches_changelog.md" >> build.md || true
 fi
 
 if [ -s "${TEMP_DIR}/cli_changelog.md" ]; then
-    echo "" >> build.md
+    log ""
 	cat "${TEMP_DIR}/cli_changelog.md" >> build.md || true
 fi
 
