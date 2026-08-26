@@ -177,12 +177,14 @@ log "> **NOTE:**<sub><br>- Install [\`MicroG-RE\`](https://github.com/MorpheApp/
 log "<br>\n"
 
 if [ -s "${TEMP_DIR}/patches_changelog.md" ]; then
-	sed '1s/^/> /' "${TEMP_DIR}/patches_changelog.md" >> build.md || true
+	# Prepend '>' only to the first line, and indent the rest cleanly
+	sed '1s/^[ >]*/> /; 2,$s/^[ >]*/ /' "${TEMP_DIR}/patches_changelog.md" >> build.md || true
 	log ""
 fi
 
 if [ -s "${TEMP_DIR}/cli_changelog.md" ]; then
-	sed '1s/^/> /' "${TEMP_DIR}/cli_changelog.md" >> build.md || true
+	# Prepend '>' to the CLI string
+	sed 's/^[ >]*/> /' "${TEMP_DIR}/cli_changelog.md" >> build.md || true
 	log ""
 fi
 
