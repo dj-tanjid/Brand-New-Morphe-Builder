@@ -181,12 +181,14 @@ get_prebuilts() {
 		fi
 
 		if [[ "$grab_cl" == true ]]; then
+			local cl_str=""
+			if [ "$host" = "gitlab" ]; then
+				cl_str="Patches: ${org}/${name}  \n[Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name})\n"
+			else
+				cl_str="Patches: ${org}/${name}  \n[Changelog](https://github.com/${clean_src}/releases/tag/${tag_name})\n"
+			fi
 			if ! grep -qF "Patches: ${org}/${name}" "${TEMP_DIR}/patches_changelog.md" 2>/dev/null; then
-				if [ "$host" = "gitlab" ]; then
-					echo -e "Patches: ${org}/${name}  \n[Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name})\n" >>"${TEMP_DIR}/patches_changelog.md"
-				else
-					echo -e "Patches: ${org}/${name}  \n[Changelog](https://github.com/${clean_src}/releases/tag/${tag_name})\n" >>"${TEMP_DIR}/patches_changelog.md"
-				fi
+				echo -e "$cl_str" >>"${TEMP_DIR}/patches_changelog.md"
 			fi
 		fi
 
@@ -464,8 +466,14 @@ semver_validate() {
 
 __TARGET_VERSION_CODE__=""
 get_patch_last_supported_ver() {
-	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false}
+	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false} arch=${5:-arm64-v8a}
 	local op
+
+	local arch_key="ARM64_V8A"
+	if [[ "$arch" == "arm-v7a" ]]; then arch_key="ARMEABI_V7A"
+	elif [[ "$arch" == "x86" ]]; then arch_key="X86"
+	elif [[ "$arch" == "x86_64" ]]; then arch_key="X86_64"; fi
+
 	if [[ -n "$inc_sel" ]]; then
 		if ! op=$(awk '{$1=$1}1' <<<"$list_patches"); then
 			epr "list-patches: '$op'"
@@ -481,13 +489,11 @@ get_patch_last_supported_ver() {
 		if [[ -n "$vers" ]]; then
 			local best_ver=$(get_highest_ver <<<"$vers")
 			if [[ -n "$best_ver" ]]; then
-				__TARGET_VERSION_CODE__=$(echo "$op" | awk '
-					$1 == "'"$best_ver"'" { flag=1; next }
-					flag && /Version codes:/ { getline; print $1; exit }
-					flag && /^[^ \t]/ { flag=0 }
-				')
-				echo "$best_ver"
-				return
+				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
+					__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
+				fi
+				echo "${best_ver%% *}"
+				return 0
 			fi
 		fi
 	fi
@@ -504,12 +510,10 @@ get_patch_last_supported_ver() {
 	fi
 	local best_ver=$(grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || true)
 	if [[ -n "$best_ver" ]]; then
-		__TARGET_VERSION_CODE__=$(echo "$op" | awk '
-			$1 == "'"$best_ver"'" { flag=1; next }
-			flag && /Version codes:/ { getline; print $1; exit }
-			flag && /^[^ \t]/ { flag=0 }
-		')
-		echo "$best_ver"
+		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
+			__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
+		fi
+		echo "${best_ver%% *}"
 		return 0
 	fi
 	return 1
@@ -829,7 +833,7 @@ def main():
             apk_assets = [a for a in release_data.get("assets", []) if a.get("name", "").endswith((".apk", ".apkm"))]
             target_asset = None
 
-            # 1st Pass: Match version string AND version code (if requested)
+            # 1st Pass: Match version string AND version code
             if version_code:
                 for a in apk_assets:
                     name = a.get("name", "")
@@ -842,7 +846,7 @@ def main():
                     target_asset = a
                     break
 
-            # 2nd Pass: Fallback to matching version string only
+            # 2nd Pass: Fallback matching version string only
             if not target_asset:
                 for a in apk_assets:
                     name = a.get("name", "")
@@ -948,6 +952,7 @@ def main():
         dl_sub_url = None
         is_bundle = False
         
+        # 1st Pass: Match version code explicitly
         for target_type in ["APK", "BUNDLE"]:
             for row in reversed(rows):
                 cells = row.select("div.table-cell")
@@ -959,15 +964,43 @@ def main():
                 
                 arch_text = cells[1].get_text(strip=True)
                 dpi_text = cells[3].get_text(strip=True)
+                row_text = row.get_text()
                 
                 dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
-                if arch_text in apparch and dpi_ok:
+                vcode_ok = True if not version_code else version_code in row_text
+
+                if arch_text in apparch and dpi_ok and vcode_ok:
                     link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
                     if link and link.get("href"):
                         dl_sub_url = urljoin("https://www.apkmirror.com", link["href"])
                         is_bundle = (target_type == "BUNDLE")
                         break
             if dl_sub_url: break
+
+        # 2nd Pass: Fallback matching version string only
+        if not dl_sub_url and version_code:
+            for target_type in ["APK", "BUNDLE"]:
+                for row in reversed(rows):
+                    cells = row.select("div.table-cell")
+                    if len(cells) < 4: continue
+                    badge = cells[0].select_one(".apkm-badge")
+                    b_type = badge.get_text(strip=True).upper() if badge else "APK"
+                    
+                    if b_type != target_type: continue
+                    
+                    arch_text = cells[1].get_text(strip=True)
+                    dpi_text = cells[3].get_text(strip=True)
+                    
+                    dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
+
+                    if arch_text in apparch and dpi_ok:
+                        link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
+                        if link and link.get("href"):
+                            dl_sub_url = urljoin("https://www.apkmirror.com", link["href"])
+                            is_bundle = (target_type == "BUNDLE")
+                            break
+                if dl_sub_url: break
+
             
         if not dl_sub_url:
             sys.exit(1)
@@ -1349,8 +1382,14 @@ check_sig() {
 
 __TARGET_VERSION_CODE__=""
 get_patch_last_supported_ver() {
-	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false}
+	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false} arch=${5:-arm64-v8a}
 	local op
+
+	local arch_key="ARM64_V8A"
+	if [[ "$arch" == "arm-v7a" ]]; then arch_key="ARMEABI_V7A"
+	elif [[ "$arch" == "x86" ]]; then arch_key="X86"
+	elif [[ "$arch" == "x86_64" ]]; then arch_key="X86_64"; fi
+
 	if [[ -n "$inc_sel" ]]; then
 		if ! op=$(awk '{$1=$1}1' <<<"$list_patches"); then
 			epr "list-patches: '$op'"
@@ -1366,12 +1405,10 @@ get_patch_last_supported_ver() {
 		if [[ -n "$vers" ]]; then
 			local best_ver=$(get_highest_ver <<<"$vers")
 			if [[ -n "$best_ver" ]]; then
-				__TARGET_VERSION_CODE__=$(echo "$op" | awk '
-					$1 == "'"$best_ver"'" { flag=1; next }
-					flag && /Version codes:/ { getline; print $1; exit }
-					flag && /^[^ \t]/ { flag=0 }
-				')
-				echo "$best_ver"
+				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
+					__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
+				fi
+				echo "${best_ver%% *}"
 				return 0
 			fi
 		fi
@@ -1389,12 +1426,10 @@ get_patch_last_supported_ver() {
 	fi
 	local best_ver=$(grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || true)
 	if [[ -n "$best_ver" ]]; then
-		__TARGET_VERSION_CODE__=$(echo "$op" | awk '
-			$1 == "'"$best_ver"'" { flag=1; next }
-			flag && /Version codes:/ { getline; print $1; exit }
-			flag && /^[^ \t]/ { flag=0 }
-		')
-		echo "$best_ver"
+		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
+			__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
+		fi
+		echo "${best_ver%% *}"
 		return 0
 	fi
 	return 1
@@ -1501,7 +1536,7 @@ build_rv() {
 
 	local get_latest_ver=false
 	if isoneof "$version_mode" "auto" "experimental"; then
-		if ! version=$(get_patch_last_supported_ver "$list_patches" "$pkg_name" "${args[included_patches]:-}" "$is_experimental"); then
+		if ! version=$(get_patch_last_supported_ver "$list_patches" "$pkg_name" "${args[included_patches]:-}" "$is_experimental" "${args[arch]}"); then
 			epr "get_patch_last_supported_ver failed '$list_patches'"
 			return
 		elif [ -z "$version" ]; then get_latest_ver="true"; fi
