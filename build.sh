@@ -143,19 +143,19 @@ for table_name in $(toml_get_table_names); do
 	app_args[module_prop_name]=$(toml_get "$t" module-prop-name) || app_args[module_prop_name]="${table_name_f}-jhc"
 
 	if [ "${app_args[arch]}" = both ]; then
-		app_args[table]="$table_name (arm64-v8a)"
+		app_args[table]="$table_name"
 		app_args[arch]="arm64-v8a"
 		module_prop_name_b=${app_args[module_prop_name]}
 		app_args[module_prop_name]="${module_prop_name_b}-arm64"
 		
-		print_banner "${app_args[table]}"
+		print_banner "${app_args[table]} (arm64-v8a)"
 		build_rv "$(declare -p app_args)"
 		
-		app_args[table]="$table_name (arm-v7a)"
+		app_args[table]="$table_name"
 		app_args[arch]="arm-v7a"
 		app_args[module_prop_name]="${module_prop_name_b}-arm"
 		
-		print_banner "${app_args[table]}"
+		print_banner "${app_args[table]} (arm-v7a)"
 		build_rv "$(declare -p app_args)"
 	else
 		if [ "${app_args[arch]}" = "arm64-v8a" ]; then
@@ -172,17 +172,16 @@ done
 _clean_tmp
 if [ -z "$(ls -A1 "${BUILD_DIR}")" ]; then abort "All builds failed."; fi
 
-log "\n- Install [ReVanced GmsCore](https://github.com/ReVanced/GmsCore/releases/latest) or [Morphe MicroG-RE](https://github.com/MorpheApp/MicroG-RE/releases/latest) for non-root YouTube, YT Music and Google Photos APKs."
-log "- (Optional) Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music modules from Google Play Store."
-log "- (Optional) Import my [**Custom Settings**](../teejay/custom_settings-by_tanjid) into your application. [*How to do this?*](../teejay/?tab=readme-ov-file#import-custom-settings-in-revancedmorphe-applications)"
+log "\n▶️ » Install [MicroG-RE](https://github.com/MorpheApp/MicroG-RE/releases) or [GmsCore](https://github.com/ReVanced/GmsCore/releases) to enable Google account sign-in for supported apps."
+log "▶️ » (Optional) Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music modules from Play Store."
+log "▶️ » (Optional) Import my [**Custom Settings**](../teejay/custom_settings-by_tanjid) into your application. [*How?*](../teejay/?tab=readme-ov-file#import-custom-settings-in-revancedmorphe-applications)\n"
 
 if [ -s "${TEMP_DIR}/patches_changelog.md" ]; then
-	log "\nPatches Sources :"
 	cat "${TEMP_DIR}/patches_changelog.md" >> build.md || true
 fi
 
 if [ -s "${TEMP_DIR}/cli_changelog.md" ]; then
-	log "\nCLI Source :"
+    echo "" >> build.md
 	cat "${TEMP_DIR}/cli_changelog.md" >> build.md || true
 fi
 
