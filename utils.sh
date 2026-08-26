@@ -183,12 +183,12 @@ get_prebuilts() {
 		if [[ "$grab_cl" == true ]]; then
 			local cl_str=""
 			if [ "$host" = "gitlab" ]; then
-				cl_str="Patches: ${org}/${name}  \n[Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name})\n"
+				cl_str="> ⚙️ » Patches: \`${org}/${name}\` ([🔗 » Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name}))"
 			else
-				cl_str="Patches: ${org}/${name}  \n[Changelog](https://github.com/${clean_src}/releases/tag/${tag_name})\n"
+				cl_str="> ⚙️ » Patches: \`${org}/${name}\` ([🔗 » Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
 			fi
-			if ! grep -qF "Patches: ${org}/${name}" "${TEMP_DIR}/patches_changelog.md" 2>/dev/null; then
-				echo -e "$cl_str" >>"${TEMP_DIR}/patches_changelog.md"
+			if ! grep -qF "\`${org}/${name}\`" "${TEMP_DIR}/patches_changelog.md" 2>/dev/null; then
+				echo -e "$cl_str\n" >>"${TEMP_DIR}/patches_changelog.md"
 			fi
 		fi
 
@@ -306,8 +306,8 @@ get_prebuilts() {
 		name=$(basename "$cli_file")
 	fi
 
-	if ! grep -qF "CLI: ${cli_org}/${name}" "${TEMP_DIR}/cli_changelog.md" 2>/dev/null; then
-		echo -e "CLI: ${cli_org}/${name}  \n" >>"${TEMP_DIR}/cli_changelog.md"
+	if ! grep -qF "CLI: \`${cli_org}/${name}\`" "${TEMP_DIR}/cli_changelog.md" 2>/dev/null; then
+		echo -e "> ⚙️ » CLI: \`${cli_org}/${name}\`  \n" >>"${TEMP_DIR}/cli_changelog.md"
 	fi
 
 	echo "${collected_patch_files[*]} ${cli_file}"
@@ -492,7 +492,7 @@ get_patch_last_supported_ver() {
 				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 					__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
-				echo "${best_ver%% *}"
+				echo "${best_ver%%\[*}"
 				return 0
 			fi
 		fi
@@ -513,7 +513,7 @@ get_patch_last_supported_ver() {
 		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 			__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 		fi
-		echo "${best_ver%% *}"
+		echo "${best_ver%%\[*}"
 		return 0
 	fi
 	return 1
@@ -916,9 +916,12 @@ def main():
                     print(txt.split()[-1])
 
     elif mode == "apkmirror_dl":
-        version, dest_path, arch, dpi = sys.argv[3:7]
-        if arch == "arm-v7a": arch = "armeabi-v7a"
+        version = sys.argv[3] if len(sys.argv) > 3 else ""
+        dest_path = sys.argv[4] if len(sys.argv) > 4 else ""
+        arch = sys.argv[5] if len(sys.argv) > 5 else "all"
+        dpi = sys.argv[6] if len(sys.argv) > 6 else ""
         version_code = sys.argv[7] if len(sys.argv) > 7 else ""
+        if arch == "arm-v7a": arch = "armeabi-v7a"
         
         cat = url.rstrip("/").split("/")[-1]
         log(f"Searching APKMirror for version {version} ({cat})")
@@ -1408,7 +1411,7 @@ get_patch_last_supported_ver() {
 				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 					__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
-				echo "${best_ver%% *}"
+				echo "${best_ver%%\[*}"
 				return 0
 			fi
 		fi
@@ -1429,7 +1432,7 @@ get_patch_last_supported_ver() {
 		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 			__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 		fi
-		echo "${best_ver%% *}"
+		echo "${best_ver%%\[*}"
 		return 0
 	fi
 	return 1
@@ -1642,7 +1645,8 @@ build_rv() {
 			return 0
 		fi
 	fi
-	log "${table}: v${version_f} (${arch_f})"
+	
+	log "- 🟢 » **${table}** (${arch_f}): \`${version_f}\`"
 
 	local microg_patch
 	microg_patch=$(grep "^Name: " <<<"$list_patches" | grep -i "gmscore\|microg" || :) microg_patch=${microg_patch#*: }
@@ -1767,4 +1771,30 @@ build_rv() {
 		popd >/dev/null || :
 		pr "Built ${table} (root): '${BUILD_DIR}/${module_output}'"
 	done
+}
+
+list_args() { tr -d '\t\r' <<<"$1" | tr -s ' ' | sed 's/" "/"\n"/g' | sed 's/\([^"]\)"\([^"]\)/\1'\''\2/g' | grep -v '^$' || :; }
+join_args() { list_args "$1" | sed "s/^/${2} /" | paste -sd " " - || :; }
+
+module_config() {
+	local ma=""
+	if [[ "$4" == "arm64-v8a" ]]; then
+		ma="arm64"
+	elif [[ "$4" == "arm-v7a" ]]; then
+		ma="arm"
+	fi
+	echo "PKG_NAME=$2
+PKG_VER=$3
+MODULE_ARCH=$ma" >"$1/config"
+}
+module_prop() {
+	echo "id=${1}
+name=${2}
+version=v${3}
+versionCode=${NEXT_VER_CODE}
+author=dj_tanjid | j-hc
+banner=https://raw.githubusercontent.com/dj-tanjid/Morphe-ReVancedX-Builder/teejay/${1}/banner.webp
+description=${4}" >"${6}/module.prop"
+
+	if [[ "$ENABLE_MODULE_UPDATE" == true ]]; then echo "updateJson=${5}" >>"${6}/module.prop"; fi
 }
