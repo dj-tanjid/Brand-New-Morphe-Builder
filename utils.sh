@@ -188,7 +188,7 @@ get_prebuilts() {
 				cl_str="> ⚙️ » Patches: \`${org}/${name}\` ([Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
 			fi
 			if ! grep -qF "\`${org}/${name}\`" "${TEMP_DIR}/patches_changelog.md" 2>/dev/null; then
-				echo -e "$cl_str\n" >>"${TEMP_DIR}/patches_changelog.md"
+				echo -e "$cl_str\n" >"${TEMP_DIR}/patches_changelog.md"
 			fi
 		fi
 
