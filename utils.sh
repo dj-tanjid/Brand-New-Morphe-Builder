@@ -180,15 +180,15 @@ get_prebuilts() {
 			tag_name=v${tag_name%.*}
 		fi
 
-		if [[ "$grab_cl" == true ]]; then
+				if [[ "$grab_cl" == true ]]; then
 			local cl_str=""
 			if [ "$host" = "gitlab" ]; then
-				cl_str=" ⚙️ » Patches: \`${org}/${name}\` ([Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name}))"
+				cl_str="⚙️ » Patches: \`${org}/${name}\` ([Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name}))"
 			else
-				cl_str=" ⚙️ » Patches: \`${org}/${name}\` ([Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
+				cl_str="⚙️ » Patches: \`${org}/${name}\` ([Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
 			fi
 			if ! grep -qF "\`${org}/${name}\`" "${TEMP_DIR}/patches_changelog.md" 2>/dev/null; then
-				echo -e "$cl_str\n" >>"${TEMP_DIR}/patches_changelog.md"
+				echo "$cl_str" >>"${TEMP_DIR}/patches_changelog.md"
 			fi
 		fi
 
@@ -306,8 +306,8 @@ get_prebuilts() {
 		name=$(basename "$cli_file")
 	fi
 
-	if ! grep -qF "CLI: \`${cli_org}/${name}\`" "${TEMP_DIR}/cli_changelog.md" 2>/dev/null; then
-		echo -e "⚙️ » CLI: \`${cli_org}/${name}\`\n" >>"${TEMP_DIR}/cli_changelog.md"
+		if ! grep -qF "CLI: \`${cli_org}/${name}\`" "${TEMP_DIR}/cli_changelog.md" 2>/dev/null; then
+		echo "⚙️ » CLI: \`${cli_org}/${name}\`" >>"${TEMP_DIR}/cli_changelog.md"
 	fi
 
 	echo "${collected_patch_files[*]} ${cli_file}"
