@@ -1,8 +1,8 @@
-- 🟢 » **Facebook-De-Vanced** (arm64-v8a): `490.0.0.63.82`  
-- 🟢 » **Facebook-Froggo** (arm64-v8a): `573.0.0.37.74`  
-- 🟢 » **Threads-Chiggi** (arm64-v8a): `434.0.0.41.74`  
+- 🟢 » **Facebook-De-Vanced** (arm64-v8a): `490.0.0.63.82`    
+- 🟢 » **Facebook-Froggo** (arm64-v8a): `573.0.0.37.74`    
+- 🟢 » **Threads-Chiggi** (arm64-v8a): `434.0.0.41.74`    
   
-- Install [`MicroG-RE`](https://github.com/MorpheApp/MicroG-RE/releases) or [`GmsCore`](https://github.com/ReVanced/GmsCore/releases) to enable Google account sign-in for supported apps.  
+- Install [`MicroG-RE`](https://github.com/MorpheApp/MicroG-RE/releases) or [`GmsCore`](https://github.com/ReVanced/GmsCore/releases/latest) to enable Google account sign-in for supported apps.  
 - (Optional) Use [`zygisk-detach`](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music modules from Google Play Store.  
 - (Optional) Import my [`Custom Settings`](../teejay/custom_settings-by_tanjid) into your application. [`How?`](../teejay/?tab=readme-ov-file#import-custom-settings-in-revancedmorphe-applications)  
   
