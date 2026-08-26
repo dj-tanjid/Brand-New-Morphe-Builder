@@ -173,7 +173,6 @@ get_prebuilts() {
 				url=$(jq -r '.url' <<<"$asset")
 				gh_dl "$file" >&2 "$url" || return 1
 			fi
-			echo "Patches: ${org}/${name}  " >>"${dir}/changelog.md"
 		else
 			grab_cl=false
 			name=$(basename "$file")
@@ -182,10 +181,12 @@ get_prebuilts() {
 		fi
 
 		if [[ "$grab_cl" == true ]]; then
-			if [ "$host" = "gitlab" ]; then
-				echo -e "[Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name})\n" >>"${dir}/changelog.md"
-			else
-				echo -e "[Changelog](https://github.com/${clean_src}/releases/tag/${tag_name})\n" >>"${dir}/changelog.md"
+			if ! grep -qF "Patches: ${org}/${name}" "${TEMP_DIR}/patches_changelog.md" 2>/dev/null; then
+				if [ "$host" = "gitlab" ]; then
+					echo -e "Patches: ${org}/${name}  \n[Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name})\n" >>"${TEMP_DIR}/patches_changelog.md"
+				else
+					echo -e "Patches: ${org}/${name}  \n[Changelog](https://github.com/${clean_src}/releases/tag/${tag_name})\n" >>"${TEMP_DIR}/patches_changelog.md"
+				fi
 			fi
 		fi
 
@@ -299,7 +300,12 @@ get_prebuilts() {
 			url=$(jq -r '.url' <<<"$asset")
 			gh_dl "$cli_file" >&2 "$url" || return 1
 		fi
-		echo "CLI: ${cli_org}/${name}  " >>"${cli_dir}/changelog.md"
+	else
+		name=$(basename "$cli_file")
+	fi
+
+	if ! grep -qF "CLI: ${cli_org}/${name}" "${TEMP_DIR}/cli_changelog.md" 2>/dev/null; then
+		echo -e "CLI: ${cli_org}/${name}  \n" >>"${TEMP_DIR}/cli_changelog.md"
 	fi
 
 	echo "${collected_patch_files[*]} ${cli_file}"
@@ -456,6 +462,7 @@ semver_validate() {
 	[[ ${#ac} -eq 0 ]]
 }
 
+__TARGET_VERSION_CODE__=""
 get_patch_last_supported_ver() {
 	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false}
 	local op
@@ -472,8 +479,16 @@ get_patch_last_supported_ver() {
 		done <<<"$(list_args "$inc_sel")"
 		vers=$(awk '{$1=$1}1' <<<"$vers")
 		if [[ -n "$vers" ]]; then
-			get_highest_ver <<<"$vers"
-			return
+			local best_ver=$(get_highest_ver <<<"$vers")
+			if [[ -n "$best_ver" ]]; then
+				__TARGET_VERSION_CODE__=$(echo "$op" | awk '
+					$1 == "'"$best_ver"'" { flag=1; next }
+					flag && /Version codes:/ { getline; print $1; exit }
+					flag && /^[^ \t]/ { flag=0 }
+				')
+				echo "$best_ver"
+				return
+			fi
 		fi
 	fi
 	op=$(patches_list_versions "${args[cli]}" "${args[ptjar]}" "$pkg_name" "$is_experimental") || return 1
@@ -487,7 +502,17 @@ get_patch_last_supported_ver() {
 			abort "No patches found for '$pkg_name' in patches '${args[ptjar]}'"
 		fi
 	fi
-	grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || return 1
+	local best_ver=$(grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || true)
+	if [[ -n "$best_ver" ]]; then
+		__TARGET_VERSION_CODE__=$(echo "$op" | awk '
+			$1 == "'"$best_ver"'" { flag=1; next }
+			flag && /Version codes:/ { getline; print $1; exit }
+			flag && /^[^ \t]/ { flag=0 }
+		')
+		echo "$best_ver"
+		return 0
+	fi
+	return 1
 }
 
 patches_list_versions() {
@@ -795,6 +820,7 @@ def main():
             dest_path = sys.argv[4] if len(sys.argv) > 4 else ""
             arch = sys.argv[5] if len(sys.argv) > 5 else "all"
             dpi = sys.argv[6] if len(sys.argv) > 6 else ""
+            version_code = sys.argv[7] if len(sys.argv) > 7 else ""
 
             if arch == "arm-v7a":
                 arch = "armeabi-v7a"
@@ -803,28 +829,31 @@ def main():
             apk_assets = [a for a in release_data.get("assets", []) if a.get("name", "").endswith((".apk", ".apkm"))]
             target_asset = None
 
-            for a in apk_assets:
-                name = a.get("name", "")
-                if version_f and version_f not in name:
-                    continue
-
-                m = arch_suffix.search(name)
-                file_arch = m.group(1).lower() if m and m.group(1) else "all"
-                if arch in ("all", "both"):
-                    if file_arch != "all":
+            # 1st Pass: Match version string AND version code (if requested)
+            if version_code:
+                for a in apk_assets:
+                    name = a.get("name", "")
+                    if version_f not in name or version_code not in name:
                         continue
-                else:
-                    if file_arch not in (arch, "all"):
-                        continue
+                    m = arch_suffix.search(name)
+                    file_arch = m.group(1).lower() if m and m.group(1) else "all"
+                    if arch in ("all", "both") and file_arch != "all": continue
+                    if arch not in ("all", "both") and file_arch not in (arch, "all"): continue
+                    target_asset = a
+                    break
 
-                target_asset = a
-                break
-
+            # 2nd Pass: Fallback to matching version string only
             if not target_asset:
                 for a in apk_assets:
-                    if version_f and version_f in a.get("name", ""):
-                        target_asset = a
-                        break
+                    name = a.get("name", "")
+                    if version_f and version_f not in name:
+                        continue
+                    m = arch_suffix.search(name)
+                    file_arch = m.group(1).lower() if m and m.group(1) else "all"
+                    if arch in ("all", "both") and file_arch != "all": continue
+                    if arch not in ("all", "both") and file_arch not in (arch, "all"): continue
+                    target_asset = a
+                    break
 
             if not target_asset and apk_assets:
                 target_asset = apk_assets[0]
@@ -885,6 +914,7 @@ def main():
     elif mode == "apkmirror_dl":
         version, dest_path, arch, dpi = sys.argv[3:7]
         if arch == "arm-v7a": arch = "armeabi-v7a"
+        version_code = sys.argv[7] if len(sys.argv) > 7 else ""
         
         cat = url.rstrip("/").split("/")[-1]
         log(f"Searching APKMirror for version {version} ({cat})")
@@ -996,7 +1026,11 @@ def main():
                 if t := el.get_text(strip=True): print(t)
 
     elif mode == "uptodown_dl":
-        version, dest_path, arch, dpi = sys.argv[3:7]
+        version = sys.argv[3] if len(sys.argv) > 3 else ""
+        dest_path = sys.argv[4] if len(sys.argv) > 4 else ""
+        arch = sys.argv[5] if len(sys.argv) > 5 else "all"
+        dpi = sys.argv[6] if len(sys.argv) > 6 else ""
+        version_code = sys.argv[7] if len(sys.argv) > 7 else ""
         if arch == "arm-v7a": arch = "armeabi-v7a"
         
         soup, _ = scraper.get_soup(f"{url}/versions")
@@ -1026,19 +1060,25 @@ def main():
             
         ver_url_data = None
         is_bundle = False
-        for i in range(1, 21):
-            _, r = scraper.get_soup(f"{url}/apps/{data_code}/versions/{i}")
-            if not r or not r.text: continue
-            try:
-                data = json.loads(r.text).get("data", [])
-            except Exception:
-                continue
-            for entry in data:
-                if entry.get("version") == version:
-                    ver_url_data = entry.get("versionURL", {})
-                    is_bundle = (entry.get("kindFile") == "xapk")
-                    break
-            if ver_url_data: break
+
+        def find_version(match_code=True):
+            for i in range(1, 21):
+                _, r = scraper.get_soup(f"{url}/apps/{data_code}/versions/{i}")
+                if not r or not r.text: continue
+                try:
+                    data = json.loads(r.text).get("data", [])
+                except Exception:
+                    continue
+                for entry in data:
+                    if entry.get("version") == version:
+                        if match_code and version_code and str(entry.get("versionCode", "")) != str(version_code):
+                            continue
+                        return entry.get("versionURL", {}), (entry.get("kindFile") == "xapk")
+            return None, False
+
+        ver_url_data, is_bundle = find_version(match_code=True)
+        if not ver_url_data and version_code:
+            ver_url_data, is_bundle = find_version(match_code=False)
 
         if not ver_url_data:
             log(f"Uptodown version {version} not found.")
@@ -1116,10 +1156,10 @@ get_github_vers() {
 }
 
 dl_github() {
-	local url="${1%/}" version=$2 output=$3 arch=$4 dpi=$5
+	local url="${1%/}" version=$2 output=$3 arch=$4 dpi=$5 vcode=${6:-}
 	rm -f "${output}.is_bundle" "${output}.apkm.is_bundle"
 
-	if ! run_python_backend "github_dl" "$url" "$version" "$output" "$arch" "$dpi" >/dev/null; then
+	if ! run_python_backend "github_dl" "$url" "$version" "$output" "$arch" "$dpi" "$vcode" >/dev/null; then
 		return 1
 	fi
 
@@ -1157,14 +1197,14 @@ get_apkmirror_pkg_name() {
 get_apkmirror_vers() { run_python_backend "apkmirror_vers" "${__APKMIRROR_URL__:-}"; }
 
 dl_apkmirror() {
-	local url="${1%/}" version=$2 output=$3 arch=$4 dpi=$5
+	local url="${1%/}" version=$2 output=$3 arch=$4 dpi=$5 vcode=${6:-}
 	if [ -f "${output}.apkm" ]; then
 		merge_splits "${output}.apkm" "${output}"
 		return 0
 	fi
 	rm -f "${output}.is_bundle" "${output}.apkm.is_bundle"
 	
-	if ! run_python_backend "apkmirror_dl" "$url" "$version" "$output" "$arch" "$dpi" >/dev/null; then
+	if ! run_python_backend "apkmirror_dl" "$url" "$version" "$output" "$arch" "$dpi" "$vcode" >/dev/null; then
 		return 1
 	fi
 	
@@ -1201,10 +1241,10 @@ get_uptodown_pkg_name() {
 get_uptodown_vers() { run_python_backend "uptodown_vers" "${__UPTODOWN_URL__:-}"; }
 
 dl_uptodown() {
-	local url="${1%/}" version=$2 output=$3 arch=$4 dpi=$5
+	local url="${1%/}" version=$2 output=$3 arch=$4 dpi=$5 vcode=${6:-}
 	rm -f "${output}.is_bundle" "${output}.apkm.is_bundle"
 	
-	if ! run_python_backend "uptodown_dl" "$url" "$version" "$output" "$arch" "$dpi" >/dev/null; then
+	if ! run_python_backend "uptodown_dl" "$url" "$version" "$output" "$arch" "$dpi" "$vcode" >/dev/null; then
 		return 1
 	fi
 	
@@ -1216,7 +1256,7 @@ dl_uptodown() {
 
 # -------------------- archive --------------------
 dl_archive() {
-	local url=$1 version=$2 output=$3 arch=$4
+	local url=$1 version=$2 output=$3 arch=$4 dpi=$5 vcode=${6:-}
 	local path output_m version=${version// /}
 	local version_f=${version#v}
 
@@ -1252,7 +1292,7 @@ get_archive_pkg_name() { echo "${__ARCHIVE_PKG_NAME__:-UNKNOWN}"; }
 
 # -------------------- direct --------------------
 dl_direct() {
-	local url=$1 version=${2// /-} output=$3 arch=$4 _dpi=$5
+	local url=$1 version=${2// /-} output=$3 arch=$4 _dpi=$5 vcode=${6:-}
 	local version_f=${version#v}
 	if ! grep -q "${version_f}-${arch// /}" <<<"$url"; then
 		epr "Given direct-dlurl for $output is not compatible. Set proper 'arch' and 'version' options."
@@ -1307,8 +1347,115 @@ check_sig() {
 	fi
 }
 
+__TARGET_VERSION_CODE__=""
+get_patch_last_supported_ver() {
+	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false}
+	local op
+	if [[ -n "$inc_sel" ]]; then
+		if ! op=$(awk '{$1=$1}1' <<<"$list_patches"); then
+			epr "list-patches: '$op'"
+			return 1
+		fi
+		local ver vers="" NL=$'\n'
+		while IFS= read -r line; do
+			line="${line:1:${#line}-2}"
+			ver=$(sed -n "/^Name: $line\$/,/^\$/p" <<<"$op" | sed -n "/^Compatible versions:\$/,/^\$/p" | tail -n +2)
+			vers=${ver}${NL}
+		done <<<"$(list_args "$inc_sel")"
+		vers=$(awk '{$1=$1}1' <<<"$vers")
+		if [[ -n "$vers" ]]; then
+			local best_ver=$(get_highest_ver <<<"$vers")
+			if [[ -n "$best_ver" ]]; then
+				__TARGET_VERSION_CODE__=$(echo "$op" | awk '
+					$1 == "'"$best_ver"'" { flag=1; next }
+					flag && /Version codes:/ { getline; print $1; exit }
+					flag && /^[^ \t]/ { flag=0 }
+				')
+				echo "$best_ver"
+				return 0
+			fi
+		fi
+	fi
+	op=$(patches_list_versions "${args[cli]}" "${args[ptjar]}" "$pkg_name" "$is_experimental") || return 1
+	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | awk '{$1=$1}1')
+	if [[ "$op" == "Any" ]]; then return; fi
+	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}
+	if [[ -z "$pcount" ]]; then
+		if grep -Fq "$pkg_name" <<<"$list_patches"; then
+			return
+		else
+			abort "No patches found for '$pkg_name' in patches '${args[ptjar]}'"
+		fi
+	fi
+	local best_ver=$(grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || true)
+	if [[ -n "$best_ver" ]]; then
+		__TARGET_VERSION_CODE__=$(echo "$op" | awk '
+			$1 == "'"$best_ver"'" { flag=1; next }
+			flag && /Version codes:/ { getline; print $1; exit }
+			flag && /^[^ \t]/ { flag=0 }
+		')
+		echo "$best_ver"
+		return 0
+	fi
+	return 1
+}
+
+patches_list_versions() {
+	local cli_jar=$1 patches_jars=$2 pkg_name=$3 is_experimental=$4
+	local combined_op="" op="" cmd cmd_base="java -jar '$cli_jar' list-versions"
+	local cli_name
+	cli_name=$(basename "$cli_jar")
+	if [ "${cli_name::8}" = "revanced" ]; then
+		cmd_base+=" -b"
+	elif [ "$is_experimental" = "true" ]; then
+		cmd_base+=" -x"
+	fi
+
+	for pj in $patches_jars; do
+		cmd="${cmd_base} --patches='$pj' -f '$pkg_name'"
+		if op=$(eval "$cmd" 2>&1); then
+			combined_op+="$op"$'\n'
+			continue
+		fi
+		cmd="${cmd_base} '$pj' -f '$pkg_name'"
+		if op=$(eval "$cmd" 2>&1); then
+			combined_op+="$op"$'\n'
+		fi
+	done
+
+	if [[ -n "$combined_op" ]]; then
+		echo "$combined_op"
+		return 0
+	fi
+	epr "Could not list versions ($pkg_name) $cli_jar"
+	return 1
+}
+
+patches_list() {
+	local cli_jar=$1 patches_jars=$2 pkg_name=$3 is_experimental=$4
+	local combined_op="" op=""
+	for pj in $patches_jars; do
+		if op=$(java -jar "$cli_jar" list-patches -p "$pj" --filter-package-name "$pkg_name" --versions --packages -b 2>&1); then
+			combined_op+="$op"$'\n'
+		else
+			local cmd="java -jar '$cli_jar' list-patches --patches '$pj' -f '$pkg_name' --with-versions --with-packages"
+			if [ "$is_experimental" = "true" ]; then cmd+=" -x"; fi
+			if op=$(eval "$cmd" 2>&1); then
+				combined_op+="$op"$'\n'
+			fi
+		fi
+	done
+
+	if [[ -z "$combined_op" ]]; then
+		epr "Could not get patches list ($pkg_name) $cli_jar"
+		return 1
+	fi
+	echo "$combined_op"
+}
+
 build_rv() {
 	eval "declare -A args=${1#*=}"
+	__TARGET_VERSION_CODE__=""
 	local version="" pkg_name=""
 	local mode_arg=${args[build_mode]:-} version_mode=${args[version]:-}
 	local app_name=${args[app_name]:-}
@@ -1411,9 +1558,15 @@ build_rv() {
 		build_mode_arr=(apk module)
 	fi
 
-	pr "Choosing version '${version}' for ${table}"
 	local version_f=${version// /}
 	version_f=${version_f#v}
+
+	if [[ -n "${__TARGET_VERSION_CODE__:-}" ]]; then
+		pr "Choosing version '${version}' (Code: ${__TARGET_VERSION_CODE__}) for ${table}"
+	else
+		pr "Choosing version '${version}' for ${table}"
+	fi
+
 	local stock_apk="${TEMP_DIR}/${pkg_name}-${version_f}-${arch_f}.apk"
 	if [[ ! -f "$stock_apk" ]]; then
 		for dl_p in "${DL_SRCS[@]}"; do
@@ -1425,7 +1578,7 @@ build_rv() {
 					continue
 				fi
 			fi
-			if ! dl_${dl_p} "${args[${dl_p}_dlurl]}" "$version" "$stock_apk" "$arch" "${args[dpi]:-}" "$get_latest_ver"; then
+			if ! dl_${dl_p} "${args[${dl_p}_dlurl]}" "$version" "$stock_apk" "$arch" "${args[dpi]:-}" "${__TARGET_VERSION_CODE__:-}"; then
 				epr "ERROR: Could not download '${table}' from '${dl_p}' with version '${version}', arch '${arch}', dpi '${args[dpi]:-}'"
 				continue
 			fi
@@ -1454,7 +1607,7 @@ build_rv() {
 			return 0
 		fi
 	fi
-	log "${table}: ${version}"
+	log "${table}: v${version_f} (${arch_f})"
 
 	local microg_patch
 	microg_patch=$(grep "^Name: " <<<"$list_patches" | grep -i "gmscore\|microg" || :) microg_patch=${microg_patch#*: }
@@ -1579,30 +1732,4 @@ build_rv() {
 		popd >/dev/null || :
 		pr "Built ${table} (root): '${BUILD_DIR}/${module_output}'"
 	done
-}
-
-list_args() { tr -d '\t\r' <<<"$1" | tr -s ' ' | sed 's/" "/"\n"/g' | sed 's/\([^"]\)"\([^"]\)/\1'\''\2/g' | grep -v '^$' || :; }
-join_args() { list_args "$1" | sed "s/^/${2} /" | paste -sd " " - || :; }
-
-module_config() {
-	local ma=""
-	if [[ "$4" == "arm64-v8a" ]]; then
-		ma="arm64"
-	elif [[ "$4" == "arm-v7a" ]]; then
-		ma="arm"
-	fi
-	echo "PKG_NAME=$2
-PKG_VER=$3
-MODULE_ARCH=$ma" >"$1/config"
-}
-module_prop() {
-	echo "id=${1}
-name=${2}
-version=v${3}
-versionCode=${NEXT_VER_CODE}
-author=dj_tanjid | j-hc
-banner=https://raw.githubusercontent.com/dj-tanjid/Morphe-ReVancedX-Builder/teejay/${1}/banner.webp
-description=${4}" >"${6}/module.prop"
-
-	if [[ "$ENABLE_MODULE_UPDATE" == true ]]; then echo "updateJson=${5}" >>"${6}/module.prop"; fi
 }
