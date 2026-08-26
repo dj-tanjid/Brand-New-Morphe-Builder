@@ -5,7 +5,7 @@ parallel-jobs = 1
 # see https://github.com/j-hc/revanced-magisk-module/blob/main/CONFIG.md for more detailed explanations
 
 [YouTube-Morphe]
-enabled = false
+enabled = true
 app-name = "YouTube"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -24,14 +24,14 @@ excluded-patches = """\
     'Custom branding' \
     """
 # included-patches = ""
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube"
 uptodown-dlurl = "https://youtube.en.uptodown.com/android"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.google.android.youtube"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.youtube"
 
 [YT-Music-Morphe]
-enabled = false
+enabled = true
 app-name = "YT Music"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -41,21 +41,21 @@ arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'un
 # Stable Support #
 # version = "auto" # 'auto', 'experimental', 'latest' or a version number
 # Experimental Support #
-# version = "9.32.51"
-version = "9.33.52"
+version = "experimental"
+#version = "9.33.52"
 excluded-patches = """\
     'Custom branding name for YouTube Music' \
     'Custom branding icon for YouTube Music' \
     'Custom branding' \
     """
 # included-patches = ""
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube-music"
 uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
 
 [Reddit-Morphe]
-enabled = false
+enabled = true
 app-name = "Reddit"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -64,9 +64,8 @@ build-mode = "both" # Options 'apk', 'module', or 'both'
 # Stable Support #
 # version = "auto" # 'auto', 'experimental', 'latest' or a version number
 # Experimental Support #
-# version = "2026.31.1"
-# version = "2026.32.0"
-version = "2026.34.0"
+version = "experimental"
+# version = "2026.34.0"
 dpi = "120-640dpi" # Options '120-640dpi', or 'nodpi'
 excluded-patches = """\
     'Custom branding name for Reddit' \
@@ -74,13 +73,13 @@ excluded-patches = """\
     'Custom branding' \
     """
 # included-patches = ""
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/redditinc/reddit"
 uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
 
 [Google-Photos-De-Vanced]
-enabled = false
+enabled = true
 app-name = "Google Photos"
 patches-source = "RookieEnough/De-Vanced"
 cli-source = "MorpheApp/morphe-desktop"
@@ -103,10 +102,10 @@ uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
 [Facebook-De-Vanced]
-enabled = false
+enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
-patches-source = "RookieEnough/De-Vanced"
+patches-source = "github:SapitoSucio/FroggoMorphePatches"
 cli-source = "MorpheApp/morphe-desktop"
 rv-brand = "De-Vanced"
 arch = "arm64-v8a"
@@ -120,7 +119,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Messenger-De-Vanced]
-enabled = false
+enabled = true
 app-name = "Facebook Messenger"
 pkg-name = "com.facebook.orca"
 patches-source = "RookieEnough/De-Vanced"
@@ -135,14 +134,14 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/messe
 uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
 
 [Threads-De-Vanced]
-enabled = false
+enabled = true
 app-name = "Treads"
 pkg-name = "com.instagram.barcelona"
-patches-source = "RookieEnough/De-Vanced"
+patches-source = "github:durgesh0505/chiggi_morphe_patches"
 cli-source = "MorpheApp/morphe-desktop"
 rv-brand = "De-Vanced"
 arch = "arm64-v8a"
-version = "latest" # 'auto', 'experimental', 'latest' or a version number
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram.barcelona"
@@ -150,7 +149,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads-an-instagram-
 uptodown-dlurl = "https://threads.en.uptodown.com/android"
 
 [Twitter-Piko]
-enabled = true
+enabled = false
 app-name = "Twitter"
 patches-source = "crimera/piko"
 cli-source = "MorpheApp/morphe-desktop"
@@ -171,10 +170,10 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko]
-enabled = true
+enabled = false
 app-name = "X"
 # patches-source = "crimera/piko"
-patches-source = ["github:crimera/piko", "gitlab:inotia00/x-shim"]
+patches-source = "github:crimera/piko"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Piko"
 build-mode = "apk" # Options 'apk', 'module', or 'both'
