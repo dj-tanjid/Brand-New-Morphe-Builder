@@ -67,9 +67,9 @@ gh_dl "${MODULE_TEMPLATE_DIR}/bin/x64/cmpr" "https://github.com/j-hc/cmpr/releas
 
 # Terminal banner for clear live logging visibility without breaking stream
 print_banner() {
-	echo -e "\n\033[1;35m===============================================================\033[0m"
+	echo -e "\n\033[1;35m============================================================\033[0m"
 	echo -e "\033[1;36m  🚀 PROCESSING : $1\033[0m"
-	echo -e "\033[1;35m===============================================================\033[0m\n"
+	echo -e "\033[1;35m============================================================\033[0m\n"
 }
 
 for table_name in $(toml_get_table_names); do
