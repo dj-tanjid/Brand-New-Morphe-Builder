@@ -183,12 +183,12 @@ get_prebuilts() {
 		if [[ "$grab_cl" == true ]]; then
 			local cl_str=""
 			if [ "$host" = "gitlab" ]; then
-				cl_str="> ⚙️ » Patches: \`${org}/${name}\` ([🔗 » Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name}))"
+				cl_str="⚙️ » Patches: \`${org}/${name}\` ([🔗 » Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name}))"
 			else
-				cl_str="> ⚙️ » Patches: \`${org}/${name}\` ([🔗 » Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
+				cl_str="⚙️ » Patches: \`${org}/${name}\` ([🔗 » Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
 			fi
 			if ! grep -qF "\`${org}/${name}\`" "${TEMP_DIR}/patches_changelog.md" 2>/dev/null; then
-				echo -e "$cl_str" >>"${TEMP_DIR}/patches_changelog.md"
+				echo "$cl_str" >>"${TEMP_DIR}/patches_changelog.md"
 			fi
 		fi
 
@@ -307,20 +307,10 @@ get_prebuilts() {
 	fi
 
 	if ! grep -qF "CLI: \`${cli_org}/${name}\`" "${TEMP_DIR}/cli_changelog.md" 2>/dev/null; then
-		echo -e "> ⚙️ » CLI: \`${cli_org}/${name}\`\n" >>"${TEMP_DIR}/cli_changelog.md"
+		echo "⚙️ » CLI: \`${cli_org}/${name}\`" >>"${TEMP_DIR}/cli_changelog.md"
 	fi
 
 	echo "${collected_patch_files[*]} ${cli_file}"
-}
-
-set_prebuilts() {
-	APKSIGNER="${BIN_DIR}/apksigner.jar"
-	local arch
-	arch=$(uname -m)
-	if [ "$arch" = aarch64 ]; then arch=arm64; elif [ "${arch:0:5}" = "armv7" ]; then arch=arm; fi
-	HTMLQ="${BIN_DIR}/htmlq/htmlq-${arch}"
-	AAPT2="${BIN_DIR}/aapt2/aapt2-${arch}"
-	TOML="${BIN_DIR}/toml/tq-${arch}"
 }
 
 config_update() {
@@ -934,31 +924,37 @@ def main():
         cat = url.rstrip("/").split("/")[-1]
         
         release_url = None
+        search_url = f"{url.rstrip('/')}/?s={version}"
         
-        # 1st Pass: Search exact version code if provided
-        if version_code:
-            log(f"Searching APKMirror for version code {version_code} ({cat})")
-            search_url = f"https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s={cat}+{version}+{version_code}"
-            soup_search, _ = scraper.get_soup(search_url)
-            if soup_search:
-                for a in soup_search.select("a.fontBlack[href*='-release/']"):
-                    if version in a.get_text() and f"/{cat}/" in a.get("href", ""):
-                        release_url = urljoin("https://www.apkmirror.com", a["href"])
-                        break
+        log(f"Searching APKMirror for version {version} ({cat})")
+        soup_search, _ = scraper.get_soup(search_url)
         
-        # 2nd Pass: Fallback to version string
-        if not release_url:
-            log(f"Searching APKMirror for version {version} ({cat})")
-            search_url = f"https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s={cat}+{version}"
-            soup_search, _ = scraper.get_soup(search_url)
-            if not soup_search: 
-                sys.exit(1)
-            
+        if soup_search:
             for a in soup_search.select("a.fontBlack[href*='-release/']"):
                 if version in a.get_text() and f"/{cat}/" in a.get("href", ""):
                     release_url = urljoin("https://www.apkmirror.com", a["href"])
                     break
-                
+                    
+        # Fallback to global search only if exact URL failed
+        if not release_url:
+            log("APKMirror release URL not found via exact app search, trying global search...")
+            search_term = version.split("-")[0].strip()
+            global_search_url = f"https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s={cat}+{search_term}"
+            if version_code:
+                global_search_url += f"+{version_code}"
+
+            soup_search, _ = scraper.get_soup(global_search_url)
+            if soup_search:
+                clean_target = re.sub(r'[^a-zA-Z0-9]', '', version.lower())
+                for a in soup_search.select("a.fontBlack[href*='-release/']"):
+                    txt = a.get_text(strip=True)
+                    href = a.get("href", "")
+                    clean_slug = re.sub(r'[^a-zA-Z0-9]', '', href.lower())
+                    clean_txt = re.sub(r'[^a-zA-Z0-9]', '', txt.lower())
+                    if clean_target in clean_slug or clean_target in clean_txt:
+                        release_url = urljoin("https://www.apkmirror.com", href)
+                        break
+
         if not release_url:
             log("APKMirror release URL not found via app search.")
             sys.exit(1)
@@ -1404,9 +1400,6 @@ check_sig() {
 	fi
 }
 
-export __TARGET_VERSION_CODE__=""
-export __TARGET_VERSION__=""
-
 get_patch_last_supported_ver() {
 	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false} arch=${5:-arm64-v8a}
 	local op
@@ -1434,10 +1427,10 @@ get_patch_last_supported_ver() {
 			local best_ver=$(get_highest_ver <<<"$vers")
 			if [[ -n "$best_ver" ]]; then
 				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
-					__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
+					export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
 				local clean_ver="${best_ver%%\[*}"
-				__TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
+				export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
 				return 0
 			fi
 		fi
@@ -1458,10 +1451,10 @@ get_patch_last_supported_ver() {
 	local best_ver=$(grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || true)
 	if [[ -n "$best_ver" ]]; then
 		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
-			__TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
+			export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 		fi
 		local clean_ver="${best_ver%%\[*}"
-		__TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
+		export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
 		return 0
 	fi
 	return 1
@@ -1522,8 +1515,8 @@ patches_list() {
 
 build_rv() {
 	eval "declare -A args=${1#*=}"
-	__TARGET_VERSION_CODE__=""
-	__TARGET_VERSION__=""
+	export __TARGET_VERSION_CODE__=""
+	export __TARGET_VERSION__=""
 	local version="" pkg_name=""
 	local mode_arg=${args[build_mode]:-} version_mode=${args[version]:-}
 	local app_name=${args[app_name]:-}
