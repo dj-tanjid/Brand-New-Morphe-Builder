@@ -11,6 +11,6 @@
  ⚙️ » Patches: `SapitoSucio/patches-1.1.17.mpp` ([Changelog](https://github.com/SapitoSucio/FroggoMorphePatches/releases/tag/v1.1.17))
 
   
-> > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.14.0-all.jar`
+> ⚙️ » CLI: `MorpheApp/morphe-desktop-1.14.0-all.jar`
 
   
