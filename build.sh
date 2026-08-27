@@ -173,9 +173,11 @@ _clean_tmp
 if [ -z "$(ls -A1 "${BUILD_DIR}")" ]; then abort "All builds failed."; fi
 
 log "\n<br>\n"
-log "> **NOTE:**<sub><br>- Install [\`MicroG-RE\`](https://github.com/MorpheApp/MicroG-RE/releases) or [\`GmsCore\`](https://github.com/ReVanced/GmsCore/releases/latest) to enable Google account sign-in for supported apps.<br>- (Optional) Use [\`zygisk-detach\`](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music modules from Google Play Store.<br>- (Optional) Import my [\`Custom Settings\`](../teejay/custom_settings-by_tanjid) into your application. [\`How?\`](../teejay/?tab=readme-ov-file#import-custom-settings-in-revancedmorphe-applications)</sub>  "
-log "<br>\n"
+log "\n**Note:**"
+log "```text\n• Install and login via ReVanced GmsCore or Morphe MicroG-RE for non-root APKs.\n• (Optional) Use zygisk-detach to detach YouTube and YT Music modules from Google Play Store or even better use HMA.\n• (Optional) Import my Custom Settings into your application.\n```"
+log "\n<br>\n"
 
+log "Patches and CLI Sources :\n"
 if [ -s "${TEMP_DIR}/patches_changelog.md" ]; then
 	# Prepend '>' only to the first line, and indent the rest cleanly
 	sed '1s/^[ >]*/> /; 2,$s/^[ >]*/ /' "${TEMP_DIR}/patches_changelog.md" >> build.md || true
