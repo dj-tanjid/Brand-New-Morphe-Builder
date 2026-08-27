@@ -173,8 +173,10 @@ _clean_tmp
 if [ -z "$(ls -A1 "${BUILD_DIR}")" ]; then abort "All builds failed."; fi
 
 log "\n<br>\n"
-log "\n**Note:**"
-log "```text\n• Install and login via ReVanced GmsCore or Morphe MicroG-RE for non-root APKs.\n• (Optional) Use zygisk-detach to detach YouTube and YT Music modules from Google Play Store or even better use HMA.\n• (Optional) Import my Custom Settings into your application.\n```"
+log "\n**Note:**\n"
+log "- Install and login via "ReVanced GmsCore" or "Morphe MicroG-RE" for non-root APKs.\n"
+log "- (Optional) Use "zygisk-detach" to detach YouTube and YT Music modules from Google Play Store or even better use "HMA".\n"
+log "- (Optional) Import my "Custom Settings" into your application.\n"
 log "\n<br>\n"
 
 log "Patches and CLI Sources :\n"
