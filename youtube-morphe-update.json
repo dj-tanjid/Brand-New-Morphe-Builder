@@ -1,6 +1,6 @@
 {
-  "version": "v21.34.243-SECONDARY (patches dev.1.mpp)",
-  "versionCode": 170,
-  "zipUrl": "https://github.com/dj-tanjid/Morphe-DeVanced-Builder/releases/download/170/youtube-morphe-module-v21.34.243-SECONDARY-arm64-v8a.zip",
+  "version": "v21.34.243 (patches dev.2.mpp)",
+  "versionCode": 171,
+  "zipUrl": "https://github.com/dj-tanjid/Morphe-DeVanced-Builder/releases/download/171/youtube-morphe-module-v21.34.243-arm64-v8a.zip",
   "changelog": "https://raw.githubusercontent.com/dj-tanjid/Morphe-DeVanced-Builder/update/build.md"
 }
