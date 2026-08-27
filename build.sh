@@ -174,9 +174,9 @@ if [ -z "$(ls -A1 "${BUILD_DIR}")" ]; then abort "All builds failed."; fi
 
 log "\n<br>\n"
 log "\n**Note:**\n"
-log "- Install and login via "ReVanced GmsCore" or "Morphe MicroG-RE" for non-root APKs.\n"
-log "- (Optional) Use "zygisk-detach" to detach YouTube and YT Music modules from Google Play Store or even better use "HMA".\n"
-log "- (Optional) Import my "Custom Settings" into your application.\n"
+log "- Install and login via [ReVanced GmsCore](https://github.com/ReVanced/GmsCore/releases/latest) or [Morphe MicroG-RE](https://github.com/MorpheApp/MicroG-RE/releases/latest) or for non-root APKs.\n"
+log "- (Optional) Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music modules from Google Play Store or even better use [**HMA-OSS**](https://github.com/frknkrc44/HMA-OSS/releases).\n"
+log "- (Optional) Import my [**Custom Settings**](../teejay/custom_settings-by_tanjid) into your application. [*How to do this?*](../teejay/?tab=readme-ov-file#import-custom-settings-in-revancedmorphe-applications).\n"
 log "\n<br>\n"
 
 log "Patches and CLI Sources :\n"
