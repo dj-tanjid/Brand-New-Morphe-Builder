@@ -121,7 +121,10 @@ get_prebuilts() {
 				local gl_rel="https://gitlab.com/api/v4/projects/${project_enc}/releases"
 				if [[ "$p_ver" == "dev" ]]; then
 					resp=$(req "$gl_rel" -) || return 1
-					p_ver=$(jq -e -r '.[].tag_name' <<<"$resp" | get_highest_ver) || return 1
+					if ! p_ver=$(jq -e -r '.[].tag_name' <<<"$resp" | get_highest_ver); then
+						_api_diag "$resp" "patches (${raw_p_src}): could not resolve dev tag"
+						return 1
+					fi
 				fi
 				if [[ "$p_ver" == "latest" ]]; then
 					resp=$(req "${gl_rel}/permalink/latest" -) || return 1
@@ -129,12 +132,18 @@ get_prebuilts() {
 					resp=$(req "${gl_rel}/${p_ver}" -) || return 1
 				fi
 				tag_name=$(jq -r '.tag_name // empty' <<<"$resp") || return 1
-				matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp") || return 1
+				if ! matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp"); then
+					_api_diag "$resp" "patches (${raw_p_src}): could not read release assets"
+					return 1
+				fi
 			else
 				local gh_rel="https://api.github.com/repos/${clean_src}/releases"
 				if [[ "$p_ver" == "dev" ]]; then
 					resp=$(gh_req "$gh_rel" -) || return 1
-					p_ver=$(jq -e -r '.[] | .tag_name' <<<"$resp" | get_highest_ver) || return 1
+					if ! p_ver=$(jq -e -r '.[] | .tag_name' <<<"$resp" | get_highest_ver); then
+						_api_diag "$resp" "patches (${raw_p_src}): could not resolve dev tag"
+						return 1
+					fi
 				fi
 				if [[ "$p_ver" == "latest" ]]; then
 					gh_rel+="/latest"
@@ -142,8 +151,14 @@ get_prebuilts() {
 					gh_rel+="/tags/${p_ver}"
 				fi
 				resp=$(gh_req "$gh_rel" -) || return 1
-				tag_name=$(jq -r '.tag_name' <<<"$resp") || return 1
-				matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp") || return 1
+				if ! tag_name=$(jq -e -r '.tag_name' <<<"$resp"); then
+					_api_diag "$resp" "patches (${raw_p_src}): could not read release"
+					return 1
+				fi
+				if ! matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp"); then
+					_api_diag "$resp" "patches (${raw_p_src}): could not read release assets"
+					return 1
+				fi
 			fi
 
 			if [[ "$(jq 'length' <<<"$matches")" -gt 1 ]]; then
@@ -252,19 +267,28 @@ get_prebuilts() {
 			local gl_rel="https://gitlab.com/api/v4/projects/${project_enc}/releases"
 			if [[ "$cli_ver" == "dev" ]]; then
 				resp=$(req "$gl_rel" -) || return 1
-				cli_ver=$(jq -e -r '.[].tag_name' <<<"$resp" | get_highest_ver) || return 1
+				if ! cli_ver=$(jq -e -r '.[].tag_name' <<<"$resp" | get_highest_ver); then
+					_api_diag "$resp" "CLI (${cli_src}): could not resolve dev tag"
+					return 1
+				fi
 			fi
 			if [[ "$cli_ver" == "latest" ]]; then
 				resp=$(req "${gl_rel}/permalink/latest" -) || return 1
 			else
 				resp=$(req "${gl_rel}/${cli_ver}" -) || return 1
 			fi
-			matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp") || return 1
+			if ! matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp"); then
+				_api_diag "$resp" "CLI (${cli_src}): could not read release assets"
+				return 1
+			fi
 		else
 			local gh_rel="https://api.github.com/repos/${clean_cli}/releases"
 			if [[ "$cli_ver" == "dev" ]]; then
 				resp=$(gh_req "$gh_rel" -) || return 1
-				cli_ver=$(jq -e -r '.[] | .tag_name' <<<"$resp" | get_highest_ver) || return 1
+				if ! cli_ver=$(jq -e -r '.[] | .tag_name' <<<"$resp" | get_highest_ver); then
+					_api_diag "$resp" "CLI (${cli_src}): could not resolve dev tag"
+					return 1
+				fi
 			fi
 			if [[ "$cli_ver" == "latest" ]]; then
 				gh_rel+="/latest"
@@ -272,7 +296,10 @@ get_prebuilts() {
 				gh_rel+="/tags/${cli_ver}"
 			fi
 			resp=$(gh_req "$gh_rel" -) || return 1
-			matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp") || return 1
+			if ! matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp"); then
+				_api_diag "$resp" "CLI (${cli_src}): could not read release assets"
+				return 1
+			fi
 		fi
 
 		if [[ "$(jq 'length' <<<"$matches")" -gt 1 ]]; then
@@ -437,6 +464,22 @@ _req() {
 
 req() { _req "$1" "$2" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"; }
 gh_req() { _req "$1" "$2" -H "$GH_HEADER"; }
+
+# Diagnose an API response that failed to parse as expected (e.g. in get_prebuilts), so a
+# silent 'return 1' doesn't hide the real cause (rate limiting, bad tag, unexpected schema, ...).
+_api_diag() {
+	local resp="$1" ctx="$2" msg
+	if [[ -z "$resp" ]]; then
+		epr "${ctx}: empty response body"
+		return
+	fi
+	msg=$(jq -r '.message // empty' <<<"$resp" 2>/dev/null)
+	if [[ -n "$msg" ]]; then
+		epr "${ctx}: API error: ${msg}"
+	else
+		epr "${ctx}: unexpected response: $(head -c 200 <<<"$resp")"
+	fi
+}
 gh_dl() {
 	if [ ! -f "$1" ]; then
 		pr "Getting '$1' from '$2'"
