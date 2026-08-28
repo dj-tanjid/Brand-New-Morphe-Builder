@@ -470,8 +470,8 @@ export __TARGET_VERSION__=""
 get_patch_last_supported_ver() {
 	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false} arch=${5:-arm64-v8a}
 	local op
-	__TARGET_VERSION_CODE__=""
-	__TARGET_VERSION__=""
+	export __TARGET_VERSION_CODE__=""
+	export __TARGET_VERSION__=""
 
 	local arch_key="ARM64_V8A"
 	if [[ "$arch" == "arm-v7a" ]]; then arch_key="ARMEABI_V7A"
@@ -486,7 +486,7 @@ get_patch_last_supported_ver() {
 		local ver vers="" NL=$'\n'
 		while IFS= read -r line; do
 			line="${line:1:${#line}-2}"
-			# Only accept lines that begin with numbers
+			# Only accept lines that begin with digits to prevent capturing headers like 'Version codes:'
 			ver=$(sed -n "/^Name: $line\$/,/^\$/p" <<<"$op" | sed -n "/^Compatible versions:\$/,/^\$/p" | tail -n +2 | grep -E '^[0-9]' || true)
 			if [[ -n "$ver" ]]; then
 				vers=${vers}${ver}${NL}
@@ -509,13 +509,21 @@ get_patch_last_supported_ver() {
 	if ! op=$(patches_list_versions "${args[cli]}" "${args[ptjar]}" "$pkg_name" "$is_experimental"); then
 		return 1
 	fi
-	# Filter out non-numeric lines like "Version codes:"
-	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | grep -E '^[0-9]' | awk '{$1=$1}1' || true)
-	if [[ "$op" == "Any" || -z "$op" ]]; then 
+	# Filter out header lines, only keeping version numbers
+	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | awk '{$1=$1}1' | grep -E '^[0-9]' || true)
+	if [[ -z "$op" || "$op" == "Any" ]]; then
 		return 0
 	fi
 
-	local best_ver=$(grep -E '^[0-9]' <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || true)
+	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}
+	if [[ -z "$pcount" ]]; then
+		if grep -Fq "$pkg_name" <<<"$list_patches"; then
+			return 0
+		else
+			abort "No patches found for '$pkg_name' in patches '${args[ptjar]}'"
+		fi
+	fi
+	local best_ver=$(grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || true)
 	if [[ -n "$best_ver" && "$best_ver" =~ ^[0-9] ]]; then
 		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 			export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
