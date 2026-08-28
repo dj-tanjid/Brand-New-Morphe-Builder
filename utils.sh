@@ -484,21 +484,27 @@ get_patch_last_supported_ver() {
 			return 1
 		fi
 		local ver vers="" NL=$'\n'
-		while IFS= read -r line; do
+				while IFS= read -r line; do
 			line="${line:1:${#line}-2}"
-			ver=$(sed -n "/^Name: $line\$/,/^\$/p" <<<"$op" | sed -n "/^Compatible versions:\$/,/^\$/p" | tail -n +2)
-			vers=${ver}${NL}
+			# Filter out 'Version codes:' headers and empty lines, keeping only valid version numbers
+			ver=$(sed -n "/^Name: $line\$/,/^\$/p" <<<"$op" | sed -n "/^Compatible versions:\$/,/^\$/p" | tail -n +2 | grep -v -i "version codes:" | grep -E '^[0-9]' || true)
+			if [[ -n "$ver" ]]; then
+				vers=${vers}${ver}${NL}
+			fi
 		done <<<"$(list_args "$inc_sel")"
 		vers=$(awk '{$1=$1}1' <<<"$vers")
 		if [[ -n "$vers" ]]; then
-			local best_ver=$(get_highest_ver <<<"$vers")
-			if [[ -n "$best_ver" ]]; then
+			local best_ver=$(get_highest_ver <<<"$vers" || true)
+			if [[ -n "$best_ver" && "$best_ver" != *"Version"* ]]; then
 				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 					export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
 				local clean_ver="${best_ver%%\[*}"
-				export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
-				return 0
+				clean_ver=$(echo "${clean_ver}" | tr -d '[:space:]')
+				if [[ "$clean_ver" =~ ^[0-9] ]]; then
+					export __TARGET_VERSION__="$clean_ver"
+					return 0
+				fi
 			fi
 		fi
 	fi
