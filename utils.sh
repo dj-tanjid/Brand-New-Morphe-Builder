@@ -498,7 +498,7 @@ get_patch_last_supported_ver() {
 				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 					export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
-				local clean_ver="${best_ver%%\[*}"
+				local clean_ver="${best_ver%%[\[:]*}"
 				export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
 				return 0
 			fi
@@ -526,7 +526,7 @@ get_patch_last_supported_ver() {
 		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 			export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 		fi
-		local clean_ver="${best_ver%%\[*}"
+		local clean_ver="${best_ver%%[\[:]*}"
 		export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
 		return 0
 	fi
