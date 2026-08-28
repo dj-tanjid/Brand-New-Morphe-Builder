@@ -449,6 +449,12 @@ log() { echo -e "$1  " >>"build.md"; }
 get_highest_ver() {
 	local vers m
 	vers=$(tee)
+	# Discard any lines that don't actually look like a version (must start with a digit),
+	# so stray scraped text (e.g. a UI label like "Version codes:") can never be picked as "the version".
+	vers=$(grep -E '^[0-9]' <<<"$vers" || true)
+	if [[ -z "$vers" ]]; then
+		return 1
+	fi
 	m=$(head -1 <<<"$vers")
 	if ! semver_validate "$m"; then 
 		echo "$m"
@@ -928,8 +934,14 @@ def main():
         if soup:
             for a in soup.select("#primary a.fontBlack[href*='-release/']"):
                 txt = a.get_text(strip=True)
-                if txt and "beta" not in txt.lower() and "alpha" not in txt.lower():
-                    print(txt.split()[-1])
+                if not txt or "beta" in txt.lower() or "alpha" in txt.lower():
+                    continue
+                ver = txt.split()[-1]
+                # Only accept tokens that actually look like a version (must start with a digit).
+                # Prevents stray non-release UI text (e.g. a "Version codes:" label matching the
+                # same selector) from ever being treated as a real version string.
+                if re.match(r"^\d", ver):
+                    print(ver)
 
     elif mode == "apkmirror_dl":
         version = sys.argv[3].strip() if len(sys.argv) > 3 else ""
@@ -1875,8 +1887,14 @@ def main():
         if soup:
             for a in soup.select("#primary a.fontBlack[href*='-release/']"):
                 txt = a.get_text(strip=True)
-                if txt and "beta" not in txt.lower() and "alpha" not in txt.lower():
-                    print(txt.split()[-1])
+                if not txt or "beta" in txt.lower() or "alpha" in txt.lower():
+                    continue
+                ver = txt.split()[-1]
+                # Only accept tokens that actually look like a version (must start with a digit).
+                # Prevents stray non-release UI text (e.g. a "Version codes:" label matching the
+                # same selector) from ever being treated as a real version string.
+                if re.match(r"^\d", ver):
+                    print(ver)
 
     elif mode == "apkmirror_dl":
         version = sys.argv[3].strip() if len(sys.argv) > 3 else ""
@@ -2567,7 +2585,7 @@ build_rv() {
 					continue
 				fi
 				pkgvers=$(get_"${dl_from}"_vers)
-				version=$(get_highest_ver <<<"$pkgvers") || version=$(head -1 <<<"$pkgvers")
+				version=$(get_highest_ver <<<"$pkgvers") || version=$(grep -E '^[0-9]' <<<"$pkgvers" | head -1)
 				
 				# Break out of the loop once a valid version is found
 				if [[ -n "$version" ]]; then 
