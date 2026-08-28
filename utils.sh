@@ -121,10 +121,7 @@ get_prebuilts() {
 				local gl_rel="https://gitlab.com/api/v4/projects/${project_enc}/releases"
 				if [[ "$p_ver" == "dev" ]]; then
 					resp=$(req "$gl_rel" -) || return 1
-					if ! p_ver=$(jq -e -r '.[].tag_name' <<<"$resp" | get_highest_ver); then
-						_api_diag "$resp" "patches (${raw_p_src}): could not resolve dev tag"
-						return 1
-					fi
+					p_ver=$(jq -e -r '.[].tag_name' <<<"$resp" | get_highest_ver) || return 1
 				fi
 				if [[ "$p_ver" == "latest" ]]; then
 					resp=$(req "${gl_rel}/permalink/latest" -) || return 1
@@ -132,18 +129,12 @@ get_prebuilts() {
 					resp=$(req "${gl_rel}/${p_ver}" -) || return 1
 				fi
 				tag_name=$(jq -r '.tag_name // empty' <<<"$resp") || return 1
-				if ! matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp"); then
-					_api_diag "$resp" "patches (${raw_p_src}): could not read release assets"
-					return 1
-				fi
+				matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp") || return 1
 			else
 				local gh_rel="https://api.github.com/repos/${clean_src}/releases"
 				if [[ "$p_ver" == "dev" ]]; then
 					resp=$(gh_req "$gh_rel" -) || return 1
-					if ! p_ver=$(jq -e -r '.[] | .tag_name' <<<"$resp" | get_highest_ver); then
-						_api_diag "$resp" "patches (${raw_p_src}): could not resolve dev tag"
-						return 1
-					fi
+					p_ver=$(jq -e -r '.[] | .tag_name' <<<"$resp" | get_highest_ver) || return 1
 				fi
 				if [[ "$p_ver" == "latest" ]]; then
 					gh_rel+="/latest"
@@ -151,14 +142,8 @@ get_prebuilts() {
 					gh_rel+="/tags/${p_ver}"
 				fi
 				resp=$(gh_req "$gh_rel" -) || return 1
-				if ! tag_name=$(jq -e -r '.tag_name' <<<"$resp"); then
-					_api_diag "$resp" "patches (${raw_p_src}): could not read release"
-					return 1
-				fi
-				if ! matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp"); then
-					_api_diag "$resp" "patches (${raw_p_src}): could not read release assets"
-					return 1
-				fi
+				tag_name=$(jq -r '.tag_name' <<<"$resp") || return 1
+				matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp") || return 1
 			fi
 
 			if [[ "$(jq 'length' <<<"$matches")" -gt 1 ]]; then
@@ -195,7 +180,7 @@ get_prebuilts() {
 			tag_name=v${tag_name%.*}
 		fi
 
-				if [[ "$grab_cl" == true ]]; then
+		if [[ "$grab_cl" == true ]]; then
 			local cl_str=""
 			if [ "$host" = "gitlab" ]; then
 				cl_str="⚙️ » Patches: \`${org}/${name}\` ([Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name}))"
@@ -267,28 +252,19 @@ get_prebuilts() {
 			local gl_rel="https://gitlab.com/api/v4/projects/${project_enc}/releases"
 			if [[ "$cli_ver" == "dev" ]]; then
 				resp=$(req "$gl_rel" -) || return 1
-				if ! cli_ver=$(jq -e -r '.[].tag_name' <<<"$resp" | get_highest_ver); then
-					_api_diag "$resp" "CLI (${cli_src}): could not resolve dev tag"
-					return 1
-				fi
+				cli_ver=$(jq -e -r '.[].tag_name' <<<"$resp" | get_highest_ver) || return 1
 			fi
 			if [[ "$cli_ver" == "latest" ]]; then
 				resp=$(req "${gl_rel}/permalink/latest" -) || return 1
 			else
 				resp=$(req "${gl_rel}/${cli_ver}" -) || return 1
 			fi
-			if ! matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp"); then
-				_api_diag "$resp" "CLI (${cli_src}): could not read release assets"
-				return 1
-			fi
+			matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp") || return 1
 		else
 			local gh_rel="https://api.github.com/repos/${clean_cli}/releases"
 			if [[ "$cli_ver" == "dev" ]]; then
 				resp=$(gh_req "$gh_rel" -) || return 1
-				if ! cli_ver=$(jq -e -r '.[] | .tag_name' <<<"$resp" | get_highest_ver); then
-					_api_diag "$resp" "CLI (${cli_src}): could not resolve dev tag"
-					return 1
-				fi
+				cli_ver=$(jq -e -r '.[] | .tag_name' <<<"$resp" | get_highest_ver) || return 1
 			fi
 			if [[ "$cli_ver" == "latest" ]]; then
 				gh_rel+="/latest"
@@ -296,10 +272,7 @@ get_prebuilts() {
 				gh_rel+="/tags/${cli_ver}"
 			fi
 			resp=$(gh_req "$gh_rel" -) || return 1
-			if ! matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp"); then
-				_api_diag "$resp" "CLI (${cli_src}): could not read release assets"
-				return 1
-			fi
+			matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp") || return 1
 		fi
 
 		if [[ "$(jq 'length' <<<"$matches")" -gt 1 ]]; then
@@ -333,7 +306,7 @@ get_prebuilts() {
 		name=$(basename "$cli_file")
 	fi
 
-		if ! grep -qF "CLI: \`${cli_org}/${name}\`" "${TEMP_DIR}/cli_changelog.md" 2>/dev/null; then
+	if ! grep -qF "CLI: \`${cli_org}/${name}\`" "${TEMP_DIR}/cli_changelog.md" 2>/dev/null; then
 		echo "⚙️ » CLI: \`${cli_org}/${name}\`" >>"${TEMP_DIR}/cli_changelog.md"
 	fi
 
@@ -464,22 +437,6 @@ _req() {
 
 req() { _req "$1" "$2" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"; }
 gh_req() { _req "$1" "$2" -H "$GH_HEADER"; }
-
-# Diagnose an API response that failed to parse as expected (e.g. in get_prebuilts), so a
-# silent 'return 1' doesn't hide the real cause (rate limiting, bad tag, unexpected schema, ...).
-_api_diag() {
-	local resp="$1" ctx="$2" msg
-	if [[ -z "$resp" ]]; then
-		epr "${ctx}: empty response body"
-		return
-	fi
-	msg=$(jq -r '.message // empty' <<<"$resp" 2>/dev/null)
-	if [[ -n "$msg" ]]; then
-		epr "${ctx}: API error: ${msg}"
-	else
-		epr "${ctx}: unexpected response: $(head -c 200 <<<"$resp")"
-	fi
-}
 gh_dl() {
 	if [ ! -f "$1" ]; then
 		pr "Getting '$1' from '$2'"
@@ -492,12 +449,6 @@ log() { echo -e "$1  " >>"build.md"; }
 get_highest_ver() {
 	local vers m
 	vers=$(tee)
-	# Discard any lines that don't actually look like a version (must start with a digit),
-	# so stray scraped text (e.g. a UI label like "Version codes:") can never be picked as "the version".
-	vers=$(grep -E '^[0-9]' <<<"$vers" || true)
-	if [[ -z "$vers" ]]; then
-		return 1
-	fi
 	m=$(head -1 <<<"$vers")
 	if ! semver_validate "$m"; then 
 		echo "$m"
@@ -511,6 +462,128 @@ semver_validate() {
 	local a="${a#v}"
 	local ac="${a//[.0-9]/}"
 	[[ ${#ac} -eq 0 ]]
+}
+
+export __TARGET_VERSION_CODE__=""
+export __TARGET_VERSION__=""
+
+get_patch_last_supported_ver() {
+	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false} arch=${5:-arm64-v8a}
+	local op
+	export __TARGET_VERSION_CODE__=""
+	export __TARGET_VERSION__=""
+
+	local arch_key="ARM64_V8A"
+	if [[ "$arch" == "arm-v7a" ]]; then arch_key="ARMEABI_V7A"
+	elif [[ "$arch" == "x86" ]]; then arch_key="X86"
+	elif [[ "$arch" == "x86_64" ]]; then arch_key="X86_64"; fi
+
+	if [[ -n "$inc_sel" ]]; then
+		if ! op=$(awk '{$1=$1}1' <<<"$list_patches"); then
+			epr "list-patches: '$op'"
+			return 1
+		fi
+		local ver vers="" NL=$'\n'
+		while IFS= read -r line; do
+			line="${line:1:${#line}-2}"
+			ver=$(sed -n "/^Name: $line\$/,/^\$/p" <<<"$op" | sed -n "/^Compatible versions:\$/,/^\$/p" | tail -n +2 | grep -E '^[0-9]' || true)
+			if [[ -n "$ver" ]]; then
+				vers=${vers}${ver}${NL}
+			fi
+		done <<<"$(list_args "$inc_sel")"
+		vers=$(awk '{$1=$1}1' <<<"$vers")
+		if [[ -n "$vers" ]]; then
+			local best_ver=$(get_highest_ver <<<"$vers" || true)
+			if [[ -n "$best_ver" && "$best_ver" =~ ^[0-9] ]]; then
+				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
+					export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
+				fi
+				local clean_ver="${best_ver%%\[*}"
+				export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
+				return 0
+			fi
+		fi
+	fi
+
+	if ! op=$(patches_list_versions "${args[cli]}" "${args[ptjar]}" "$pkg_name" "$is_experimental"); then
+		return 1
+	fi
+	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | awk '{$1=$1}1' | grep -E '^[0-9]' || true)
+	if [[ -z "$op" || "$op" == "Any" ]]; then
+		return 0
+	fi
+
+	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}
+	if [[ -z "$pcount" ]]; then
+		if grep -Fq "$pkg_name" <<<"$list_patches"; then
+			return 0
+		else
+			abort "No patches found for '$pkg_name' in patches '${args[ptjar]}'"
+		fi
+	fi
+	local best_ver=$(grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || true)
+	if [[ -n "$best_ver" && "$best_ver" =~ ^[0-9] ]]; then
+		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
+			export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
+		fi
+		local clean_ver="${best_ver%%\[*}"
+		export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
+		return 0
+	fi
+	return 0
+}
+
+patches_list_versions() {
+	local cli_jar=$1 patches_jars=$2 pkg_name=$3 is_experimental=$4
+	local combined_op="" op="" cmd cmd_base="java -jar '$cli_jar' list-versions"
+	local cli_name
+	cli_name=$(basename "$cli_jar")
+	if [ "${cli_name::8}" = "revanced" ]; then
+		cmd_base+=" -b"
+	elif [ "$is_experimental" = "true" ]; then
+		cmd_base+=" -x"
+	fi
+
+	for pj in $patches_jars; do
+		cmd="${cmd_base} --patches='$pj' -f '$pkg_name'"
+		if op=$(eval "$cmd" 2>&1); then
+			combined_op+="$op"$'\n'
+			continue
+		fi
+		cmd="${cmd_base} '$pj' -f '$pkg_name'"
+		if op=$(eval "$cmd" 2>&1); then
+			combined_op+="$op"$'\n'
+		fi
+	done
+
+	if [[ -n "$combined_op" ]]; then
+		echo "$combined_op"
+		return 0
+	fi
+	epr "Could not list versions ($pkg_name) $cli_jar"
+	return 1
+}
+
+patches_list() {
+	local cli_jar=$1 patches_jars=$2 pkg_name=$3 is_experimental=$4
+	local combined_op="" op=""
+	for pj in $patches_jars; do
+		if op=$(java -jar "$cli_jar" list-patches -p "$pj" --filter-package-name "$pkg_name" --versions --packages -b 2>&1); then
+			combined_op+="$op"$'\n'
+		else
+			local cmd="java -jar '$cli_jar' list-patches --patches '$pj' -f '$pkg_name' --with-versions --with-packages"
+			if [ "$is_experimental" = "true" ]; then cmd+=" -x"; fi
+			if op=$(eval "$cmd" 2>&1); then
+				combined_op+="$op"$'\n'
+			fi
+		fi
+	done
+
+	if [[ -z "$combined_op" ]]; then
+		epr "Could not get patches list ($pkg_name) $cli_jar"
+		return 1
+	fi
+	echo "$combined_op"
 }
 
 isoneof() {
@@ -537,12 +610,49 @@ merge_splits() {
 	return 0
 }
 
+patch_apk() {
+	local stock_input=$1 patched_apk=$2 patcher_args=$3 cli_jar=$4 patches_jars=$5
+	local tmp_files
+	tmp_files="$(pwd)/$(mktemp -d -p "$TEMP_DIR")"
+
+	local p_flags=()
+	for pj in $patches_jars; do
+		p_flags+=("-p" "$pj")
+	done
+
+	local cmd="java -jar '$cli_jar' patch '$stock_input' -o '$patched_apk' "${p_flags[@]}" --keystore=ks.keystore \
+    --keystore-entry-password=123456789 --keystore-password=123456789 --signer=jhc --keystore-entry-alias=jhc -t '$patched_apk-tmp' $patcher_args"
+
+	local cli_name
+	cli_name=$(basename "$cli_jar")
+	if [[ "${cli_name::8}" == revanced ]]; then cmd+=" -b"; fi
+
+	if [[ "$OS" == Android ]]; then cmd+=" --custom-aapt2-binary='${AAPT2}'"; fi
+	pr "$cmd"
+	if (set -o pipefail; eval "$cmd" 2>&1 | grep -vE "INFO: Processing|INFO: Writing|INFO: Wrote|INFO: Stripping|INFO: Compiling"); then
+		[[ -f "$patched_apk" ]]
+	else
+		rm -f "$patched_apk" 2>/dev/null || :
+		return 1
+	fi
+}
+
+check_sig() {
+	local file=$1 pkg_name=$2
+	local sig
+	if grep -q "$pkg_name" sig.txt; then
+		sig=$(java -jar "$APKSIGNER" verify --print-certs "$file" | grep ^Signer | grep SHA-256 | tail -1 | awk '{print $NF}')
+		echo "$pkg_name signature: ${sig}"
+		grep -qFx "$sig $pkg_name" sig.txt
+	fi
+}
+
 # ----------------- Pure Python Independent Engine -----------------
 setup_python_backend() {
 	mkdir -p "$TEMP_DIR"
 	if [ ! -f "$TEMP_DIR/network_engine.py" ]; then
 		export PIP_BREAK_SYSTEM_PACKAGES=1
-		python3 -m pip install -q "curl_cffi>=0.7.0" beautifulsoup4 urllib3 requests 2>/dev/null || true
+		python3 -m pip install -q "curl_cffi>=0.16.2" "beautifulsoup4>=4.15.0" "urllib3>=2.7.0" requests 2>/dev/null || true
 		cat << 'EOF' > "$TEMP_DIR/network_engine.py"
 import sys, os, re, time, json, random
 from urllib.parse import urljoin
@@ -853,14 +963,8 @@ def main():
         if soup:
             for a in soup.select("#primary a.fontBlack[href*='-release/']"):
                 txt = a.get_text(strip=True)
-                if not txt or "beta" in txt.lower() or "alpha" in txt.lower():
-                    continue
-                ver = txt.split()[-1]
-                # Only accept tokens that actually look like a version (must start with a digit).
-                # Prevents stray non-release UI text (e.g. a "Version codes:" label matching the
-                # same selector) from ever being treated as a real version string.
-                if re.match(r"^\d", ver):
-                    print(ver)
+                if txt and "beta" not in txt.lower() and "alpha" not in txt.lower():
+                    print(txt.split()[-1])
 
     elif mode == "apkmirror_dl":
         version = sys.argv[3].strip() if len(sys.argv) > 3 else ""
@@ -874,7 +978,7 @@ def main():
         
         release_url = None
         
-        # Priority 1: Match directly via exact path URL pattern (Robust against hyphens)
+        # Priority 1: Match directly via exact path URL pattern
         search_url = f"{url.rstrip('/')}/?s={version}"
         log(f"Searching APKMirror via exact path: {search_url}")
         soup_search, _ = scraper.get_soup(search_url)
@@ -885,7 +989,7 @@ def main():
                     release_url = urljoin("https://www.apkmirror.com", a["href"])
                     break
                     
-        # Priority 2: Fallback to global search if path lookup fails
+        # Priority 2: Fallback to global search
         if not release_url:
             log("APKMirror release URL not found via path search, trying global search...")
             search_term = version.split("-")[0].strip()
@@ -923,7 +1027,7 @@ def main():
         dl_sub_url = None
         is_bundle = False
         
-        # 1st Pass: Match version code explicitly from row text
+        # 1st Pass: Match version code explicitly
         if version_code:
             for target_type in ["APK", "BUNDLE"]:
                 for row in reversed(rows):
@@ -971,7 +1075,6 @@ def main():
                             break
                 if dl_sub_url: break
 
-            
         if not dl_sub_url:
             sys.exit(1)
             
@@ -1313,159 +1416,6 @@ get_direct_pkg_name() { cut -d- -f1 <<<"${__DIRECT_APKNAME__:-}"; }
 get_direct_resp() { __DIRECT_APKNAME__=$(awk -F/ '{print $NF}' <<<"$1"); }
 # --------------------------------------------------
 
-patch_apk() {
-	local stock_input=$1 patched_apk=$2 patcher_args=$3 cli_jar=$4 patches_jars=$5
-	local tmp_files
-	tmp_files="$(pwd)/$(mktemp -d -p "$TEMP_DIR")"
-
-	local p_flags=()
-	for pj in $patches_jars; do
-		p_flags+=("-p" "$pj")
-	done
-
-	local cmd="java -jar '$cli_jar' patch '$stock_input' -o '$patched_apk' "${p_flags[@]}" --keystore=ks.keystore \
-    --keystore-entry-password=123456789 --keystore-password=123456789 --signer=jhc --keystore-entry-alias=jhc -t '$patched_apk-tmp' $patcher_args"
-
-	local cli_name
-	cli_name=$(basename "$cli_jar")
-	if [[ "${cli_name::8}" == revanced ]]; then cmd+=" -b"; fi
-
-	if [[ "$OS" == Android ]]; then cmd+=" --custom-aapt2-binary='${AAPT2}'"; fi
-	pr "$cmd"
-	if (set -o pipefail; eval "$cmd" 2>&1 | grep -vE "INFO: Processing|INFO: Writing|INFO: Wrote|INFO: Stripping|INFO: Compiling"); then
-		[[ -f "$patched_apk" ]]
-	else
-		rm -f "$patched_apk" 2>/dev/null || :
-		return 1
-	fi
-}
-
-check_sig() {
-	local file=$1 pkg_name=$2
-	local sig
-	if grep -q "$pkg_name" sig.txt; then
-		sig=$(java -jar "$APKSIGNER" verify --print-certs "$file" | grep ^Signer | grep SHA-256 | tail -1 | awk '{print $NF}')
-		echo "$pkg_name signature: ${sig}"
-		grep -qFx "$sig $pkg_name" sig.txt
-	fi
-}
-
-export __TARGET_VERSION_CODE__=""
-export __TARGET_VERSION__=""
-
-get_patch_last_supported_ver() {
-	local list_patches=$1 pkg_name=$2 inc_sel=${3:-} is_experimental=${4:-false} arch=${5:-arm64-v8a}
-	local op
-	__TARGET_VERSION_CODE__=""
-	__TARGET_VERSION__=""
-
-	local arch_key="ARM64_V8A"
-	if [[ "$arch" == "arm-v7a" ]]; then arch_key="ARMEABI_V7A"
-	elif [[ "$arch" == "x86" ]]; then arch_key="X86"
-	elif [[ "$arch" == "x86_64" ]]; then arch_key="X86_64"; fi
-
-	if [[ -n "$inc_sel" ]]; then
-		if ! op=$(awk '{$1=$1}1' <<<"$list_patches"); then
-			epr "list-patches: '$op'"
-			return 1
-		fi
-		local ver vers="" NL=$'\n'
-		while IFS= read -r line; do
-			line="${line:1:${#line}-2}"
-			ver=$(sed -n "/^Name: $line\$/,/^\$/p" <<<"$op" | sed -n "/^Compatible versions:\$/,/^\$/p" | tail -n +2)
-			vers=${ver}${NL}
-		done <<<"$(list_args "$inc_sel")"
-		vers=$(awk '{$1=$1}1' <<<"$vers")
-		if [[ -n "$vers" ]]; then
-			local best_ver=$(get_highest_ver <<<"$vers")
-			if [[ -n "$best_ver" ]]; then
-				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
-					export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
-				fi
-				local clean_ver="${best_ver%%\[*}"
-				export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
-				return 0
-			fi
-		fi
-	fi
-	if ! op=$(patches_list_versions "${args[cli]}" "${args[ptjar]}" "$pkg_name" "$is_experimental"); then
-		return 1
-	fi
-	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | awk '{$1=$1}1')
-	if [[ "$op" == "Any" ]]; then return; fi
-	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}
-	if [[ -z "$pcount" ]]; then
-		if grep -Fq "$pkg_name" <<<"$list_patches"; then
-			return
-		else
-			abort "No patches found for '$pkg_name' in patches '${args[ptjar]}'"
-		fi
-	fi
-	local best_ver=$(grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || true)
-	if [[ -n "$best_ver" ]]; then
-		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
-			export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
-		fi
-		local clean_ver="${best_ver%%\[*}"
-		export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
-		return 0
-	fi
-	return 1
-}
-
-patches_list_versions() {
-	local cli_jar=$1 patches_jars=$2 pkg_name=$3 is_experimental=$4
-	local combined_op="" op="" cmd cmd_base="java -jar '$cli_jar' list-versions"
-	local cli_name
-	cli_name=$(basename "$cli_jar")
-	if [ "${cli_name::8}" = "revanced" ]; then
-		cmd_base+=" -b"
-	elif [ "$is_experimental" = "true" ]; then
-		cmd_base+=" -x"
-	fi
-
-	for pj in $patches_jars; do
-		cmd="${cmd_base} --patches='$pj' -f '$pkg_name'"
-		if op=$(eval "$cmd" 2>&1); then
-			combined_op+="$op"$'\n'
-			continue
-		fi
-		cmd="${cmd_base} '$pj' -f '$pkg_name'"
-		if op=$(eval "$cmd" 2>&1); then
-			combined_op+="$op"$'\n'
-		fi
-	done
-
-	if [[ -n "$combined_op" ]]; then
-		echo "$combined_op"
-		return 0
-	fi
-	epr "Could not list versions ($pkg_name) $cli_jar"
-	return 1
-}
-
-patches_list() {
-	local cli_jar=$1 patches_jars=$2 pkg_name=$3 is_experimental=$4
-	local combined_op="" op=""
-	for pj in $patches_jars; do
-		if op=$(java -jar "$cli_jar" list-patches -p "$pj" --filter-package-name "$pkg_name" --versions --packages -b 2>&1); then
-			combined_op+="$op"$'\n'
-		else
-			local cmd="java -jar '$cli_jar' list-patches --patches '$pj' -f '$pkg_name' --with-versions --with-packages"
-			if [ "$is_experimental" = "true" ]; then cmd+=" -x"; fi
-			if op=$(eval "$cmd" 2>&1); then
-				combined_op+="$op"$'\n'
-			fi
-		fi
-	done
-
-	if [[ -z "$combined_op" ]]; then
-		epr "Could not get patches list ($pkg_name) $cli_jar"
-		return 1
-	fi
-	echo "$combined_op"
-}
-
 build_rv() {
 	eval "declare -A args=${1#*=}"
 	export __TARGET_VERSION_CODE__=""
@@ -1551,7 +1501,7 @@ build_rv() {
 					continue
 				fi
 				pkgvers=$(get_"${dl_from}"_vers)
-				version=$(get_highest_ver <<<"$pkgvers") || version=$(grep -E '^[0-9]' <<<"$pkgvers" | head -1)
+				version=$(get_highest_ver <<<"$pkgvers") || version=$(head -1 <<<"$pkgvers")
 				
 				# Break out of the loop once a valid version is found
 				if [[ -n "$version" ]]; then 
