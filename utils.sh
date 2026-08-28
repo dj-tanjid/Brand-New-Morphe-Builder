@@ -484,10 +484,10 @@ get_patch_last_supported_ver() {
 			return 1
 		fi
 		local ver vers="" NL=$'\n'
-				while IFS= read -r line; do
+		while IFS= read -r line; do
 			line="${line:1:${#line}-2}"
-			# Filter out 'Version codes:' headers and empty lines, keeping only valid version numbers
-			ver=$(sed -n "/^Name: $line\$/,/^\$/p" <<<"$op" | sed -n "/^Compatible versions:\$/,/^\$/p" | tail -n +2 | grep -v -i "version codes:" | grep -E '^[0-9]' || true)
+			# Only accept lines that begin with numbers
+			ver=$(sed -n "/^Name: $line\$/,/^\$/p" <<<"$op" | sed -n "/^Compatible versions:\$/,/^\$/p" | tail -n +2 | grep -E '^[0-9]' || true)
 			if [[ -n "$ver" ]]; then
 				vers=${vers}${ver}${NL}
 			fi
@@ -495,34 +495,28 @@ get_patch_last_supported_ver() {
 		vers=$(awk '{$1=$1}1' <<<"$vers")
 		if [[ -n "$vers" ]]; then
 			local best_ver=$(get_highest_ver <<<"$vers" || true)
-			if [[ -n "$best_ver" && "$best_ver" != *"Version"* ]]; then
+			if [[ -n "$best_ver" && "$best_ver" =~ ^[0-9] ]]; then
 				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 					export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
 				local clean_ver="${best_ver%%\[*}"
-				clean_ver=$(echo "${clean_ver}" | tr -d '[:space:]')
-				if [[ "$clean_ver" =~ ^[0-9] ]]; then
-					export __TARGET_VERSION__="$clean_ver"
-					return 0
-				fi
+				export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
+				return 0
 			fi
 		fi
 	fi
+
 	if ! op=$(patches_list_versions "${args[cli]}" "${args[ptjar]}" "$pkg_name" "$is_experimental"); then
 		return 1
 	fi
-	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | awk '{$1=$1}1')
-	if [[ "$op" == "Any" ]]; then return; fi
-	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}
-	if [[ -z "$pcount" ]]; then
-		if grep -Fq "$pkg_name" <<<"$list_patches"; then
-			return
-		else
-			abort "No patches found for '$pkg_name' in patches '${args[ptjar]}'"
-		fi
+	# Filter out non-numeric lines like "Version codes:"
+	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | grep -E '^[0-9]' | awk '{$1=$1}1' || true)
+	if [[ "$op" == "Any" || -z "$op" ]]; then 
+		return 0
 	fi
-	local best_ver=$(grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || true)
-	if [[ -n "$best_ver" ]]; then
+
+	local best_ver=$(grep -E '^[0-9]' <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || true)
+	if [[ -n "$best_ver" && "$best_ver" =~ ^[0-9] ]]; then
 		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 			export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 		fi
@@ -530,7 +524,7 @@ get_patch_last_supported_ver() {
 		export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
 		return 0
 	fi
-	return 1
+	return 0
 }
 
 patches_list_versions() {
