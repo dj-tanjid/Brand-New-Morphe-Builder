@@ -79,7 +79,7 @@ uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
 
 [Google-Photos-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Google Photos"
 patches-source = "RookieEnough/De-Vanced"
 cli-source = "MorpheApp/morphe-desktop"
@@ -102,7 +102,7 @@ uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
 [Facebook-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:RookieEnough/De-Vanced"
@@ -136,7 +136,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Messenger-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Facebook Messenger"
 pkg-name = "com.facebook.orca"
 patches-source = "RookieEnough/De-Vanced"
@@ -151,7 +151,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/messe
 uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
 
 [Threads-Chiggi]
-enabled = true
+enabled = false
 app-name = "Threads"
 pkg-name = "com.instagram.barcelona"
 patches-source = "github:durgesh0505/chiggi_morphe_patches"
@@ -166,7 +166,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads-an-instagram-
 uptodown-dlurl = "https://threads.en.uptodown.com/android"
 
 [Twitter-Piko]
-enabled = false
+enabled = true
 app-name = "Twitter"
 patches-source = "crimera/piko"
 cli-source = "MorpheApp/morphe-desktop"
@@ -187,7 +187,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko]
-enabled = false
+enabled = true
 app-name = "X"
 # patches-source = "crimera/piko"
 patches-source = "github:crimera/piko"
@@ -209,7 +209,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [Instagram-Piko]
-enabled = false
+enabled = true
 app-name = "Instagram"
 patches-source = "crimera/piko"
 cli-source = "MorpheApp/morphe-desktop"
