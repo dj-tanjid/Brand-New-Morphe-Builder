@@ -131,6 +131,9 @@ version = "auto" # 'auto', 'experimental', 'latest' or a version number
 # version = "573.0.0.37.74"
 build-mode = "apk"
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+excluded-patches = """\
+    'Block Facebook Auto Refresh' \
+    """
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
