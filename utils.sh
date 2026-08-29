@@ -1655,12 +1655,16 @@ build_rv() {
 
 		local p_vers=()
 		for pj in ${args[ptjar]}; do
-			# Get the filename (e.g., morphe-patches-1.41.0-dev.5.mpp)
-			local pj_name=$(basename "$pj")
-			# Strip the "morphe-patches-" prefix
-			local pj_tag=$(cut -d'-' -f3- <<<"$pj_name")
-			# Remove the file extension and prepend 'v'
-			p_vers+=("v${pj_tag%.*}")
+			local base="${pj##*/}"
+			base="${base%.*}"
+			# Matches semver patterns like 1.41.0, v1.41.0, 1.41.0-dev.5, v1.41.0-dev.5
+			local p_v
+			p_v=$(grep -oE 'v?[0-9]+(\.[0-9]+)+(-[a-zA-Z0-9.]+)?' <<<"$base" | head -1 || true)
+			if [[ -n "$p_v" ]]; then
+				p_vers+=("v${p_v#v}")
+			else
+				p_vers+=("${base}")
+			fi
 		done
 		local patches_ver="${p_vers[*]}"
 
