@@ -1655,14 +1655,19 @@ build_rv() {
 
 		local p_vers=()
 		for pj in ${args[ptjar]}; do
-			p_vers+=("${pj##*-}")
+			# Get the filename (e.g., morphe-patches-1.41.0-dev.5.mpp)
+			local pj_name=$(basename "$pj")
+			# Strip the "morphe-patches-" prefix
+			local pj_tag=$(cut -d'-' -f3- <<<"$pj_name")
+			# Remove the file extension and prepend 'v'
+			p_vers+=("v${pj_tag%.*}")
 		done
 		local patches_ver="${p_vers[*]}"
 
 		module_prop \
 			"${args[module_prop_name]:-}" \
 			"${app_name} ${args[rv_brand]:-}" \
-			"${version_f} (patches ${patches_ver})" \
+			"${version_f} (Patch ${patches_ver})" \
 			"${app_name} ${args[rv_brand]:-} module" \
 			"https://raw.githubusercontent.com/${GITHUB_REPOSITORY-}/update/${upj}" \
 			"$base_template"
