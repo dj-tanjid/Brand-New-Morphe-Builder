@@ -325,4 +325,4 @@ version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/ookla/speedtest"
-uptodown-dlurl = "https://speedtest-net-mobile.en.uptodown.com/android""
+uptodown-dlurl = "https://speedtest-net-mobile.en.uptodown.com/android"
