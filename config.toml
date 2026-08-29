@@ -153,6 +153,21 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.o
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/messenger"
 uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
 
+[Facebook-Messenger-Rushi]
+enabled = false
+app-name = "Facebook Messenger"
+pkg-name = "com.facebook.orca"
+patches-source = "github:rushiranpise/morphe-patches"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "Rushi"
+arch = "arm64-v8a"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+build-mode = "apk"
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.orca"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/messenger"
+uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
+
 [Threads-Chiggi]
 enabled = false
 app-name = "Threads"
