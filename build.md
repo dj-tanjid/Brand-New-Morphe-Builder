@@ -1,10 +1,10 @@
+📱 » **Facebook-De-Vanced** (arm64-v8a): `490.0.0.63.82`    
 📱 » **Facebook-Froggo** (arm64-v8a): `573.0.0.37.74`    
-📱 » **Instagram-Piko** (arm64-v8a): `Versioncodes:`    
+📱 » **Facebook-Messenger-De-Vanced** (arm64-v8a): `576.0.0.47.92`    
+📱 » **Google-Photos-De-Vanced** (arm64-v8a): `7.90.0.971743778`    
 📱 » **Reddit-Morphe** (all): `2026.35.0`    
-📱 » **Twitter-Piko** (all): `12.19.1-release.0`    
-📱 » **X-Piko** (all): `12.19.1-release.0`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.34.52`    
-📱 » **YouTube-Morphe** (arm64-v8a): `21.34.243`    
+📱 » **YouTube-Morphe** (arm64-v8a): `21.35.442-SECONDARY`    
 
 <br>
   
@@ -22,9 +22,9 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `SapitoSucio/patches-1.2.0-dev.9.mpp` ([Changelog](https://github.com/SapitoSucio/FroggoMorphePatches/releases/tag/v1.2.0-dev.9))
- ⚙️ » Patches: `crimera/patches-3.9.0-dev.10.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.9.0-dev.10))
- ⚙️ » Patches: `MorpheApp/patches-1.41.0-dev.3.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.41.0-dev.3))
+> ⚙️ » Patches: `RookieEnough/patches-1.3.0-dev.5.mpp` ([Changelog](https://github.com/RookieEnough/De-Vanced/releases/tag/v1.3.0-dev.5))
+ ⚙️ » Patches: `SapitoSucio/patches-1.2.0-dev.27.mpp` ([Changelog](https://github.com/SapitoSucio/FroggoMorphePatches/releases/tag/v1.2.0-dev.27))
+ ⚙️ » Patches: `MorpheApp/patches-1.41.0-dev.5.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.41.0-dev.5))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.14.0-all.jar`
   
