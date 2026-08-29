@@ -261,3 +261,68 @@ build-mode = "apk"
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/cloudflare/1-1-1-1-faster-safer-internet"
 uptodown-dlurl = "https://1-1-1-1.en.uptodown.com/android"
+
+[Proton-VPN-Rushi]
+enabled = false
+app-name = "Proton VPN"
+patches-source = "github:rushiranpise/morphe-patches"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "Rushi"
+# arch = "arm64-v8a"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+build-mode = "apk"
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+apkmirror-dlurl = "https://www.apkmirror.com/apk/proton-technologies-ag/protonvpn-secure-and-free-vpn"
+uptodown-dlurl = "https://protonvpn.en.uptodown.com/android"
+
+[Proton-VPN-Paresh]
+enabled = false
+app-name = "Proton VPN"
+patches-source = "gitlab:Paresh-Maheshwari/paresh-patches"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "Paresh"
+# arch = "arm64-v8a"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+build-mode = "apk"
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+apkmirror-dlurl = "https://www.apkmirror.com/apk/proton-technologies-ag/protonvpn-secure-and-free-vpn"
+uptodown-dlurl = "https://protonvpn.en.uptodown.com/android"
+
+[Windscribe-VPN]
+enabled = false
+app-name = "Windscribe VPN"
+patches-source = "github:rushiranpise/morphe-patches"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "Rushi"
+# arch = "arm64-v8a"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+build-mode = "apk"
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+apkmirror-dlurl = "https://www.apkmirror.com/apk/windscribe/windscribe-vpn"
+uptodown-dlurl = "https://windscribe.en.uptodown.com/android"
+
+[TeraBox]
+enabled = false
+app-name = "TeraBox"
+patches-source = "github:rushiranpise/morphe-patches"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "Rushi"
+# arch = "arm64-v8a"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+build-mode = "apk"
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+apkmirror-dlurl = "https://www.apkmirror.com/apk/flextech-inc/terabox-cloud-storage-cloud-backup-data-backup"
+uptodown-dlurl = "https://terabox.en.uptodown.com/android"
+
+[Speedtest-by-Ookla]
+enabled = false
+app-name = "Speedtest by Ookla"
+patches-source = "github:rushiranpise/morphe-patches"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "Rushi"
+arch = "both"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+build-mode = "apk"
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+apkmirror-dlurl = "https://www.apkmirror.com/apk/ookla/speedtest"
+uptodown-dlurl = "https://speedtest-net-mobile.en.uptodown.com/android""
