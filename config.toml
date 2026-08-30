@@ -23,6 +23,7 @@ excluded-patches = """\
     'Custom branding name for YouTube' \
     'Custom branding icon for YouTube' \
     'Custom branding' \
+    'Fullscreen video scale' \
     """
 # included-patches = ""
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
@@ -132,6 +133,9 @@ version = "auto" # 'auto', 'experimental', 'latest' or a version number
 # version = "573.0.0.37.74"
 build-mode = "apk"
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+included-patches = """\
+    'Block Facebook Story ads' \
+    """
 excluded-patches = """\
     'Block Facebook Auto Refresh' \
     """
