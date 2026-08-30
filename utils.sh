@@ -498,8 +498,10 @@ get_patch_last_supported_ver() {
 				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 					export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
-				local clean_ver="${best_ver%%[\[:]*}"
-				export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
+					local clean_ver="${best_ver%%[\[:]*}"
+				    clean_ver=$(sed -E 's/-(all|arm64-v8a|armeabi-v7a|arm-v7a|x86_64|x86)$//I' <<<"$clean_ver")
+				    export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
+
 				return 0
 			fi
 		fi
@@ -526,8 +528,9 @@ get_patch_last_supported_ver() {
 		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 			export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 		fi
-		local clean_ver="${best_ver%%[\[:]*}"
-		export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
+			local clean_ver="${best_ver%%[\[:]*}"
+			clean_ver=$(sed -E 's/-(all|arm64-v8a|armeabi-v7a|arm-v7a|x86_64|x86)$//I' <<<"$clean_ver")
+			export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
 		return 0
 	fi
 	return 0
