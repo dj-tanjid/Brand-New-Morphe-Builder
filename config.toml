@@ -393,5 +393,11 @@ arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "both"
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+excluded-patches = """\
+    'Package Rename' \
+    'Zhuyin Bottom Row Key Sizes' \
+    'Zhuyin Quick Traditional/Simplified Toggle' \
+    'Zhuyin Slide Input' \
+    """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/gboard/"
 uptodown-dlurl = "https://gboard-go.en.uptodown.com/android"
