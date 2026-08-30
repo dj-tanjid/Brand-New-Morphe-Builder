@@ -4,9 +4,9 @@ Adding an app is as simple as defining a table entry with download sources and p
 
 ```toml
 [YouTube-Morphe]
-apkmirror-dlurl = "[https://www.apkmirror.com/apk/google-inc/youtube](https://www.apkmirror.com/apk/google-inc/youtube)"
-# uptodown-dlurl = "[https://youtube.en.uptodown.com/android](https://youtube.en.uptodown.com/android)"
-# github-dlurl = "[https://github.com/owner/repo/releases/tag/com.google.android.youtube](https://github.com/owner/repo/releases/tag/com.google.android.youtube)"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube"
+# uptodown-dlurl = "https://youtube.en.uptodown.com/android"
+# github-dlurl = "https://github.com/owner/repo/releases/tag/com.google.android.youtube"
 ```
 
 > [!WARNING]
