@@ -1,8 +1,4 @@
-📱 » **Facebook-Froggo** (arm64-v8a): `573.0.0.37.74`    
-📱 » **Facebook-Messenger-Rushi** (arm64-v8a): `576.0.0.47.92`    
-📱 » **Gboard-Jason** (arm64-v8a): `18.0.3.954559732-release`    
-📱 » **PokeRaid-DanielTheManiel** (arm64-v8a): `0.48.9`    
-📱 » **Send-Files-To-TV-Rushi** (all): `1.4.22`    
+📱 » **YouTube-Morphe** (arm64-v8a): `21.35.442-SECONDARY`    
 
 <br>
   
@@ -16,11 +12,7 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `SapitoSucio/patches-1.3.0-dev.1.mpp` ([Changelog](https://github.com/SapitoSucio/FroggoMorphePatches/releases/tag/v1.3.0-dev.1))
- ⚙️ » Patches: `rushiranpise/patches-1.21.0.mpp` ([Changelog](https://github.com/rushiranpise/morphe-patches/releases/tag/v1.21.0))
- ⚙️ » Patches: `jasonwu1994/patches-3.7.0-dev.2.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v3.7.0-dev.2))
- ⚙️ » Patches: `Dan1elTheMan1el/patches-1.5.0-dev.1.mpp` ([Changelog](https://github.com/Dan1elTheMan1el/Morphe-Patches/releases/tag/v1.5.0-dev.1))
- ⚙️ » Patches: `Nai64/patches-1.38.0.mpp` ([Changelog](https://github.com/Nai64/Nai64Patches/releases/tag/1.38.0))
+> ⚙️ » Patches: `MorpheApp/patches-1.41.0-dev.7.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.41.0-dev.7))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.14.0-all.jar`
   
