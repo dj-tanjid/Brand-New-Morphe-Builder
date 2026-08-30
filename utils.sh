@@ -1199,7 +1199,7 @@ def main():
         ver_url_data = None
         is_bundle = False
 
-            def find_version(match_code=True):
+        def find_version(match_code=True):
             clean_target_v = re.sub(r'-(all|arm64-v8a|armeabi-v7a|arm-v7a|x86_64|x86)$', '', version, flags=re.I).strip()
             for i in range(1, 21):
                 _, r = scraper.get_soup(f"{url}/apps/{data_code}/versions/{i}")
