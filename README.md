@@ -4,7 +4,7 @@
 
 <p align="center">
   <b>Automated, high-performance CI/CD pipeline for building root Magisk/KernelSU modules and non-root APKs.</b><br>
-  Powered by <a href="https://github.com/MorpheApp">Morphe</a>, <a href="https://github.com/RookieEnough/De-Vanced">De-Vanced</a>, <a href="https://github.com/crimera/piko">Piko</a>, and <a href="https://github.com/anddea/revanced-patches">ReVanced Extended</a>.
+  Powered by <a href="https://github.com/MorpheApp">Morphe</a>, <a href="https://github.com/RookieEnough/De-Vanced">De-Vanced</a>, <a href="https://github.com/crimera/piko">Piko</a>, and many more.
 </p>
 
 [![Build Workflow](https://img.shields.io/github/actions/workflow/status/dj-tanjid/Morphe-DeVanced-Builder/build.yml?label=Build%20Status&logo=githubactions&logoColor=white)](../../actions/workflows/build.yml)
