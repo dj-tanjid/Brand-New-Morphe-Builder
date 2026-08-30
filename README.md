@@ -1,16 +1,16 @@
 <div align="center">
 
-# ⚡ Morphe x De-Vanced Builder
+# ⚡ Brand New Morphe Builder
 
 <p align="center">
   <b>Automated, high-performance CI/CD pipeline for building root Magisk/KernelSU modules and non-root APKs.</b><br>
   Powered by <a href="https://github.com/MorpheApp">Morphe</a>, <a href="https://github.com/RookieEnough/De-Vanced">De-Vanced</a>, <a href="https://github.com/crimera/piko">Piko</a>, and <a href="https://github.com/anddea/revanced-patches">ReVanced Extended</a>.
 </p>
 
+[![Build Workflow](https://img.shields.io/github/actions/workflow/status/dj-tanjid/Morphe-DeVanced-Builder/build.yml?label=Build%20Status&logo=githubactions&logoColor=white)](../../actions/workflows/build.yml)
 [![GitHub License](https://img.shields.io/github/license/dj-tanjid/Morphe-DeVanced-Builder?logo=github&label=License&color=blue)](https://github.com/dj-tanjid/Morphe-DeVanced-Builder/blob/main/LICENSE)
 [![Latest Release](https://img.shields.io/github/v/release/dj-tanjid/Morphe-DeVanced-Builder?label=Latest%20Release&logo=android&color=success)](../../releases/latest)
 [![GitHub Downloads](https://img.shields.io/github/downloads/dj-tanjid/Morphe-DeVanced-Builder/total?logo=github&label=Downloads&color=orange)](https://github.com/dj-tanjid/Morphe-DeVanced-Builder/releases)
-[![Build Workflow](https://img.shields.io/github/actions/workflow/status/dj-tanjid/Morphe-DeVanced-Builder/build.yml?label=Build%20Status&logo=githubactions&logoColor=white)](../../actions/workflows/build.yml)
 
 </div>
 
