@@ -1628,8 +1628,9 @@ build_rv() {
 	fi
 
 	local patcher_args patched_apk build_mode
-	local rv_brand_f=${args[rv_brand],,}
-	rv_brand_f=${rv_brand_f// /-}
+	local rv_brand_f
+	rv_brand_f=$(iconv -f utf-8 -t ascii//TRANSLIT <<<"${args[rv_brand]}" 2>/dev/null || echo "${args[rv_brand]}")
+	rv_brand_f=$(echo "$rv_brand_f" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/^-+|-+$//g')
 	if [[ -n "${args[patcher_args]:-}" ]]; then p_patcher_args+=("${args[patcher_args]}"); fi
 	for build_mode in "${build_mode_arr[@]}"; do
 		patcher_args=("${p_patcher_args[@]}")
