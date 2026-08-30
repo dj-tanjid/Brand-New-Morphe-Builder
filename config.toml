@@ -281,19 +281,6 @@ build-mode = "apk"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/proton-technologies-ag/protonvpn-secure-and-free-vpn"
 uptodown-dlurl = "https://protonvpn.en.uptodown.com/android"
 
-[Proton-VPN-Paresh]
-enabled = true
-app-name = "Proton VPN"
-patches-source = "gitlab:Paresh-Maheshwari/paresh-patches"
-cli-source = "github:MorpheApp/morphe-desktop"
-rv-brand = "Paresh"
-# arch = "arm64-v8a"
-version = "auto" # 'auto', 'experimental', 'latest' or a version number
-build-mode = "apk"
-patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
-apkmirror-dlurl = "https://www.apkmirror.com/apk/proton-technologies-ag/protonvpn-secure-and-free-vpn"
-uptodown-dlurl = "https://protonvpn.en.uptodown.com/android"
-
 [Windscribe-VPN-Rushi]
 enabled = false
 app-name = "Windscribe VPN"
