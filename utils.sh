@@ -1038,6 +1038,7 @@ def main():
         dl_sub_url = None
         is_bundle = False
         
+        # 1st Pass: Match version code explicitly AND suffix if present
         if version_code:
             for target_type in ["APK", "BUNDLE"]:
                 for row in reversed(rows):
@@ -1049,12 +1050,19 @@ def main():
                     
                     arch_text = cells[1].get_text(strip=True)
                     dpi_text = cells[3].get_text(strip=True)
-                    row_text = row.get_text()
+                    row_text = row.get_text().lower()
                     
                     dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
                     vcode_ok = version_code in row_text
 
-                    if is_arch_compat(arch_text, arch) and dpi_ok and vcode_ok:
+                    suffix_match = True
+                    if "-" in clean_ver:
+                        suffix = clean_ver.split("-", 1)[1].lower()
+                        suffix_clean = re.sub(r'[^a-z0-9]', '', suffix)
+                        if suffix_clean and suffix_clean not in re.sub(r'[^a-z0-9]', '', row_text):
+                            suffix_match = False
+
+                    if is_arch_compat(arch_text, arch) and dpi_ok and vcode_ok and suffix_match:
                         link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
                         if link and link.get("href"):
                             dl_sub_url = urljoin("https://www.apkmirror.com", link["href"])
@@ -1062,6 +1070,38 @@ def main():
                             break
                 if dl_sub_url: break
 
+        # 2nd Pass: Fallback matching version string AND suffix if present
+        if not dl_sub_url:
+            for target_type in ["APK", "BUNDLE"]:
+                for row in reversed(rows):
+                    cells = row.select("div.table-cell")
+                    if len(cells) < 4: continue
+                    badge = cells[0].select_one(".apkm-badge")
+                    b_type = badge.get_text(strip=True).upper() if badge else "APK"
+                    if b_type != target_type: continue
+                    
+                    arch_text = cells[1].get_text(strip=True)
+                    dpi_text = cells[3].get_text(strip=True)
+                    row_text = row.get_text().lower()
+                    
+                    dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
+
+                    suffix_match = True
+                    if "-" in clean_ver:
+                        suffix = clean_ver.split("-", 1)[1].lower()
+                        suffix_clean = re.sub(r'[^a-z0-9]', '', suffix)
+                        if suffix_clean and suffix_clean not in re.sub(r'[^a-z0-9]', '', row_text):
+                            suffix_match = False
+
+                    if is_arch_compat(arch_text, arch) and dpi_ok and suffix_match:
+                        link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
+                        if link and link.get("href"):
+                            dl_sub_url = urljoin("https://www.apkmirror.com", link["href"])
+                            is_bundle = (target_type == "BUNDLE")
+                            break
+                if dl_sub_url: break
+
+        # 3rd Pass: Loose fallback matching only architecture and DPI
         if not dl_sub_url:
             for target_type in ["APK", "BUNDLE"]:
                 for row in reversed(rows):
@@ -1077,29 +1117,6 @@ def main():
                     dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
 
                     if is_arch_compat(arch_text, arch) and dpi_ok:
-                        link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
-                        if link and link.get("href"):
-                            dl_sub_url = urljoin("https://www.apkmirror.com", link["href"])
-                            is_bundle = (target_type == "BUNDLE")
-                            break
-                if dl_sub_url: break
-
-        # 2nd Pass: Fallback matching version string only
-        if not dl_sub_url:
-            for target_type in ["APK", "BUNDLE"]:
-                for row in reversed(rows):
-                    cells = row.select("div.table-cell")
-                    if len(cells) < 4: continue
-                    badge = cells[0].select_one(".apkm-badge")
-                    b_type = badge.get_text(strip=True).upper() if badge else "APK"
-                    if b_type != target_type: continue
-                    
-                    arch_text = cells[1].get_text(strip=True)
-                    dpi_text = cells[3].get_text(strip=True)
-                    
-                    dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
-
-                    if arch_text in apparch and dpi_ok:
                         link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
                         if link and link.get("href"):
                             dl_sub_url = urljoin("https://www.apkmirror.com", link["href"])
