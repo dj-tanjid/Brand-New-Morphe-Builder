@@ -1465,9 +1465,10 @@ build_rv() {
 	export __TARGET_VERSION__=""
 	local version="" pkg_name=""
 	local mode_arg=${args[build_mode]:-} version_mode=${args[version]:-}
-	local app_name=${args[app_name]:-}
-	local app_name_l=${app_name,,}
-	app_name_l=${app_name_l// /-}
+    local app_name=${args[app_name]:-}
+	local app_name_l
+	app_name_l=$(iconv -f utf-8 -t ascii//TRANSLIT <<<"$app_name" 2>/dev/null || echo "$app_name")
+	app_name_l=$(echo "$app_name_l" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/^-+|-+$//g')
 	local table=${args[table]:-}
 	local dl_from=${args[dl_from]:-}
 	local arch=${args[arch]:-}
