@@ -676,6 +676,15 @@ COOKIE_JAR = "/tmp/apkmirror_cookies.json"
 BROWSER_CFG = "/tmp/apkmirror_browser.txt"
 SOLVER_URL = os.getenv("CF_SOLVER_URL", "http://localhost:8000")
 
+def is_arch_compat(row_arch, target_arch):
+    ra = (row_arch or "").lower()
+    ta = (target_arch or "").lower()
+    if ta in ("all", "both", "") or "universal" in ra or "noarch" in ra or ta in ra:
+        return True
+    if ta in ("armeabi-v7a", "arm-v7a") and ("armeabi" in ra or "arm-v7a" in ra):
+        return True
+    return False
+
 class Scraper:
     def __init__(self):
         self.session = None
