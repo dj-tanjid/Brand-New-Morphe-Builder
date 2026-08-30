@@ -373,12 +373,12 @@ uptodown-dlurl = "https://bluetooth-keyboard-and-mouse.en.uptodown.com/android"
 [PokeRaid-DanielTheManiel]
 enabled = false
 app-name = "PokeRaid - for Pokémon GO Raid"
-patches-source = "github:Dan1elTheMan1el/Morphe-Patches"
+patches-source = ["github:Dan1elTheMan1el/Morphe-Patches", "github:Nai64/Nai64Patches"]
+patches-version = ["dev", "latest"]
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "DanielTheManiel"
 arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
-patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/pyde-technologies-ltd/pokeraid-worldwide-remote-raids/"
 uptodown-dlurl = "https://pokeraid-worldwide-remote-ra.en.uptodown.com/android"
