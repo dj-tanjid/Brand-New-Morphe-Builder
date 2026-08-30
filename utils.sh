@@ -1196,7 +1196,8 @@ def main():
         ver_url_data = None
         is_bundle = False
 
-        def find_version(match_code=True):
+            def find_version(match_code=True):
+            clean_target_v = re.sub(r'-(all|arm64-v8a|armeabi-v7a|arm-v7a|x86_64|x86)$', '', version, flags=re.I).strip()
             for i in range(1, 21):
                 _, r = scraper.get_soup(f"{url}/apps/{data_code}/versions/{i}")
                 if not r or not r.text: continue
@@ -1205,7 +1206,8 @@ def main():
                 except Exception:
                     continue
                 for entry in data:
-                    if entry.get("version") == version:
+                    entry_ver = entry.get("version", "").strip()
+                    if entry_ver == version or entry_ver == clean_target_v:
                         if match_code and version_code and str(entry.get("versionCode", "")) != str(version_code):
                             continue
                         return entry.get("versionURL", {}), (entry.get("kindFile") == "xapk")
@@ -1226,9 +1228,6 @@ def main():
         btn_variants = soup_ver.select_one(".button.variants")
 
         if btn_variants and (data_version := btn_variants.get("data-version")):
-            apparch = {"arm64-v8a, armeabi-v7a, x86_64", "arm64-v8a, armeabi-v7a, x86, x86_64", "arm64-v8a, armeabi-v7a"}
-            if arch != "all": apparch.add(arch)
-
             base_url = url.rsplit("/", 1)[0]
             _, r_files = scraper.get_soup(f"{base_url}/app/{data_code}/version/{data_version}/files")
             files_html = json.loads(r_files.text).get("content", "") if r_files else ""
@@ -1236,21 +1235,33 @@ def main():
             content = soup_files.select_one(".content")
             
             matched_id = None
+            first_id = None
+            first_is_bundle = False
             if content:
                 for child in content.children:
                     if not getattr(child, "name", None): continue
                     if "variant" not in child.get("class", []):
                         node_arch = child.get_text(strip=True)
                         continue
-                    if not node_arch or node_arch not in apparch:
-                        continue
                     
                     file_type_tag = child.select_one(".v-file > span")
-                    is_bundle = file_type_tag.get_text(strip=True) == "xapk" if file_type_tag else False
-                    try:
-                        matched_id = child.select_one(".v-report")["data-file-id"]
+                    cur_bundle = file_type_tag.get_text(strip=True).lower() == "xapk" if file_type_tag else False
+                    v_rep = child.select_one(".v-report")
+                    cur_id = v_rep["data-file-id"] if v_rep and "data-file-id" in v_rep.attrs else None
+                    if not cur_id: continue
+
+                    if first_id is None:
+                        first_id = cur_id
+                        first_is_bundle = cur_bundle
+
+                    if is_arch_compat(node_arch, arch):
+                        matched_id = cur_id
+                        is_bundle = cur_bundle
                         break
-                    except Exception: continue
+
+            if not matched_id and first_id:
+                matched_id = first_id
+                is_bundle = first_is_bundle
 
             if matched_id:
                 soup_ver, _ = scraper.get_soup(f"{url}/download/{matched_id}-x")
