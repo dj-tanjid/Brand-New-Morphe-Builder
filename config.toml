@@ -135,7 +135,7 @@ version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
-    'Block Facebook Story ads' \
+    'Block Facebook Story ads (573)' \
     """
 excluded-patches = """\
     'Block Facebook Auto Refresh' \
