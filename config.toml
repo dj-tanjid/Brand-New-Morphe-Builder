@@ -3,7 +3,7 @@ parallel-jobs = 1
 remove-rv-integrations-checks = true # Automatically patch shared integration checks
 
 # add 'enabled = false' for not patching a specific app or remove it from the config
-# see https://github.com/j-hc/revanced-magisk-module/blob/main/CONFIG.md for more detailed explanations
+# see https://github.com/dj-tanjid/Morphe-DeVanced-Builder/blob/teejay/CONFIG.md for more detailed explanations
 
 [YouTube-Morphe]
 enabled = true
