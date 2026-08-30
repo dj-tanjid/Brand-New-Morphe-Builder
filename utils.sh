@@ -987,28 +987,30 @@ def main():
         
         release_url = None
         
-        # Priority 1: Match directly via exact path URL pattern
-        search_url = f"{url.rstrip('/')}/?s={version}"
+        clean_ver = re.sub(r'-(all|arm64-v8a|armeabi-v7a|arm-v7a|x86_64|x86)$', '', version, flags=re.I).strip()
+        search_term = clean_ver.split("-")[0].strip()
+        clean_target = re.sub(r'[^a-zA-Z0-9]', '', search_term.lower())
+
+        search_url = f"{url.rstrip('/')}/?s={search_term}"
         log(f"Searching APKMirror via exact path: {search_url}")
         soup_search, _ = scraper.get_soup(search_url)
         
         if soup_search:
             for a in soup_search.select("a.fontBlack[href*='-release/']"):
-                if version in a.get_text() and f"/{cat}/" in a.get("href", ""):
-                    release_url = urljoin("https://www.apkmirror.com", a["href"])
+                href = a.get("href", "")
+                txt = a.get_text(strip=True)
+                clean_slug = re.sub(r'[^a-zA-Z0-9]', '', href.lower())
+                clean_txt = re.sub(r'[^a-zA-Z0-9]', '', txt.lower())
+                if (clean_target in clean_slug or clean_target in clean_txt) and f"/{cat}/" in href:
+                    release_url = urljoin("https://www.apkmirror.com", href)
                     break
                     
-        # Priority 2: Fallback to global search
         if not release_url:
             log("APKMirror release URL not found via path search, trying global search...")
-            search_term = version.split("-")[0].strip()
             global_search_url = f"https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s={cat}+{search_term}"
-            if version_code:
-                global_search_url += f"+{version_code}"
 
             soup_search, _ = scraper.get_soup(global_search_url)
             if soup_search:
-                clean_target = re.sub(r'[^a-zA-Z0-9]', '', version.lower())
                 for a in soup_search.select("a.fontBlack[href*='-release/']"):
                     txt = a.get_text(strip=True)
                     href = a.get("href", "")
@@ -1030,13 +1032,9 @@ def main():
         if not rows:
             rows = [r for r in soup_rel.select("div.table-row") if len(r.select("div.table-cell")) >= 4]
         
-        apparch = {"universal", "noarch", "arm64-v8a + armeabi-v7a", "arm64-v8a + armeabi"}
-        if arch != "all": apparch.add(arch)
-        
         dl_sub_url = None
         is_bundle = False
         
-        # 1st Pass: Match version code explicitly
         if version_code:
             for target_type in ["APK", "BUNDLE"]:
                 for row in reversed(rows):
@@ -1053,7 +1051,29 @@ def main():
                     dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
                     vcode_ok = version_code in row_text
 
-                    if arch_text in apparch and dpi_ok and vcode_ok:
+                    if is_arch_compat(arch_text, arch) and dpi_ok and vcode_ok:
+                        link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
+                        if link and link.get("href"):
+                            dl_sub_url = urljoin("https://www.apkmirror.com", link["href"])
+                            is_bundle = (target_type == "BUNDLE")
+                            break
+                if dl_sub_url: break
+
+        if not dl_sub_url:
+            for target_type in ["APK", "BUNDLE"]:
+                for row in reversed(rows):
+                    cells = row.select("div.table-cell")
+                    if len(cells) < 4: continue
+                    badge = cells[0].select_one(".apkm-badge")
+                    b_type = badge.get_text(strip=True).upper() if badge else "APK"
+                    if b_type != target_type: continue
+                    
+                    arch_text = cells[1].get_text(strip=True)
+                    dpi_text = cells[3].get_text(strip=True)
+                    
+                    dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
+
+                    if is_arch_compat(arch_text, arch) and dpi_ok:
                         link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
                         if link and link.get("href"):
                             dl_sub_url = urljoin("https://www.apkmirror.com", link["href"])
