@@ -498,10 +498,9 @@ get_patch_last_supported_ver() {
 				if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 					export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 				fi
-					local clean_ver="${best_ver%%[\[:]*}"
-				    clean_ver=$(sed -E 's/-(all|arm64-v8a|armeabi-v7a|arm-v7a|x86_64|x86)$//I' <<<"$clean_ver")
-				    export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
-
+				local clean_ver="${best_ver%%[\[:]*}"
+				clean_ver=$(sed -E 's/-(all|arm64-v8a|armeabi-v7a|arm-v7a|x86_64|x86)$//I' <<<"$clean_ver")
+				export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
 				return 0
 			fi
 		fi
@@ -528,9 +527,9 @@ get_patch_last_supported_ver() {
 		if [[ "$best_ver" =~ $arch_key=([0-9]+) ]]; then
 			export __TARGET_VERSION_CODE__="${BASH_REMATCH[1]}"
 		fi
-			local clean_ver="${best_ver%%[\[:]*}"
-			clean_ver=$(sed -E 's/-(all|arm64-v8a|armeabi-v7a|arm-v7a|x86_64|x86)$//I' <<<"$clean_ver")
-			export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
+		local clean_ver="${best_ver%%[\[:]*}"
+		clean_ver=$(sed -E 's/-(all|arm64-v8a|armeabi-v7a|arm-v7a|x86_64|x86)$//I' <<<"$clean_ver")
+		export __TARGET_VERSION__=$(echo "${clean_ver}" | tr -d '[:space:]')
 		return 0
 	fi
 	return 0
@@ -1035,94 +1034,73 @@ def main():
         if not rows:
             rows = [r for r in soup_rel.select("div.table-row") if len(r.select("div.table-cell")) >= 4]
         
+        def find_candidate_row(check_func):
+            for target_type in ["APK", "BUNDLE"]:
+                for row in rows:
+                    cells = row.select("div.table-cell")
+                    if len(cells) < 4: continue
+                    badge = cells[0].select_one(".apkm-badge")
+                    b_type = badge.get_text(strip=True).upper() if badge else "APK"
+                    if b_type != target_type: continue
+                    
+                    arch_text = cells[1].get_text(strip=True)
+                    dpi_text = cells[3].get_text(strip=True)
+                    
+                    dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
+                    if not (is_arch_compat(arch_text, arch) and dpi_ok):
+                        continue
+                    
+                    link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
+                    href = link.get("href", "") if link else ""
+                    if not href: continue
+                    
+                    row_text = row.get_text()
+                    if check_func(row_text, href):
+                        return urljoin("https://www.apkmirror.com", href), (target_type == "BUNDLE")
+            return None, False
+
         dl_sub_url = None
         is_bundle = False
-        
-        # 1st Pass: Match version code explicitly AND suffix if present
-        if version_code:
-            for target_type in ["APK", "BUNDLE"]:
-                for row in reversed(rows):
-                    cells = row.select("div.table-cell")
-                    if len(cells) < 4: continue
-                    badge = cells[0].select_one(".apkm-badge")
-                    b_type = badge.get_text(strip=True).upper() if badge else "APK"
-                    if b_type != target_type: continue
-                    
-                    arch_text = cells[1].get_text(strip=True)
-                    dpi_text = cells[3].get_text(strip=True)
-                    row_text = row.get_text().lower()
-                    
-                    dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
-                    vcode_ok = version_code in row_text
 
-                    suffix_match = True
-                    if "-" in clean_ver:
-                        suffix = clean_ver.split("-", 1)[1].lower()
-                        suffix_clean = re.sub(r'[^a-z0-9]', '', suffix)
-                        if suffix_clean and suffix_clean not in re.sub(r'[^a-z0-9]', '', row_text):
-                            suffix_match = False
+        req_suffix = None
+        if "-" in clean_ver:
+            req_suffix = clean_ver.split("-", 1)[1].strip().lower()
 
-                    if is_arch_compat(arch_text, arch) and dpi_ok and vcode_ok and suffix_match:
-                        link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
-                        if link and link.get("href"):
-                            dl_sub_url = urljoin("https://www.apkmirror.com", link["href"])
-                            is_bundle = (target_type == "BUNDLE")
-                            break
-                if dl_sub_url: break
+        # Priority 1: Match version_code AND requested suffix
+        if version_code and req_suffix:
+            dl_sub_url, is_bundle = find_candidate_row(
+                lambda t, h: version_code in t and req_suffix in f"{t} {h}".lower()
+            )
 
-        # 2nd Pass: Fallback matching version string AND suffix if present
+        # Priority 2: Match version_code
+        if not dl_sub_url and version_code:
+            dl_sub_url, is_bundle = find_candidate_row(
+                lambda t, h: version_code in t
+            )
+
+        # Priority 3: Match clean_ver or requested suffix (e.g. "release", excluding "lite")
+        if not dl_sub_url and req_suffix:
+            dl_sub_url, is_bundle = find_candidate_row(
+                lambda t, h: clean_ver.lower() in t.lower() or (req_suffix in f"{t} {h}".lower() and "lite" not in f"{t} {h}".lower())
+            )
+
+        # Priority 4: Match base_ver avoiding beta/alpha/lite
         if not dl_sub_url:
-            for target_type in ["APK", "BUNDLE"]:
-                for row in reversed(rows):
-                    cells = row.select("div.table-cell")
-                    if len(cells) < 4: continue
-                    badge = cells[0].select_one(".apkm-badge")
-                    b_type = badge.get_text(strip=True).upper() if badge else "APK"
-                    if b_type != target_type: continue
-                    
-                    arch_text = cells[1].get_text(strip=True)
-                    dpi_text = cells[3].get_text(strip=True)
-                    row_text = row.get_text().lower()
-                    
-                    dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
+            dl_sub_url, is_bundle = find_candidate_row(
+                lambda t, h: search_term.lower() in t.lower() and not any(x in f"{t} {h}".lower() for x in ["beta", "alpha", "lite"])
+            )
 
-                    suffix_match = True
-                    if "-" in clean_ver:
-                        suffix = clean_ver.split("-", 1)[1].lower()
-                        suffix_clean = re.sub(r'[^a-z0-9]', '', suffix)
-                        if suffix_clean and suffix_clean not in re.sub(r'[^a-z0-9]', '', row_text):
-                            suffix_match = False
-
-                    if is_arch_compat(arch_text, arch) and dpi_ok and suffix_match:
-                        link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
-                        if link and link.get("href"):
-                            dl_sub_url = urljoin("https://www.apkmirror.com", link["href"])
-                            is_bundle = (target_type == "BUNDLE")
-                            break
-                if dl_sub_url: break
-
-        # 3rd Pass: Loose fallback matching only architecture and DPI
+        # Priority 5: Match base_ver
         if not dl_sub_url:
-            for target_type in ["APK", "BUNDLE"]:
-                for row in reversed(rows):
-                    cells = row.select("div.table-cell")
-                    if len(cells) < 4: continue
-                    badge = cells[0].select_one(".apkm-badge")
-                    b_type = badge.get_text(strip=True).upper() if badge else "APK"
-                    if b_type != target_type: continue
-                    
-                    arch_text = cells[1].get_text(strip=True)
-                    dpi_text = cells[3].get_text(strip=True)
-                    
-                    dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
+            dl_sub_url, is_bundle = find_candidate_row(
+                lambda t, h: search_term.lower() in t.lower()
+            )
 
-                    if is_arch_compat(arch_text, arch) and dpi_ok:
-                        link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
-                        if link and link.get("href"):
-                            dl_sub_url = urljoin("https://www.apkmirror.com", link["href"])
-                            is_bundle = (target_type == "BUNDLE")
-                            break
-                if dl_sub_url: break
+        # Priority 6: Fallback to any matching arch & dpi
+        if not dl_sub_url:
+            dl_sub_url, is_bundle = find_candidate_row(
+                lambda t, h: True
+            )
 
         if not dl_sub_url:
             sys.exit(1)
@@ -1482,7 +1460,7 @@ build_rv() {
 	export __TARGET_VERSION__=""
 	local version="" pkg_name=""
 	local mode_arg=${args[build_mode]:-} version_mode=${args[version]:-}
-    local app_name=${args[app_name]:-}
+	local app_name=${args[app_name]:-}
 	local app_name_l
 	app_name_l=$(iconv -f utf-8 -t ascii//TRANSLIT <<<"$app_name" 2>/dev/null || echo "$app_name")
 	app_name_l=$(echo "$app_name_l" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/^-+|-+$//g')
@@ -1719,7 +1697,6 @@ build_rv() {
 		for pj in ${args[ptjar]}; do
 			local base="${pj##*/}"
 			base="${base%.*}"
-			# Matches semver patterns like 1.41.0, v1.41.0, 1.41.0-dev.5, v1.41.0-dev.5
 			local p_v
 			p_v=$(grep -oE 'v?[0-9]+(\.[0-9]+)+(-[a-zA-Z0-9.]+)?' <<<"$base" | head -1 || true)
 			if [[ -n "$p_v" ]]; then
