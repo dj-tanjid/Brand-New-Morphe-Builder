@@ -6,7 +6,7 @@ remove-rv-integrations-checks = true # Automatically patch shared integration ch
 # see https://github.com/dj-tanjid/Morphe-DeVanced-Builder/blob/teejay/CONFIG.md for more detailed explanations
 
 [YouTube-Morphe]
-enabled = false
+enabled = true
 app-name = "YouTube"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -19,7 +19,7 @@ arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'un
 # version = "21.28.207" # Version Supporting Miniplayer Type
 # version = "experimental"
 version = "21.35.442-SECONDARY"
-# dpi = "nodpi" # Options '120-640dpi', or 'nodpi'
+dpi = "nodpi" # Options '120-640dpi', or 'nodpi'
 excluded-patches = """\
     'Custom branding name for YouTube' \
     'Custom branding icon for YouTube' \
@@ -122,7 +122,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Froggo]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:SapitoSucio/FroggoMorphePatches"
@@ -160,7 +160,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/messe
 uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
 
 [Facebook-Messenger-Rushi]
-enabled = true
+enabled = false
 app-name = "Facebook Messenger"
 pkg-name = "com.facebook.orca"
 patches-source = "github:rushiranpise/morphe-patches"
@@ -324,7 +324,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/ookla/speedtest"
 uptodown-dlurl = "https://speedtest-net-mobile.en.uptodown.com/android"
 
 [Send-Files-To-TV-Rushi]
-enabled = true
+enabled = false
 app-name = "Send Files To TV"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -362,7 +362,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/appground-io/bluetooth-keyboard
 uptodown-dlurl = "https://bluetooth-keyboard-and-mouse.en.uptodown.com/android"
 
 [PokeRaid-DanielTheManiel]
-enabled = true
+enabled = false
 app-name = "PokeRaid - for Pokémon GO Raid"
 patches-source = ["github:Dan1elTheMan1el/Morphe-Patches", "github:Nai64/Nai64Patches"]
 patches-version = ["dev", "latest"]
@@ -375,7 +375,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/pyde-technologies-ltd/pokeraid-
 uptodown-dlurl = "https://pokeraid-worldwide-remote-ra.en.uptodown.com/android"
 
 [Gboard-Jason]
-enabled = true
+enabled = false
 app-name = "Gboard"
 patches-source = "github:jasonwu1994/Gboard-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
