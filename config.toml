@@ -264,7 +264,7 @@ rv-brand = "Rushi"
 # arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
-" patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/cloudflare/1-1-1-1-faster-safer-internet"
 uptodown-dlurl = "https://1-1-1-1.en.uptodown.com/android"
 
