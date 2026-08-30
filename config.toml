@@ -384,12 +384,12 @@ build-mode = "apk"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/pyde-technologies-ltd/pokeraid-worldwide-remote-raids/"
 uptodown-dlurl = "https://pokeraid-worldwide-remote-ra.en.uptodown.com/android"
 
-[Gboard-jasonwu1994]
+[Gboard-Jason]
 enabled = false
 app-name = "Gboard"
 patches-source = "github:jasonwu1994/Gboard-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
-rv-brand = "jasonwu1994"
+rv-brand = "Jason"
 arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "both"
