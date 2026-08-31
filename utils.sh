@@ -676,6 +676,7 @@ except ImportError as e:
 
 COOKIE_JAR = "/tmp/apkmirror_cookies.json"
 BROWSER_CFG = "/tmp/apkmirror_browser.txt"
+UA_CFG = "/tmp/apkmirror_ua.txt"
 SOLVER_URL = os.getenv("CF_SOLVER_URL", "http://localhost:8000")
 
 def is_arch_compat(row_arch, target_arch):
@@ -710,6 +711,8 @@ class Scraper:
             try:
                 with open(BROWSER_CFG, "w") as f: f.write(self.current_browser)
                 with open(COOKIE_JAR, "w") as f: json.dump(self.session.cookies.get_dict(), f)
+                if "User-Agent" in self.session.headers:
+                    with open(UA_CFG, "w") as f: f.write(self.session.headers["User-Agent"])
             except Exception: pass
 
     def load_state(self):
@@ -720,6 +723,10 @@ class Scraper:
                 with open(COOKIE_JAR, "r") as f:
                     for k, v in json.load(f).items():
                         self.session.cookies.set(k, v)
+                if os.path.exists(UA_CFG):
+                    with open(UA_CFG, "r") as f:
+                        ua = f.read().strip()
+                        if ua: self.session.headers["User-Agent"] = ua
                 return True
         except Exception: pass
         return False
@@ -728,6 +735,7 @@ class Scraper:
         try:
             if os.path.exists(BROWSER_CFG): os.remove(BROWSER_CFG)
             if os.path.exists(COOKIE_JAR): os.remove(COOKIE_JAR)
+            if os.path.exists(UA_CFG): os.remove(UA_CFG)
         except Exception: pass
 
     def _solve_via_docker_service(self, url):
@@ -820,14 +828,34 @@ class Scraper:
         real_dest = f"{dest_path}.apkm" if is_bundle else dest_path
         
         log(f"Downloading file: {url}")
-        r_file = self.session.get(url, headers=headers, timeout=300)
-        
-        if r_file.status_code == 200 and r_file.content.startswith(b"PK"):
+        r_file = None
+        if self.session:
+            try:
+                r_file = self.session.get(url, headers=headers, timeout=300)
+            except Exception as e:
+                log(f"Initial download request error: {e}")
+
+        # If download was challenged or forbidden (403, 503, 429 or not a valid ZIP)
+        if not r_file or r_file.status_code != 200 or not r_file.content.startswith(b"PK"):
+            status = r_file.status_code if r_file else "None"
+            log(f"Download attempt returned HTTP {status}. Triggering Cloudflare solver bypass...")
+            solve_target = referer if referer else url
+            if self._solve_via_docker_service(solve_target):
+                if referer:
+                    headers["Referer"] = referer
+                try:
+                    r_file = self.session.get(url, headers=headers, timeout=300)
+                except Exception as e:
+                    log(f"Retry download error: {e}")
+
+        if r_file and r_file.status_code == 200 and r_file.content.startswith(b"PK"):
             with open(real_dest, "wb") as f: f.write(r_file.content)
             with open(f"{dest_path}.is_bundle", "w") as f: f.write("true" if is_bundle else "false")
             log("SUCCESS")
         else:
-            log(f"Download failed. HTTP {r_file.status_code}. Valid Zip: {r_file.content.startswith(b'PK')}")
+            status = r_file.status_code if r_file else "No response"
+            valid_pk = r_file.content.startswith(b"PK") if (r_file and r_file.content) else False
+            log(f"Download failed. HTTP {status}. Valid Zip: {valid_pk}")
             sys.exit(1)
 
 def main():
@@ -1033,8 +1061,12 @@ def main():
         rows = soup_rel.select("div.table-row.headerFont")
         if not rows:
             rows = [r for r in soup_rel.select("div.table-row") if len(r.select("div.table-cell")) >= 4]
-        
-        def find_candidate_row(check_func):
+
+        req_suffix = None
+        if "-" in clean_ver:
+            req_suffix = clean_ver.split("-", 1)[1].strip().lower()
+
+        def find_candidate_row(check_func, match_dpi=True):
             for target_type in ["APK", "BUNDLE"]:
                 for row in rows:
                     cells = row.select("div.table-cell")
@@ -1046,8 +1078,11 @@ def main():
                     arch_text = cells[1].get_text(strip=True)
                     dpi_text = cells[3].get_text(strip=True)
                     
-                    dpi_ok = not dpi_text or re.match(r"\d+-640dpi", dpi_text) or dpi_text in {"nodpi", "anydpi"} or (dpi and dpi in dpi_text)
-                    if not (is_arch_compat(arch_text, arch) and dpi_ok):
+                    if not is_arch_compat(arch_text, arch):
+                        continue
+                    
+                    dpi_ok = (not dpi) or (dpi in dpi_text) or (dpi_text in {"nodpi", "anydpi"}) or bool(re.search(r"\d+-\d+dpi", dpi_text))
+                    if match_dpi and not dpi_ok:
                         continue
                     
                     link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
@@ -1062,44 +1097,46 @@ def main():
         dl_sub_url = None
         is_bundle = False
 
-        req_suffix = None
-        if "-" in clean_ver:
-            req_suffix = clean_ver.split("-", 1)[1].strip().lower()
-
-        # Priority 1: Match version_code AND requested suffix
+        # Priority 1: Match version_code AND requested suffix (bypassing restrictive DPI range filters)
         if version_code and req_suffix:
             dl_sub_url, is_bundle = find_candidate_row(
-                lambda t, h: version_code in t and req_suffix in f"{t} {h}".lower()
+                lambda t, h: version_code in t and req_suffix in f"{t} {h}".lower(),
+                match_dpi=False
             )
 
-        # Priority 2: Match version_code
+        # Priority 2: Match version_code exactly (bypassing restrictive DPI range filters)
         if not dl_sub_url and version_code:
             dl_sub_url, is_bundle = find_candidate_row(
-                lambda t, h: version_code in t
+                lambda t, h: version_code in t,
+                match_dpi=False
             )
 
-        # Priority 3: Match clean_ver or requested suffix (e.g. "release", excluding "lite")
+        # Priority 3: Match clean_ver or requested suffix (e.g. "release", excluding "lite" / "beta")
         if not dl_sub_url and req_suffix:
             dl_sub_url, is_bundle = find_candidate_row(
-                lambda t, h: clean_ver.lower() in t.lower() or (req_suffix in f"{t} {h}".lower() and "lite" not in f"{t} {h}".lower())
+                lambda t, h: clean_ver.lower() in t.lower() or (req_suffix in f"{t} {h}".lower() and "lite" not in f"{t} {h}".lower()),
+                match_dpi=True
             )
 
-        # Priority 4: Match base_ver avoiding beta/alpha/lite
+        # Priority 4: Match search_term avoiding beta/alpha/lite
         if not dl_sub_url:
             dl_sub_url, is_bundle = find_candidate_row(
-                lambda t, h: search_term.lower() in t.lower() and not any(x in f"{t} {h}".lower() for x in ["beta", "alpha", "lite"])
+                lambda t, h: search_term.lower() in t.lower() and not any(x in f"{t} {h}".lower() for x in ["beta", "alpha", "lite"]),
+                match_dpi=True
             )
 
-        # Priority 5: Match base_ver
+        # Priority 5: Match search_term
         if not dl_sub_url:
             dl_sub_url, is_bundle = find_candidate_row(
-                lambda t, h: search_term.lower() in t.lower()
+                lambda t, h: search_term.lower() in t.lower(),
+                match_dpi=True
             )
 
-        # Priority 6: Fallback to any matching arch & dpi
+        # Priority 6: Fallback to any matching arch
         if not dl_sub_url:
             dl_sub_url, is_bundle = find_candidate_row(
-                lambda t, h: True
+                lambda t, h: True,
+                match_dpi=False
             )
 
         if not dl_sub_url:
@@ -1697,6 +1734,7 @@ build_rv() {
 		for pj in ${args[ptjar]}; do
 			local base="${pj##*/}"
 			base="${base%.*}"
+			# Matches semver patterns like 1.41.0, v1.41.0, 1.41.0-dev.5, v1.41.0-dev.5
 			local p_v
 			p_v=$(grep -oE 'v?[0-9]+(\.[0-9]+)+(-[a-zA-Z0-9.]+)?' <<<"$base" | head -1 || true)
 			if [[ -n "$p_v" ]]; then
