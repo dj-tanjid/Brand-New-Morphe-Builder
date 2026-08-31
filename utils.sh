@@ -656,7 +656,7 @@ setup_python_backend() {
 		export PIP_BREAK_SYSTEM_PACKAGES=1
 		python3 -m pip install -q "curl_cffi>=0.16.2" "beautifulsoup4>=4.15.0" "urllib3>=2.7.0" requests 2>/dev/null || true
 		cat << 'EOF' > "$TEMP_DIR/network_engine.py"
-import sys, os, re, time, json, random
+import sys, os, re, time, json, random, zipfile
 from urllib.parse import urljoin
 
 def log(msg):
@@ -691,7 +691,7 @@ def is_arch_compat(row_arch, target_arch):
 class Scraper:
     def __init__(self):
         self.session = None
-        self.current_browser = "chrome120"
+        self.current_browser = "chrome124"
         
     def _create_session(self, browser):
         sess = cffi_requests.Session(impersonate=browser)
@@ -751,8 +751,8 @@ class Scraper:
                 return False
 
             self.clear_state()
-            self.current_browser = "chrome120"
-            sess = self._create_session("chrome120")
+            self.current_browser = "chrome124"
+            sess = self._create_session("chrome124")
             
             if isinstance(cookies, dict):
                 for k, v in cookies.items():
@@ -831,26 +831,57 @@ class Scraper:
         r_file = None
         if self.session:
             try:
-                r_file = self.session.get(url, headers=headers, timeout=300)
+                r_file = self.session.get(url, headers=headers, timeout=300, allow_redirects=True)
             except Exception as e:
                 log(f"Initial download request error: {e}")
 
-        # If download was challenged or forbidden (403, 503, 429 or not a valid ZIP)
+        # If download was challenged or forbidden, solve the root apkmirror domain
         if not r_file or r_file.status_code != 200 or not r_file.content.startswith(b"PK"):
             status = r_file.status_code if r_file else "None"
             log(f"Download attempt returned HTTP {status}. Triggering Cloudflare solver bypass...")
-            solve_target = referer if referer else url
-            if self._solve_via_docker_service(solve_target):
-                if referer:
-                    headers["Referer"] = referer
+            if self._solve_via_docker_service("https://www.apkmirror.com/"):
+                if referer: headers["Referer"] = referer
                 try:
-                    r_file = self.session.get(url, headers=headers, timeout=300)
+                    r_file = self.session.get(url, headers=headers, timeout=300, allow_redirects=True)
                 except Exception as e:
                     log(f"Retry download error: {e}")
 
+        # If solver failed or still not valid ZIP, force browser back to chrome124 to avoid 403 on byte stream
+        if not r_file or r_file.status_code != 200 or not r_file.content.startswith(b"PK"):
+            log("Solver did not produce valid download, trying forced browser rotation for download...")
+            try:
+                time.sleep(1.5)
+                sess = self._create_session("chrome124")
+                if referer: headers["Referer"] = referer
+                r = sess.get(url, headers=headers, timeout=300, allow_redirects=True)
+                if r.status_code == 200 and r.content.startswith(b"PK"):
+                    self.session = sess
+                    self.current_browser = "chrome124"
+                    self.save_state()
+                    r_file = r
+            except Exception:
+                pass
+
         if r_file and r_file.status_code == 200 and r_file.content.startswith(b"PK"):
             with open(real_dest, "wb") as f: f.write(r_file.content)
-            with open(f"{dest_path}.is_bundle", "w") as f: f.write("true" if is_bundle else "false")
+            
+            # Verify if the downloaded file is actually a bundle (contains internal .apk files)
+            actual_bundle = is_bundle
+            if is_bundle:
+                is_valid_bundle = False
+                try:
+                    with zipfile.ZipFile(real_dest, "r") as z:
+                        if any(item.endswith(".apk") for item in z.namelist()):
+                            is_valid_bundle = True
+                except Exception:
+                    pass
+                if not is_valid_bundle:
+                    log("File downloaded as bundle is a standalone APK. Re-tagging as APK...")
+                    if real_dest.endswith(".apkm") and real_dest != dest_path:
+                        os.replace(real_dest, dest_path)
+                    actual_bundle = False
+
+            with open(f"{dest_path}.is_bundle", "w") as f: f.write("true" if actual_bundle else "false")
             log("SUCCESS")
         else:
             status = r_file.status_code if r_file else "No response"
@@ -1155,7 +1186,10 @@ def main():
         if not soup_final:
             sys.exit(1)
             
-        dl_link = soup_final.select_one("a[data-google-vignette='false'][rel='nofollow']") or soup_final.select_one("span > a[rel=nofollow]") or soup_final.find("a", string=re.compile("here", re.I))
+        dl_link = soup_final.select_one("a[data-google-vignette='false'][rel='nofollow']:not([href*='forcebaseapk'])") or \
+                  soup_final.select_one("a[data-google-vignette='false'][rel='nofollow']") or \
+                  soup_final.select_one("span > a[rel=nofollow]") or \
+                  soup_final.find("a", string=re.compile("here", re.I))
         if not dl_link:
             sys.exit(1)
             
@@ -1338,7 +1372,7 @@ get_github_vers() {
 
 dl_github() {
 	local url="${1%/}" version=$2 output=$3 arch=$4 dpi=$5 vcode=${6:-}
-	rm -f "${output}.is_bundle" "${output}.apkm.is_bundle"
+	rm -rf "${output}" "${output}.apkm" "${output}-zip" "${output}.is_bundle" "${output}.apkm.is_bundle"
 
 	if ! run_python_backend "github_dl" "$url" "$version" "$output" "$arch" "$dpi" "$vcode" >/dev/null; then
 		return 1
@@ -1383,7 +1417,7 @@ dl_apkmirror() {
 		merge_splits "${output}.apkm" "${output}"
 		return 0
 	fi
-	rm -f "${output}.is_bundle" "${output}.apkm.is_bundle"
+	rm -rf "${output}" "${output}.apkm" "${output}-zip" "${output}.is_bundle" "${output}.apkm.is_bundle"
 	
 	if ! run_python_backend "apkmirror_dl" "$url" "$version" "$output" "$arch" "$dpi" "$vcode" >/dev/null; then
 		return 1
@@ -1423,7 +1457,7 @@ get_uptodown_vers() { run_python_backend "uptodown_vers" "${__UPTODOWN_URL__:-}"
 
 dl_uptodown() {
 	local url="${1%/}" version=$2 output=$3 arch=$4 dpi=$5 vcode=${6:-}
-	rm -f "${output}.is_bundle" "${output}.apkm.is_bundle"
+	rm -rf "${output}" "${output}.apkm" "${output}-zip" "${output}.is_bundle" "${output}.apkm.is_bundle"
 	
 	if ! run_python_backend "uptodown_dl" "$url" "$version" "$output" "$arch" "$dpi" "$vcode" >/dev/null; then
 		return 1
@@ -1734,7 +1768,6 @@ build_rv() {
 		for pj in ${args[ptjar]}; do
 			local base="${pj##*/}"
 			base="${base%.*}"
-			# Matches semver patterns like 1.41.0, v1.41.0, 1.41.0-dev.5, v1.41.0-dev.5
 			local p_v
 			p_v=$(grep -oE 'v?[0-9]+(\.[0-9]+)+(-[a-zA-Z0-9.]+)?' <<<"$base" | head -1 || true)
 			if [[ -n "$p_v" ]]; then
