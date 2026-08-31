@@ -824,9 +824,8 @@ class Scraper:
         return None, None
 
     def download(self, url, dest_path, is_bundle, referer):
+        import zipfile
         headers = {"Referer": referer} if referer else {}
-        real_dest = f"{dest_path}.apkm" if is_bundle else dest_path
-        
         log(f"Downloading file: {url}")
         r_file = None
         if self.session:
@@ -848,8 +847,21 @@ class Scraper:
                     log(f"Retry download error: {e}")
 
         if r_file and r_file.status_code == 200 and r_file.content.startswith(b"PK"):
+            real_is_bundle = is_bundle
+            if is_bundle:
+                try:
+                    import io
+                    with zipfile.ZipFile(io.BytesIO(r_file.content)) as z:
+                        names = z.namelist()
+                        has_inner_apks = any(n.endswith(".apk") for n in names)
+                        if not has_inner_apks and ("AndroidManifest.xml" in names or any(n.startswith("classes") for n in names)):
+                            real_is_bundle = False
+                except Exception:
+                    pass
+
+            real_dest = f"{dest_path}.apkm" if real_is_bundle else dest_path
             with open(real_dest, "wb") as f: f.write(r_file.content)
-            with open(f"{dest_path}.is_bundle", "w") as f: f.write("true" if is_bundle else "false")
+            with open(f"{dest_path}.is_bundle", "w") as f: f.write("true" if real_is_bundle else "false")
             log("SUCCESS")
         else:
             status = r_file.status_code if r_file else "No response"
@@ -1096,21 +1108,21 @@ def main():
         dl_sub_url = None
         is_bundle = False
 
-        # Priority 1: Match version_code AND requested suffix (bypassing restrictive DPI range filters)
+        # Priority 1: Match version_code AND requested suffix
         if version_code and req_suffix:
             dl_sub_url, is_bundle = find_candidate_row(
                 lambda t, h: version_code in t and req_suffix in f"{t} {h}".lower(),
                 match_dpi=False
             )
 
-        # Priority 2: Match version_code exactly (bypassing restrictive DPI range filters)
+        # Priority 2: Match version_code exactly
         if not dl_sub_url and version_code:
             dl_sub_url, is_bundle = find_candidate_row(
                 lambda t, h: version_code in t,
                 match_dpi=False
             )
 
-        # Priority 3: Match clean_ver or requested suffix (e.g. "release", excluding "lite" / "beta")
+        # Priority 3: Match clean_ver or requested suffix
         if not dl_sub_url and req_suffix:
             dl_sub_url, is_bundle = find_candidate_row(
                 lambda t, h: clean_ver.lower() in t.lower() or (req_suffix in f"{t} {h}".lower() and "lite" not in f"{t} {h}".lower()),
@@ -1337,7 +1349,7 @@ get_github_vers() {
 
 dl_github() {
 	local url="${1%/}" version=$2 output=$3 arch=$4 dpi=$5 vcode=${6:-}
-	rm -f "${output}.is_bundle" "${output}.apkm.is_bundle"
+	rm -f "${output}" "${output}.apkm" "${output}.is_bundle" "${output}.apkm.is_bundle"
 
 	if ! run_python_backend "github_dl" "$url" "$version" "$output" "$arch" "$dpi" "$vcode" >/dev/null; then
 		return 1
@@ -1634,7 +1646,7 @@ build_rv() {
 	local sig_op
 	if [[ -f "${stock_apk}.apkm" ]]; then
 		rm -rf "${stock_apk}-zip" || :
-		unzip -j "${stock_apk}.apkm" -d "${stock_apk}-zip" >/dev/null
+		unzip -o -q -j "${stock_apk}.apkm" -d "${stock_apk}-zip" >/dev/null 2>&1
 		for a in "${stock_apk}"-zip/*.apk; do
 			if ! sig_op=$(check_sig "$a" "$pkg_name" 2>&1); then
 				epr "Not building $table, apk signature mismatch '$a': $sig_op"
