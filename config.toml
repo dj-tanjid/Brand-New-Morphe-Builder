@@ -260,6 +260,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram.
 [1-1-1-1-Rushi]
 enabled = true
 app-name = "1.1.1.1"
+pkg-name = "com.cloudflare.onedotonedotonedotone"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Rushi"
