@@ -288,7 +288,7 @@ get_prebuilts() {
 			return 1
 		fi
 
-		asset=$(jq -r ".[0]" <<<matches")
+		asset=$(jq -r ".[0]" <<<"$matches")
 		name=$(jq -r '.name' <<<"$asset")
 		cli_file="${cli_dir}/${name}"
 
@@ -1733,6 +1733,7 @@ build_rv() {
 		for pj in ${args[ptjar]}; do
 			local base="${pj##*/}"
 			base="${base%.*}"
+			# Matches semver patterns like 1.41.0, v1.41.0, 1.41.0-dev.5, v1.41.0-dev.5
 			local p_v
 			p_v=$(grep -oE 'v?[0-9]+(\.[0-9]+)+(-[a-zA-Z0-9.]+)?' <<<"$base" | head -1 || true)
 			if [[ -n "$p_v" ]]; then
