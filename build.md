@@ -1,9 +1,6 @@
+📱 » **Bluetooth-Keyboard-Mouse-Rushi** (arm64-v8a): `6.23.1`    
 📱 » **Facebook-De-Vanced** (arm64-v8a): `490.0.0.63.82`    
 📱 » **Facebook-Froggo** (arm64-v8a): `573.0.0.37.74`    
-📱 » **Facebook-Messenger-De-Vanced** (arm64-v8a): `576.0.0.47.92`    
-📱 » **Send-Files-To-TV-Rushi** (all): `1.4.22`    
-📱 » **Twitter-Piko** (all): `12.19.1-release.0`    
-📱 » **X-Piko** (all): `12.19.1-release.0`    
 
 <br>
   
@@ -20,7 +17,6 @@ Patches and CLI Sources :
 > ⚙️ » Patches: `rushiranpise/patches-1.21.2.mpp` ([Changelog](https://github.com/rushiranpise/morphe-patches/releases/tag/v1.21.2))
  ⚙️ » Patches: `RookieEnough/patches-1.3.1.mpp` ([Changelog](https://github.com/RookieEnough/De-Vanced/releases/tag/v1.3.1))
  ⚙️ » Patches: `SapitoSucio/patches-1.3.0-dev.2.mpp` ([Changelog](https://github.com/SapitoSucio/FroggoMorphePatches/releases/tag/v1.3.0-dev.2))
- ⚙️ » Patches: `crimera/patches-3.9.0.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.9.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.14.0-all.jar`
   
