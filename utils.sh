@@ -1108,24 +1108,30 @@ def main():
         dl_sub_url = None
         is_bundle = False
 
-        # Priority 1: Match version_code AND requested suffix
+        # Priority 1: Match version_code AND requested suffix (bypassing restrictive DPI range filters)
         if version_code and req_suffix:
             dl_sub_url, is_bundle = find_candidate_row(
-                lambda t, h: version_code in t and req_suffix in f"{t} {h}".lower(),
+                lambda t, h: version_code in t and (
+                    req_suffix in f"{t} {h}".lower() and
+                    not (req_suffix == "release" and any(x in t.lower() for x in ["beta", "alpha", "lite"]))
+                ),
                 match_dpi=False
             )
 
-        # Priority 2: Match version_code exactly
+        # Priority 2: Match version_code exactly (bypassing restrictive DPI range filters)
         if not dl_sub_url and version_code:
             dl_sub_url, is_bundle = find_candidate_row(
                 lambda t, h: version_code in t,
                 match_dpi=False
             )
 
-        # Priority 3: Match clean_ver or requested suffix
+        # Priority 3: Match clean_ver or requested suffix (e.g. "release", excluding "lite" / "beta")
         if not dl_sub_url and req_suffix:
             dl_sub_url, is_bundle = find_candidate_row(
-                lambda t, h: clean_ver.lower() in t.lower() or (req_suffix in f"{t} {h}".lower() and "lite" not in f"{t} {h}".lower()),
+                lambda t, h: clean_ver.lower() in t.lower() or (
+                    req_suffix in f"{t} {h}".lower() and 
+                    not (req_suffix == "release" and any(x in t.lower() for x in ["beta", "alpha", "lite"]))
+                ),
                 match_dpi=True
             )
 
@@ -1745,7 +1751,6 @@ build_rv() {
 		for pj in ${args[ptjar]}; do
 			local base="${pj##*/}"
 			base="${base%.*}"
-			# Matches semver patterns like 1.41.0, v1.41.0, 1.41.0-dev.5, v1.41.0-dev.5
 			local p_v
 			p_v=$(grep -oE 'v?[0-9]+(\.[0-9]+)+(-[a-zA-Z0-9.]+)?' <<<"$base" | head -1 || true)
 			if [[ -n "$p_v" ]]; then
