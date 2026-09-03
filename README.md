@@ -73,12 +73,32 @@ This builder is an advanced, hardened fork of [j-hc's revanced-magisk-module](ht
   </tr>
   <tr>
     <td><b>Facebook & Messenger</b></td>
-    <td>De-Vanced / Rushi</td>
+    <td>De-Vanced / Rushi / Froggo</td>
     <td>Non-Root APK</td>
   </tr>
   <tr>
     <td><b>Threads</b></td>
-    <td>De-Vanced</td>
+    <td>De-Vanced / Chiggi</td>
+    <td>Non-Root APK</td>
+  </tr>
+  <tr>
+    <td><b>Gboard</b></td>
+    <td>Jason</td>
+    <td>Non-Root APK + Magisk/KSU Module</td>
+  </tr>
+  <tr>
+    <td><b>VPNs (1.1.1.1, Proton, Windscribe)</b></td>
+    <td>Rushi</td>
+    <td>Non-Root APK</td>
+  </tr>
+  <tr>
+    <td><b>Utilities (TeraBox, Speedtest, Send Files To TV, APKMirror Installer, Bluetooth Keyboard & Mouse)</b></td>
+    <td>Rushi</td>
+    <td>Non-Root APK</td>
+  </tr>
+  <tr>
+    <td><b>PokeRaid</b></td>
+    <td>DanielTheManiel / Nai64</td>
     <td>Non-Root APK</td>
   </tr>
 </table>
@@ -140,6 +160,11 @@ Special thanks to the open-source developers who make this ecosystem possible:
 * [crimera](https://github.com/crimera) : Developer of the Piko patches for Twitter/X and Instagram.
 * [Aaron Veil (anddea)](https://github.com/anddea) : ReVanced Extended ecosystem patches.
 * [Sarthak Sinha (RookieEnough)](https://github.com/RookieEnough/) : De-Vanced patches.
+* [rushiranpise](https://github.com/rushiranpise) : Morphe patches for utility applications and VPNs.
+* [jasonwu1994](https://github.com/jasonwu1994) : Gboard optimization patches.
+* [SapitoSucio](https://github.com/SapitoSucio) : Froggo Morphe patches for Facebook.
+* [durgesh0505](https://github.com/durgesh0505) : Chiggi Morphe patches for Threads.
+* [Dan1elTheMan1el](https://github.com/Dan1elTheMan1el) & [Nai64](https://github.com/Nai64) : PokeRaid module patches.
 * [ReVanced Team](https://github.com/ReVanced) : Original patcher framework and bytecode tooling.
 
 ---
