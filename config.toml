@@ -24,7 +24,6 @@ excluded-patches = """\
     'Custom branding name for YouTube' \
     'Custom branding icon for YouTube' \
     'Custom branding' \
-    'Fullscreen video scale' \
     """
 # included-patches = ""
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
