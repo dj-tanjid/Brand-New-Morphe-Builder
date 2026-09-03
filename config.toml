@@ -6,7 +6,7 @@ remove-rv-integrations-checks = true # Automatically patch shared integration ch
 # see https://github.com/dj-tanjid/Morphe-DeVanced-Builder/blob/teejay/CONFIG.md for more detailed explanations
 
 [YouTube-Morphe]
-enabled = false 
+enabled = true
 app-name = "YouTube"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -34,7 +34,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.google.and
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.youtube"
 
 [YT-Music-Morphe]
-enabled = false
+enabled = true
 app-name = "YT Music"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -58,7 +58,7 @@ uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
 
 [Reddit-Morphe]
-enabled = false
+enabled = true
 app-name = "Reddit"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -82,7 +82,7 @@ uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
 
 [Google-Photos-De-Vanced]
-enabled = false
+enabled = true
 app-name = "Google Photos"
 patches-source = "RookieEnough/De-Vanced"
 cli-source = "MorpheApp/morphe-desktop"
@@ -92,7 +92,7 @@ version = "latest"
 # version = "auto" # 'auto', 'experimental', 'latest' or a version number
 # version = "7.89.0.968035987"
 build-mode = "both" # Options 'apk', 'module', or 'both'
-patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'Enable DCIM folders backup control' \
     'Fix DCIM folder classification' \
@@ -116,7 +116,7 @@ arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 # version = "573.0.0.37.74"
 build-mode = "apk"
-patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
@@ -145,7 +145,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Messenger-De-Vanced]
-enabled = false
+enabled = true
 app-name = "Facebook Messenger"
 pkg-name = "com.facebook.orca"
 patches-source = "RookieEnough/De-Vanced"
@@ -154,13 +154,13 @@ rv-brand = "De-Vanced"
 arch = "arm64-v8a"
 version = "latest" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
-patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.orca"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/messenger"
 uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
 
 [Facebook-Messenger-Rushi]
-enabled = false
+enabled = true
 app-name = "Facebook Messenger"
 pkg-name = "com.facebook.orca"
 patches-source = "github:rushiranpise/morphe-patches"
@@ -193,7 +193,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads-an-instagram-
 uptodown-dlurl = "https://threads.en.uptodown.com/android"
 
 [Twitter-Piko]
-enabled = false
+enabled = true
 app-name = "Twitter"
 patches-source = "crimera/piko"
 cli-source = "MorpheApp/morphe-desktop"
@@ -202,7 +202,7 @@ build-mode = "apk" # Options 'apk', 'module', or 'both'
 # version = "latest" # 'auto', 'experimental', 'latest' or a version number
 version = "auto"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'Bring back twitter' \
     'Browse tweet object' \
@@ -214,7 +214,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko]
-enabled = false
+enabled = true
 app-name = "X"
 # patches-source = "crimera/piko"
 patches-source = "github:crimera/piko"
@@ -224,7 +224,7 @@ build-mode = "apk" # Options 'apk', 'module', or 'both'
 # version = "latest" # 'auto', 'experimental', 'latest' or a version number
 version = "auto"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'Dynamic color' \
     'Browse tweet object' \
@@ -235,7 +235,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [Instagram-Piko]
-enabled = false
+enabled = true
 app-name = "Instagram"
 patches-source = "crimera/piko"
 cli-source = "MorpheApp/morphe-desktop"
@@ -245,7 +245,7 @@ build-mode = "apk" # Options 'apk', 'module', or 'both'
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 # version = "439.0.0.37.89"
 arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'universal'
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'Theme' \
     """
@@ -258,7 +258,7 @@ uptodown-dlurl = "https://instagram.en.uptodown.com/android"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram.android"
 
 [1-1-1-1-Rushi]
-enabled = false
+enabled = true
 app-name = "1.1.1.1"
 pkg-name = "com.cloudflare.onedotonedotonedotone"
 patches-source = "github:rushiranpise/morphe-patches"
@@ -272,7 +272,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/cloudflare/1-1-1-1-faster-safer
 uptodown-dlurl = "https://1-1-1-1.en.uptodown.com/android"
 
 [Proton-VPN-Rushi]
-enabled = false
+enabled = true
 app-name = "Proton VPN"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -285,7 +285,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/proton-technologies-ag/protonvp
 uptodown-dlurl = "https://protonvpn.en.uptodown.com/android"
 
 [Windscribe-VPN-Rushi]
-enabled = false
+enabled = true
 app-name = "Windscribe VPN"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -298,7 +298,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/windscribe/windscribe-vpn"
 uptodown-dlurl = "https://windscribe.en.uptodown.com/android"
 
 [TeraBox-Rushi]
-enabled = false
+enabled = true
 app-name = "TeraBox"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -311,7 +311,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/flextech-inc/terabox-cloud-stor
 uptodown-dlurl = "https://terabox.en.uptodown.com/android"
 
 [Speedtest-by-Ookla-Rushi]
-enabled = false
+enabled = true
 app-name = "Speedtest by Ookla"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -324,7 +324,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/ookla/speedtest"
 uptodown-dlurl = "https://speedtest-net-mobile.en.uptodown.com/android"
 
 [Send-Files-To-TV-Rushi]
-enabled = false
+enabled = true
 app-name = "Send Files To TV"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -337,7 +337,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/yablio/send-files-to-tv/"
 uptodown-dlurl = "https://send-files-to-tv.en.uptodown.com/android"
 
 [APKMirror-Installer-Rushi]
-enabled = false
+enabled = true
 app-name = "APKMirror Installer"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -375,7 +375,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/pyde-technologies-ltd/pokeraid-
 uptodown-dlurl = "https://pokeraid-worldwide-remote-ra.en.uptodown.com/android"
 
 [Gboard-Jason]
-enabled = false
+enabled = true
 app-name = "Gboard"
 patches-source = "github:jasonwu1994/Gboard-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
