@@ -1034,6 +1034,14 @@ def main():
         clean_target = re.sub(r'[^a-zA-Z0-9]', '', search_term.lower())
         clean_target_full = re.sub(r'[^a-zA-Z0-9]', '', clean_ver.lower())
 
+        req_suffix = None
+        if "-" in clean_ver:
+            req_suffix = clean_ver.split("-", 1)[1].strip().lower()
+
+        def is_beta_or_alpha(s):
+            s = s.lower()
+            return "beta" in s or "alpha" in s or "lite" in s
+
         search_url = f"{url.rstrip('/')}/?s={search_term}"
         log(f"Searching APKMirror via exact path: {search_url}")
         soup_search, _ = scraper.get_soup(search_url)
@@ -1049,6 +1057,8 @@ def main():
                         exact_release_url = urljoin("https://www.apkmirror.com", href)
                         break
                     if release_url is None and (clean_target in clean_slug or clean_target in clean_txt):
+                        if req_suffix and not is_beta_or_alpha(req_suffix) and is_beta_or_alpha(clean_slug):
+                            continue
                         release_url = urljoin("https://www.apkmirror.com", href)
                         
         release_url = exact_release_url or release_url
@@ -1068,6 +1078,8 @@ def main():
                         exact_release_url = urljoin("https://www.apkmirror.com", href)
                         break
                     if release_url is None and (clean_target in clean_slug or clean_target in clean_txt):
+                        if req_suffix and not is_beta_or_alpha(req_suffix) and is_beta_or_alpha(clean_slug):
+                            continue
                         release_url = urljoin("https://www.apkmirror.com", href)
 
             release_url = exact_release_url or release_url
@@ -1083,10 +1095,6 @@ def main():
         rows = soup_rel.select("div.table-row.headerFont")
         if not rows:
             rows = [r for r in soup_rel.select("div.table-row") if len(r.select("div.table-cell")) >= 4]
-
-        req_suffix = None
-        if "-" in clean_ver:
-            req_suffix = clean_ver.split("-", 1)[1].strip().lower()
 
         def find_candidate_row(check_func, match_dpi=True):
             for target_type in ["APK", "BUNDLE"]:
@@ -1124,7 +1132,7 @@ def main():
             dl_sub_url, is_bundle = find_candidate_row(
                 lambda t, h: version_code in t and (
                     req_suffix in f"{t} {h}".lower() and
-                    not (req_suffix == "release" and any(x in t.lower() for x in ["beta", "alpha", "lite"]))
+                    not (req_suffix == "release" and is_beta_or_alpha(t))
                 ),
                 match_dpi=False
             )
@@ -1141,7 +1149,7 @@ def main():
             dl_sub_url, is_bundle = find_candidate_row(
                 lambda t, h: clean_ver.lower() in t.lower() or (
                     req_suffix in f"{t} {h}".lower() and 
-                    not (req_suffix == "release" and any(x in t.lower() for x in ["beta", "alpha", "lite"]))
+                    not (req_suffix == "release" and is_beta_or_alpha(t))
                 ),
                 match_dpi=True
             )
@@ -1149,21 +1157,23 @@ def main():
         # Priority 4: Match search_term avoiding beta/alpha/lite
         if not dl_sub_url:
             dl_sub_url, is_bundle = find_candidate_row(
-                lambda t, h: search_term.lower() in t.lower() and not any(x in f"{t} {h}".lower() for x in ["beta", "alpha", "lite"]),
+                lambda t, h: search_term.lower() in t.lower() and not is_beta_or_alpha(f"{t} {h}"),
                 match_dpi=True
             )
 
         # Priority 5: Match search_term
         if not dl_sub_url:
             dl_sub_url, is_bundle = find_candidate_row(
-                lambda t, h: search_term.lower() in t.lower(),
+                lambda t, h: search_term.lower() in t.lower() and (
+                    not req_suffix or is_beta_or_alpha(req_suffix) or not is_beta_or_alpha(f"{t} {h}")
+                ),
                 match_dpi=True
             )
 
         # Priority 6: Fallback to any matching arch
         if not dl_sub_url:
             dl_sub_url, is_bundle = find_candidate_row(
-                lambda t, h: True,
+                lambda t, h: not req_suffix or is_beta_or_alpha(req_suffix) or not is_beta_or_alpha(f"{t} {h}"),
                 match_dpi=False
             )
 
