@@ -1,4 +1,5 @@
-📱 » **Gboard-Jason** (arm64-v8a): `18.0.3.954559732-release`    
+📱 » **Twitter-Piko-NewX** (all): `12.23.0-prod.01`    
+📱 » **X-Piko-NewX** (all): `12.23.0-prod.01`    
 
 <br>
   
@@ -20,7 +21,7 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `jasonwu1994/patches-3.10.0.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v3.10.0))
+> ⚙️ » Patches: `crimera/patches.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/12.22.0-prod.01-fceaaf2))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.15.0-all.jar`
   
