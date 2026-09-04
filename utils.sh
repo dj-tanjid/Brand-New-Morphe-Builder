@@ -1745,12 +1745,26 @@ build_rv() {
 		cp -a $MODULE_TEMPLATE_DIR/. "$base_template"
 		local upj="${table,,}-update.json"
 
-		module_config "$base_template" "$pkg_name" "$version_f" "$arch"
+		local mod_ver_f="$version_f"
+		local aapt_bin=""
+		if command -v aapt >/dev/null 2>&1; then aapt_bin="aapt"
+		elif command -v aapt2 >/dev/null 2>&1; then aapt_bin="aapt2"
+		elif [[ -n "${ANDROID_HOME:-}" ]]; then aapt_bin=$(find "$ANDROID_HOME/build-tools" -name "aapt" 2>/dev/null | sort -r | head -1);
+		elif [[ -f "${AAPT2:-}" ]]; then aapt_bin="$AAPT2"; fi
+		
+		if [[ -n "$aapt_bin" && -x "$aapt_bin" ]]; then
+			local real_ver
+			real_ver=$("$aapt_bin" dump badging "$patched_apk" 2>/dev/null | grep -m1 "versionName=" | sed -E "s/.*versionName='([^']+)'.*/\1/")
+			if [[ -n "$real_ver" ]]; then mod_ver_f="$real_ver"; fi
+		fi
+
+		module_config "$base_template" "$pkg_name" "$mod_ver_f" "$arch"
 
 		local p_vers=()
 		for pj in ${args[ptjar]}; do
 			local base="${pj##*/}"
 			base="${base%.*}"
+			# Matches semver patterns like 1.41.0, v1.41.0, 1.41.0-dev.5, v1.41.0-dev.5
 			local p_v
 			p_v=$(grep -oE 'v?[0-9]+(\.[0-9]+)+(-[a-zA-Z0-9.]+)?' <<<"$base" | head -1 || true)
 			if [[ -n "$p_v" ]]; then
@@ -1764,7 +1778,7 @@ build_rv() {
 		module_prop \
 			"${args[module_prop_name]:-}" \
 			"${app_name} ${args[rv_brand]:-}" \
-			"${version_f} (Patch ${patches_ver})" \
+			"${mod_ver_f} (Patch ${patches_ver})" \
 			"${app_name} ${args[rv_brand]:-} module" \
 			"https://raw.githubusercontent.com/${GITHUB_REPOSITORY-}/update/${upj}" \
 			"$base_template"
