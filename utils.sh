@@ -900,7 +900,7 @@ def main():
             log(f"Failed to fetch GitHub release: {e}")
             sys.exit(1)
 
-        arch_suffix = re.compile(r"(?:-(all|arm64-v8a|armeabi-v7a|x86_64|x86))?(?:\.apk\.apkm|\.apk|\.apkm)$", re.I)
+        arch_suffix = re.compile(r"(?:-(all|arm64-v8a|armeabi-v7a|x86_64|x86))?(?:\.apk\.apkm|\.apk|\.apkm|\.xapk|\.zip)$", re.I)
 
         if mode == "github_pkg":
             pkg_name = release_data.get("name") or release_data.get("tag_name") or "UNKNOWN"
@@ -912,7 +912,7 @@ def main():
             seen = {}
             for asset in release_data.get("assets", []):
                 name = asset.get("name", "")
-                if name.startswith(prefix) and name.endswith((".apk", ".apkm")):
+                if name.startswith(prefix) and name.endswith((".apk", ".apkm", ".xapk", ".zip")):
                     ver = arch_suffix.sub("", name[len(prefix):])
                     seen[ver] = None
             versions = list(seen.keys()) or [release_data.get("tag_name", "")]
@@ -931,19 +931,21 @@ def main():
                 arch = "armeabi-v7a"
             version_f = version.replace(" ", "").lstrip("v")
 
-            apk_assets = [a for a in release_data.get("assets", []) if a.get("name", "").endswith((".apk", ".apkm"))]
+            apk_assets = [a for a in release_data.get("assets", []) if a.get("name", "").endswith((".apk", ".apkm", ".xapk", ".zip"))]
             target_asset = None
+
+            def is_arch_ok(file_arch, target_arch):
+                if target_arch in ("all", "both", ""): return True
+                return file_arch == target_arch or file_arch == "all"
 
             # 1st Pass: Match version string AND version code
             if version_code:
                 for a in apk_assets:
                     name = a.get("name", "")
-                    if version_f not in name or version_code not in name:
-                        continue
+                    if version_f not in name or version_code not in name: continue
                     m = arch_suffix.search(name)
                     file_arch = m.group(1).lower() if m and m.group(1) else "all"
-                    if arch in ("all", "both") and file_arch != "all": continue
-                    if arch not in ("all", "both") and file_arch not in (arch, "all"): continue
+                    if not is_arch_ok(file_arch, arch): continue
                     target_asset = a
                     break
 
@@ -951,16 +953,14 @@ def main():
             if not target_asset:
                 for a in apk_assets:
                     name = a.get("name", "")
-                    if version_f and version_f not in name:
-                        continue
+                    if version_f and version_f not in name: continue
                     m = arch_suffix.search(name)
                     file_arch = m.group(1).lower() if m and m.group(1) else "all"
-                    if arch in ("all", "both") and file_arch != "all": continue
-                    if arch not in ("all", "both") and file_arch not in (arch, "all"): continue
+                    if not is_arch_ok(file_arch, arch): continue
                     target_asset = a
                     break
 
-            if not target_asset and apk_assets:
+            if not target_asset and apk_assets and not version_f:
                 target_asset = apk_assets[0]
 
             if not target_asset:
@@ -968,8 +968,7 @@ def main():
                 sys.exit(1)
 
             dl_url = target_asset.get("browser_download_url")
-            is_bundle = target_asset.get("name", "").endswith(".apkm")
-            real_dest = f"{dest_path}.apkm" if is_bundle else dest_path
+            is_bundle = target_asset.get("name", "").endswith((".apkm", ".xapk", ".zip"))
 
             log(f"Downloading GitHub asset: {target_asset.get('name')}")
             dl_headers = gh_headers.copy()
@@ -977,10 +976,23 @@ def main():
 
             r_file = requests.get(dl_url, headers=dl_headers, timeout=300, allow_redirects=True)
             if r_file.status_code == 200 and r_file.content.startswith(b"PK"):
-                with open(real_dest, "wb") as f:
+                real_is_bundle = is_bundle
+                if is_bundle:
+                    try:
+                        import zipfile, io
+                        with zipfile.ZipFile(io.BytesIO(r_file.content)) as z:
+                            names = z.namelist()
+                            has_inner_apks = any(n.endswith(".apk") for n in names)
+                            if not has_inner_apks and ("AndroidManifest.xml" in names or any(n.startswith("classes") for n in names)):
+                                real_is_bundle = False
+                    except Exception:
+                        pass
+                
+                final_dest = f"{dest_path}.apkm" if real_is_bundle else dest_path
+                with open(final_dest, "wb") as f:
                     f.write(r_file.content)
                 with open(f"{dest_path}.is_bundle", "w") as f:
-                    f.write("true" if is_bundle else "false")
+                    f.write("true" if real_is_bundle else "false")
                 log("SUCCESS")
             else:
                 log(f"Download failed. HTTP {r_file.status_code}")
