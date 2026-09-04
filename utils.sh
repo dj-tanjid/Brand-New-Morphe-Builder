@@ -1027,10 +1027,12 @@ def main():
         cat = url.rstrip("/").split("/")[-1]
         
         release_url = None
+        exact_release_url = None
         
         clean_ver = re.sub(r'-(all|arm64-v8a|armeabi-v7a|arm-v7a|x86_64|x86)$', '', version, flags=re.I).strip()
         search_term = clean_ver.split("-")[0].strip()
         clean_target = re.sub(r'[^a-zA-Z0-9]', '', search_term.lower())
+        clean_target_full = re.sub(r'[^a-zA-Z0-9]', '', clean_ver.lower())
 
         search_url = f"{url.rstrip('/')}/?s={search_term}"
         log(f"Searching APKMirror via exact path: {search_url}")
@@ -1042,9 +1044,14 @@ def main():
                 txt = a.get_text(strip=True)
                 clean_slug = re.sub(r'[^a-zA-Z0-9]', '', href.lower())
                 clean_txt = re.sub(r'[^a-zA-Z0-9]', '', txt.lower())
-                if (clean_target in clean_slug or clean_target in clean_txt) and f"/{cat}/" in href:
-                    release_url = urljoin("https://www.apkmirror.com", href)
-                    break
+                if f"/{cat}/" in href:
+                    if clean_target_full in clean_slug or clean_target_full in clean_txt:
+                        exact_release_url = urljoin("https://www.apkmirror.com", href)
+                        break
+                    if release_url is None and (clean_target in clean_slug or clean_target in clean_txt):
+                        release_url = urljoin("https://www.apkmirror.com", href)
+                        
+        release_url = exact_release_url or release_url
                     
         if not release_url:
             log("APKMirror release URL not found via path search, trying global search...")
@@ -1057,9 +1064,13 @@ def main():
                     href = a.get("href", "")
                     clean_slug = re.sub(r'[^a-zA-Z0-9]', '', href.lower())
                     clean_txt = re.sub(r'[^a-zA-Z0-9]', '', txt.lower())
-                    if clean_target in clean_slug or clean_target in clean_txt:
-                        release_url = urljoin("https://www.apkmirror.com", href)
+                    if clean_target_full in clean_slug or clean_target_full in clean_txt:
+                        exact_release_url = urljoin("https://www.apkmirror.com", href)
                         break
+                    if release_url is None and (clean_target in clean_slug or clean_target in clean_txt):
+                        release_url = urljoin("https://www.apkmirror.com", href)
+
+            release_url = exact_release_url or release_url
 
         if not release_url:
             log("APKMirror release URL not found.")
