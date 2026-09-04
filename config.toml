@@ -194,8 +194,8 @@ uptodown-dlurl = "https://threads.en.uptodown.com/android"
 [Twitter-Piko]
 enabled = false
 app-name = "Twitter"
-patches-source = "crimera/piko"
-cli-source = "MorpheApp/morphe-desktop"
+patches-source = "github:crimera/piko"
+cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Piko"
 build-mode = "apk" # Options 'apk', 'module', or 'both'
 # version = "latest" # 'auto', 'experimental', 'latest' or a version number
@@ -215,7 +215,6 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 [X-Piko]
 enabled = false
 app-name = "X"
-# patches-source = "crimera/piko"
 patches-source = "github:crimera/piko"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Piko"
@@ -227,6 +226,45 @@ patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'Dynamic color' \
     'Browse tweet object' \
+    """
+apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter"
+uptodown-dlurl = "https://twitter.en.uptodown.com/android"
+github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.android"
+# archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
+
+[Twitter-Piko-NewX]
+enabled = true
+app-name = "Twitter"
+patches-source = "github:crimera/piko-newx"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "Piko-NewX"
+build-mode = "apk" # Options 'apk', 'module', or 'both'
+# version = "latest" # 'auto', 'experimental', 'latest' or a version number
+version = "auto"
+include-stock = "split" # Options 'split', 'merged', or 'disable'
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+included-patches = """\
+    'NewX: Restore Twitter branding' \
+    'NewX: Browse tweet object' \
+    """
+apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter"
+uptodown-dlurl = "https://twitter.en.uptodown.com/android"
+github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.android"
+# archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
+
+[X-Piko-NewX]
+enabled = true
+app-name = "X"
+patches-source = "github:crimera/piko-newx"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "Piko-NewX"
+build-mode = "apk" # Options 'apk', 'module', or 'both'
+# version = "latest" # 'auto', 'experimental', 'latest' or a version number
+version = "auto"
+include-stock = "split" # Options 'split', 'merged', or 'disable'
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+included-patches = """\
+    'NewX: Browse tweet object' \
     """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter"
 uptodown-dlurl = "https://twitter.en.uptodown.com/android"
