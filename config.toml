@@ -419,7 +419,7 @@ cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Jason"
 arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
-build-mode = "both"
+build-mode = "apk"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 excluded-patches = """\
     'Package Rename' \
