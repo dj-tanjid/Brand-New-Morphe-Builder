@@ -81,7 +81,7 @@ uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
 
 [Google-Photos-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Google Photos"
 patches-source = "RookieEnough/De-Vanced"
 cli-source = "MorpheApp/morphe-desktop"
@@ -104,7 +104,7 @@ uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
 [Facebook-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:RookieEnough/De-Vanced"
@@ -121,7 +121,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Froggo]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:SapitoSucio/FroggoMorphePatches"
@@ -144,7 +144,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Messenger-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Facebook Messenger"
 pkg-name = "com.facebook.orca"
 patches-source = "RookieEnough/De-Vanced"
@@ -159,7 +159,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/messe
 uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
 
 [Facebook-Messenger-Rushi]
-enabled = true
+enabled = false
 app-name = "Facebook Messenger"
 pkg-name = "com.facebook.orca"
 patches-source = "github:rushiranpise/morphe-patches"
@@ -192,7 +192,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads-an-instagram-
 uptodown-dlurl = "https://threads.en.uptodown.com/android"
 
 [Twitter-Piko]
-enabled = true
+enabled = false
 app-name = "Twitter"
 patches-source = "crimera/piko"
 cli-source = "MorpheApp/morphe-desktop"
@@ -213,7 +213,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko]
-enabled = true
+enabled = false
 app-name = "X"
 # patches-source = "crimera/piko"
 patches-source = "github:crimera/piko"
@@ -234,7 +234,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [Instagram-Piko]
-enabled = true
+enabled = false
 app-name = "Instagram"
 patches-source = "crimera/piko"
 cli-source = "MorpheApp/morphe-desktop"
@@ -257,7 +257,7 @@ uptodown-dlurl = "https://instagram.en.uptodown.com/android"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram.android"
 
 [1-1-1-1-Rushi]
-enabled = true
+enabled = false
 app-name = "1.1.1.1"
 pkg-name = "com.cloudflare.onedotonedotonedotone"
 patches-source = "github:rushiranpise/morphe-patches"
@@ -271,7 +271,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/cloudflare/1-1-1-1-faster-safer
 uptodown-dlurl = "https://1-1-1-1.en.uptodown.com/android"
 
 [Proton-VPN-Rushi]
-enabled = true
+enabled = false
 app-name = "Proton VPN"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -284,7 +284,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/proton-technologies-ag/protonvp
 uptodown-dlurl = "https://protonvpn.en.uptodown.com/android"
 
 [Windscribe-VPN-Rushi]
-enabled = true
+enabled = false
 app-name = "Windscribe VPN"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -297,7 +297,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/windscribe/windscribe-vpn"
 uptodown-dlurl = "https://windscribe.en.uptodown.com/android"
 
 [TeraBox-Rushi]
-enabled = true
+enabled = false
 app-name = "TeraBox"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -310,7 +310,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/flextech-inc/terabox-cloud-stor
 uptodown-dlurl = "https://terabox.en.uptodown.com/android"
 
 [Speedtest-by-Ookla-Rushi]
-enabled = true
+enabled = false
 app-name = "Speedtest by Ookla"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -323,7 +323,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/ookla/speedtest"
 uptodown-dlurl = "https://speedtest-net-mobile.en.uptodown.com/android"
 
 [Send-Files-To-TV-Rushi]
-enabled = true
+enabled = false
 app-name = "Send Files To TV"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -336,7 +336,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/yablio/send-files-to-tv/"
 uptodown-dlurl = "https://send-files-to-tv.en.uptodown.com/android"
 
 [APKMirror-Installer-Rushi]
-enabled = true
+enabled = false
 app-name = "APKMirror Installer"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -348,7 +348,7 @@ build-mode = "apk"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/apkmirror/apkmirror-installer-official/"
 
 [Bluetooth-Keyboard-Mouse-Rushi]
-enabled = true
+enabled = false
 app-name = "Bluetooth Keyboard & Mouse"
 patches-source = "github:rushiranpise/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
