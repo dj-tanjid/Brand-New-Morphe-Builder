@@ -183,6 +183,7 @@ get_prebuilts() {
 				gh_dl "$file" >&2 "$url" || return 1
 			fi
 		else
+			grab_cl=false
 			name=$(basename "$file")
 			local v_extracted
 			v_extracted=$(grep -oE '[0-9]+(\.[0-9]+)+(-[a-zA-Z0-9.]+)?' <<<"$name" | head -1 || true)
@@ -193,7 +194,6 @@ get_prebuilts() {
 				tag_name=v${tag_name%.*}
 			fi
 		fi
-		echo "$tag: ${src}/${name}  " >>"${cl_dir}/changelog.md"
 
 		if [[ "$grab_cl" == true ]]; then
 			local cl_str=""
@@ -221,7 +221,7 @@ get_prebuilts() {
 					cd "${file}-zip" || abort
 					zip -0rq "${CWD}/${file}" . || return 1
 				) >&2; then
-					echo >&2 "Patching integrations checks failed"
+					echo >&2 "Patching revanced-integrations failed"
 				fi
 				rm -rf "${file}-zip" || :
 			fi
@@ -261,7 +261,7 @@ get_prebuilts() {
 	fi
 
 	if [[ -z "$cli_file" ]]; then
-		local resp="" matches="" asset="" name=""
+		local resp="" matches="" asset="" name="" tag_name=""
 		if [ "$cli_host" = "gitlab" ]; then
 			local project_enc="${clean_cli//\//%2F}"
 			local gl_rel="https://gitlab.com/api/v4/projects/${project_enc}/releases"
@@ -274,6 +274,7 @@ get_prebuilts() {
 			else
 				resp=$(req "${gl_rel}/${cli_ver}" -) || return 1
 			fi
+			tag_name=$(jq -r '.tag_name // empty' <<<"$resp") || return 1
 			matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp") || return 1
 		else
 			local gh_rel="https://api.github.com/repos/${clean_cli}/releases"
@@ -287,6 +288,7 @@ get_prebuilts() {
 				gh_rel+="/tags/${cli_ver}"
 			fi
 			resp=$(gh_req "$gh_rel" -) || return 1
+			tag_name=$(jq -r '.tag_name' <<<"$resp") || return 1
 			matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp") || return 1
 		fi
 
@@ -384,7 +386,7 @@ config_update() {
 				if [ "${sources["$raw_src/$p_ver"]}" = 1 ]; then upped+=("$table_name"); fi
 			else
 				sources["$raw_src/$p_ver"]=0
-				local last_patches=""
+				local last_patches="" tag_name=""
 				if [ "$host" = "gitlab" ]; then
 					local project_enc="${clean_src//\//%2F}"
 					local gl_rel="https://gitlab.com/api/v4/projects/${project_enc}/releases"
@@ -395,6 +397,7 @@ config_update() {
 					else
 						last_patches=$(req "$gl_rel/${p_ver}" -) || continue
 					fi
+					tag_name=$(jq -r '.tag_name // empty' <<<"$last_patches") || continue
 					if ! last_patches=$(jq -e -r '.assets.links[]? | select(.name | (endswith("asc") or endswith("json")) | not) | .name' <<<"$last_patches"); then
 						continue
 					fi
@@ -407,6 +410,7 @@ config_update() {
 					else
 						last_patches=$(gh_req "$rv_rel/tags/${p_ver}" -) || continue
 					fi
+					tag_name=$(jq -r '.tag_name' <<<"$last_patches") || continue
 					if ! last_patches=$(jq -e -r '.assets[] | select(.name | (endswith("asc") or endswith("json")) | not) | .name' <<<"$last_patches"); then
 						continue
 					fi
@@ -419,7 +423,7 @@ config_update() {
 						last_patches="${name_only}-${tag_name#v}.${name_ext}"
 					fi
 
-					if ! OP=$(grep "^Patches: ${org}/" build.md 2>/dev/null | grep -m1 "$last_patches"); then
+					if ! OP=$(grep -m1 "^Patches: ${org}/${last_patches}" build.md 2>/dev/null); then
 						sources["$raw_src/$p_ver"]=1
 						prcfg=true
 						upped+=("$table_name")
