@@ -6,7 +6,7 @@ remove-rv-integrations-checks = true # Automatically patch shared integration ch
 # see https://github.com/dj-tanjid/Morphe-DeVanced-Builder/blob/teejay/CONFIG.md for more detailed explanations
 
 [YouTube-Morphe]
-enabled = false
+enabled = true
 app-name = "YouTube"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -33,7 +33,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.google.and
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.youtube"
 
 [YT-Music-Morphe]
-enabled = false
+enabled = true
 app-name = "YT Music"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -57,7 +57,7 @@ uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
 
 [Reddit-Morphe]
-enabled = false
+enabled = true
 app-name = "Reddit"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
@@ -192,7 +192,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads-an-instagram-
 uptodown-dlurl = "https://threads.en.uptodown.com/android"
 
 [Twitter-Piko]
-enabled = false
+enabled = true
 app-name = "Twitter"
 patches-source = "github:crimera/piko"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -213,7 +213,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko]
-enabled = false
+enabled = true
 app-name = "X"
 patches-source = "github:crimera/piko"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -272,7 +272,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [Instagram-Piko]
-enabled = false
+enabled = true
 app-name = "Instagram"
 patches-source = "crimera/piko"
 cli-source = "MorpheApp/morphe-desktop"
