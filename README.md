@@ -92,7 +92,7 @@ This builder is an advanced, hardened fork of [j-hc's revanced-magisk-module](ht
     <td>Non-Root APK</td>
   </tr>
   <tr>
-    <td><b>Utilities (TeraBox, Speedtest, Send Files To TV, APKMirror Installer, Bluetooth Keyboard & Mouse)</b></td>
+    <td><b>Utilities (Speedtest, Send Files To TV, APKMirror Installer, Bluetooth Keyboard & Mouse)</b></td>
     <td>Rushi</td>
     <td>Non-Root APK</td>
   </tr>
