@@ -28,6 +28,8 @@
 Patches and CLI Sources :
   
 > ⚙️ » Patches: `crimera/patches-3.10.1.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.10.1))
+ ⚙️ » Patches: `MorpheApp/patches-1.42.0-dev.3.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.42.0-dev.3))
+ ⚙️ » Patches: `crimera/patches-3.10.1.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.10.1))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.15.0-all.jar`
   
