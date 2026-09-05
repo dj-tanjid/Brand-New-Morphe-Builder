@@ -157,10 +157,19 @@ get_prebuilts() {
 			if [[ "$(jq 'length' <<<"$matches")" -eq 0 ]]; then
 				epr "No patch asset was found for ${raw_p_src}"
 				return 1
+			elif [[ "$(jq 'length' <<<"$matches")" -gt 1 ]]; then
+				wpr "More than 1 patch asset was found for ${raw_p_src}. Falling back to the first one found..."
 			fi
 
 			asset=$(jq -r ".[0]" <<<"$matches")
 			name=$(jq -r '.name' <<<"$asset")
+
+			if [[ ! "$name" =~ [0-9] ]]; then
+				local name_only="${name%.*}"
+				local name_ext="${name##*.}"
+				name="${name_only}-${tag_name#v}.${name_ext}"
+			fi
+
 			file="${dir}/${name}"
 
 			if [ "$host" = "gitlab" ]; then
@@ -176,8 +185,14 @@ get_prebuilts() {
 		else
 			grab_cl=false
 			name=$(basename "$file")
-			tag_name=$(cut -d'-' -f3- <<<"$name")
-			tag_name=v${tag_name%.*}
+			local v_extracted
+			v_extracted=$(grep -oE '[0-9]+(\.[0-9]+)+(-[a-zA-Z0-9.]+)?' <<<"$name" | head -1 || true)
+			if [[ -n "$v_extracted" ]]; then
+				tag_name="v${v_extracted#v}"
+			else
+				tag_name=$(cut -d'-' -f2- <<<"$name")
+				tag_name=v${tag_name%.*}
+			fi
 		fi
 
 		if [[ "$grab_cl" == true ]]; then
@@ -286,10 +301,19 @@ get_prebuilts() {
 		if [[ "$(jq 'length' <<<"$matches")" -eq 0 ]]; then
 			epr "No CLI asset was found for ${cli_src}"
 			return 1
+		elif [[ "$(jq 'length' <<<"$matches")" -gt 1 ]]; then
+			wpr "More than 1 CLI asset was found for ${cli_src}. Falling back to the first one found..."
 		fi
 
 		asset=$(jq -r ".[0]" <<<"$matches")
 		name=$(jq -r '.name' <<<"$asset")
+
+		if [[ ! "$name" =~ [0-9] ]]; then
+			local name_only="${name%.*}"
+			local name_ext="${name##*.}"
+			name="${name_only}-${tag_name#v}.${name_ext}"
+		fi
+
 		cli_file="${cli_dir}/${name}"
 
 		if [ "$cli_host" = "gitlab" ]; then
@@ -389,6 +413,12 @@ config_update() {
 				fi
 
 				if [ -n "$last_patches" ]; then
+					if [[ ! "$last_patches" =~ [0-9] ]]; then
+						local name_only="${last_patches%.*}"
+						local name_ext="${last_patches##*.}"
+						last_patches="${name_only}-${tag_name#v}.${name_ext}"
+					fi
+
 					if ! OP=$(grep "^Patches: ${org}/" build.md 2>/dev/null | grep -m1 "$last_patches"); then
 						sources["$raw_src/$p_ver"]=1
 						prcfg=true
