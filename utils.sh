@@ -183,7 +183,6 @@ get_prebuilts() {
 				gh_dl "$file" >&2 "$url" || return 1
 			fi
 		else
-			grab_cl=false
 			name=$(basename "$file")
 			local v_extracted
 			v_extracted=$(grep -oE '[0-9]+(\.[0-9]+)+(-[a-zA-Z0-9.]+)?' <<<"$name" | head -1 || true)
@@ -194,6 +193,7 @@ get_prebuilts() {
 				tag_name=v${tag_name%.*}
 			fi
 		fi
+		echo "$tag: ${src}/${name}  " >>"${cl_dir}/changelog.md"
 
 		if [[ "$grab_cl" == true ]]; then
 			local cl_str=""
@@ -221,7 +221,7 @@ get_prebuilts() {
 					cd "${file}-zip" || abort
 					zip -0rq "${CWD}/${file}" . || return 1
 				) >&2; then
-					echo >&2 "Patching revanced-integrations failed"
+					echo >&2 "Patching integrations checks failed"
 				fi
 				rm -rf "${file}-zip" || :
 			fi
