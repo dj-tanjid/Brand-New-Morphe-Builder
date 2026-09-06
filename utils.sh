@@ -1628,8 +1628,10 @@ build_rv() {
 		get_patch_last_supported_ver "$list_patches" "$pkg_name" "${args[included_patches]:-}" "$is_experimental" "${args[arch]}" || true
 		if [[ -z "$__TARGET_VERSION__" ]]; then 
 			get_latest_ver="true"
+			p_patcher_args+=("-f")
 		else
 			version="$__TARGET_VERSION__"
+			p_patcher_args+=("-f")
 		fi
 	elif [ "$version_mode" = "latest" ]; then
 		get_latest_ver="true"
