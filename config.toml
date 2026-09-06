@@ -136,9 +136,6 @@ patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'Block Facebook Story ads (573)' \
     'Change Facebook app theme (573)' \
-    'Facebook 573 AI content diagnostics' \
-    'Facebook 573 AI filter + recommendation diagnostics' \
-    'Facebook 573 Feed recommendation diagnostics' \
     """
 excluded-patches = """\
     'Block Facebook Auto Refresh' \
