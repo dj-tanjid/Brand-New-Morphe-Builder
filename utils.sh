@@ -167,7 +167,7 @@ get_prebuilts() {
 			if [[ ! "$name" =~ [0-9] ]]; then
 				local name_only="${name%.*}"
 				local name_ext="${name##*.}"
-				name="patches-${tag_name#v}.${name_ext}"
+				name="${name_only}-${tag_name#v}.${name_ext}"
 			fi
 
 			file="${dir}/${name}"
