@@ -1,9 +1,5 @@
 📱 » **Facebook-Froggo** (arm64-v8a): `573.0.0.37.74`    
-📱 » **Reddit-Morphe** (all): `2026.35.0`    
-📱 » **Twitter-Piko-NewX** (all): `12.23.1-prod.01`    
-📱 » **X-Piko-NewX** (all): `12.23.1-prod.01`    
-📱 » **YT-Music-Morphe** (arm64-v8a): `9.35.54`    
-📱 » **YouTube-Morphe** (arm64-v8a): `21.36.45`    
+📱 » **YouTube-Morphe** (arm64-v8a): `21.36.45-SECONDARY`    
 
 <br>
   
@@ -27,7 +23,6 @@ Patches and CLI Sources :
   
 > ⚙️ » Patches: `SapitoSucio/patches-1.4.0-dev.1.mpp` ([Changelog](https://github.com/SapitoSucio/FroggoMorphePatches/releases/tag/v1.4.0-dev.1))
  ⚙️ » Patches: `MorpheApp/patches-1.42.0-dev.6.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.42.0-dev.6))
- ⚙️ » Patches: `crimera/patches-3.10.5.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.10.5))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.15.0-all.jar`
   
