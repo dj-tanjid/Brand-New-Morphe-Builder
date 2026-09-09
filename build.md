@@ -2,9 +2,9 @@
 📱 » **Instagram-Piko** (arm64-v8a): `439.0.0.37.89`    
 📱 » **Reddit-Morphe** (all): `2026.35.0`    
 📱 » **Twitter-Piko** (all): `12.19.1-release.0`    
-📱 » **Twitter-Piko-NewX** (all): `12.23.1-prod.01`    
+📱 » **Twitter-Piko-NewX** (all): `12.24.0-prod.02`    
 📱 » **X-Piko** (all): `12.19.1-release.0`    
-📱 » **X-Piko-NewX** (all): `12.23.1-prod.01`    
+📱 » **X-Piko-NewX** (all): `12.24.0-prod.02`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.35.54`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.36.45`    
 
@@ -30,8 +30,8 @@ Patches and CLI Sources :
   
 > ⚙️ » Patches: `SapitoSucio/patches-1.4.0-dev.2.mpp` ([Changelog](https://github.com/SapitoSucio/FroggoMorphePatches/releases/tag/v1.4.0-dev.2))
  ⚙️ » Patches: `crimera/patches-3.10.0-dev.5.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.10.0-dev.5))
- ⚙️ » Patches: `MorpheApp/patches-1.42.0-dev.7.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.42.0-dev.7))
- ⚙️ » Patches: `crimera/patches-3.10.7.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.10.7))
+ ⚙️ » Patches: `MorpheApp/patches-1.42.0-dev.9.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.42.0-dev.9))
+ ⚙️ » Patches: `crimera/patches-3.14.0.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.14.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.15.0-all.jar`
   
