@@ -1,5 +1,9 @@
+📱 » **Google-Photos-De-Vanced** (arm64-v8a): `7.92.0.977185651`    
+📱 » **Reddit-Morphe** (all): `2026.35.0`    
 📱 » **Twitter-Piko-NewX** (all): `12.25.0-prod.01`    
 📱 » **X-Piko-NewX** (all): `12.25.0-prod.01`    
+📱 » **YT-Music-Morphe** (arm64-v8a): `9.36.50`    
+📱 » **YouTube-Morphe** (arm64-v8a): `21.36.45`    
 
 <br>
   
@@ -21,7 +25,9 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `crimera/patches-3.19.1.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.19.1))
+> ⚙️ » Patches: `RookieEnough/patches-1.4.0.mpp` ([Changelog](https://github.com/RookieEnough/De-Vanced/releases/tag/v1.4.0))
+ ⚙️ » Patches: `MorpheApp/patches-1.43.0-dev.1.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.43.0-dev.1))
+ ⚙️ » Patches: `crimera/patches-3.19.3.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.19.3))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.15.1-all.jar`
   
