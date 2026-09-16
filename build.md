@@ -1,5 +1,12 @@
+📱 » **Facebook-Andrew** (arm64-v8a): `577.0.0.50.72`    
+📱 » **Facebook-De-Vanced** (arm64-v8a): `490.0.0.63.82`    
+📱 » **Facebook-Froggo** (arm64-v8a): `573.0.0.37.74`    
+📱 » **Google-Photos-Akash** (arm64-v8a): `7.92.0.980155911`    
 📱 » **Google-Photos-De-Vanced** (arm64-v8a): `7.92.0.980155911`    
+📱 » **Google-Photos-Rushi** (arm64-v8a): `7.92.0.980155911`    
 📱 » **Reddit-Morphe** (all): `2026.37.0`    
+📱 » **Twitter-Piko-NewX** (all): `12.25.2-prod.01`    
+📱 » **X-Piko-NewX** (all): `12.25.2-prod.01`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.36.50`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.37.42`    
 
@@ -23,8 +30,13 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `RookieEnough/patches-1.4.2.mpp` ([Changelog](https://github.com/RookieEnough/De-Vanced/releases/tag/v1.4.2))
- ⚙️ » Patches: `MorpheApp/patches-1.44.0-dev.1.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.44.0-dev.1))
+> ⚙️ » Patches: `andrewliang25/patches-3.0.0.mpp` ([Changelog](https://github.com/andrewliang25/morphe-patches/releases/tag/v3.0.0))
+ ⚙️ » Patches: `RookieEnough/patches-1.4.2.mpp` ([Changelog](https://github.com/RookieEnough/De-Vanced/releases/tag/v1.4.2))
+ ⚙️ » Patches: `SapitoSucio/patches-1.4.0-dev.2.mpp` ([Changelog](https://github.com/SapitoSucio/FroggoMorphePatches/releases/tag/v1.4.0-dev.2))
+ ⚙️ » Patches: `Akash-Sriram/patches-1.3.1.mpp` ([Changelog](https://github.com/Akash-Sriram/De-Vanced/releases/tag/v1.3.1))
+ ⚙️ » Patches: `rushiranpise/patches-1.22.0.mpp` ([Changelog](https://github.com/rushiranpise/morphe-patches/releases/tag/v1.22.0))
+ ⚙️ » Patches: `MorpheApp/patches-1.44.0-dev.2.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.44.0-dev.2))
+ ⚙️ » Patches: `crimera/patches-3.25.1.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.25.1))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.16.0-all.jar`
   
