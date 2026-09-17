@@ -129,7 +129,7 @@ get_prebuilts() {
 					resp=$(req "${gl_rel}/${p_ver}" -) || return 1
 				fi
 				tag_name=$(jq -r '.tag_name // empty' <<<"$resp") || return 1
-				matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp") || return 1
+				matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json") or endswith("zip") or endswith("tar.gz")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp") || return 1
 			else
 				local gh_rel="https://api.github.com/repos/${clean_src}/releases"
 				if [[ "$p_ver" == "dev" ]]; then
@@ -143,7 +143,7 @@ get_prebuilts() {
 				fi
 				resp=$(gh_req "$gh_rel" -) || return 1
 				tag_name=$(jq -r '.tag_name' <<<"$resp") || return 1
-				matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp") || return 1
+				matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json") or endswith("zip") or endswith("tar.gz")) | not))' <<<"$resp") || return 1
 			fi
 
 			if [[ "$(jq 'length' <<<"$matches")" -gt 1 ]]; then
@@ -272,7 +272,7 @@ get_prebuilts() {
 				resp=$(req "${gl_rel}/${cli_ver}" -) || return 1
 			fi
 			tag_name=$(jq -r '.tag_name // empty' <<<"$resp") || return 1
-			matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp") || return 1
+			matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json") or endswith("zip") or endswith("tar.gz")) | not))' <<<"$resp" 2>/dev/null || jq -e '.assets // []' <<<"$resp") || return 1
 		else
 			local gh_rel="https://api.github.com/repos/${clean_cli}/releases"
 			if [[ "$cli_ver" == "dev" ]]; then
@@ -286,7 +286,7 @@ get_prebuilts() {
 			fi
 			resp=$(gh_req "$gh_rel" -) || return 1
 			tag_name=$(jq -r '.tag_name' <<<"$resp") || return 1
-			matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp") || return 1
+			matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json") or endswith("zip") or endswith("tar.gz")) | not))' <<<"$resp") || return 1
 		fi
 
 		if [[ "$(jq 'length' <<<"$matches")" -gt 1 ]]; then
@@ -388,7 +388,7 @@ config_update() {
 						last_patches=$(req "$gl_rel/${p_ver}" -) || continue
 					fi
 					tag_name=$(jq -r '.tag_name // empty' <<<"$last_patches") || continue
-					if ! last_patches=$(jq -e -r '.assets.links[]? | select(.name | (endswith("asc") or endswith("json")) | not) | .name' <<<"$last_patches"); then
+					if ! last_patches=$(jq -e -r '.assets.links[]? | select(.name | (endswith("asc") or endswith("json") or endswith("zip") or endswith("tar.gz")) | not) | .name' <<<"$last_patches"); then
 						continue
 					fi
 				else
@@ -401,7 +401,7 @@ config_update() {
 						last_patches=$(gh_req "$rv_rel/tags/${p_ver}" -) || continue
 					fi
 					tag_name=$(jq -r '.tag_name' <<<"$last_patches") || continue
-					if ! last_patches=$(jq -e -r '.assets[] | select(.name | (endswith("asc") or endswith("json")) | not) | .name' <<<"$last_patches"); then
+					if ! last_patches=$(jq -e -r '.assets[] | select(.name | (endswith("asc") or endswith("json") or endswith("zip") or endswith("tar.gz")) | not) | .name' <<<"$last_patches"); then
 						continue
 					fi
 				fi
