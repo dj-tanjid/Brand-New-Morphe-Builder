@@ -1821,8 +1821,25 @@ build_rv() {
 	done
 }
 
-list_args() { tr -d '\t\r' <<<"$1" | tr -s ' ' | sed 's/" "/"\n"/g' | sed 's/\([^"]\)"\([^"]\)/\1'\''\2/g' | grep -v '^$' || :; }
-join_args() { list_args "$1" | sed "s/^/${2} /" | paste -sd " " - || :; }
+list_args() {
+    local clean_str
+    # Remove backslashes used for line continuation, tabs, and carriage returns
+    clean_str=$(tr -d '\\\t\r' <<<"$1" | tr '\n' ' ')
+    # Use eval to safely parse the single-quoted strings into an array
+    eval "local arr=($clean_str)"
+    # Print each element on a new line
+    printf '%s\n' "${arr[@]}"
+}
+
+join_args() {
+    local args_list
+    args_list=$(list_args "$1")
+    if [[ -n "$args_list" ]]; then
+        while IFS= read -r line; do
+            [[ -n "$line" ]] && printf "%s '%s' " "$2" "$line"
+        done <<<"$args_list"
+    fi
+}
 
 module_config() {
 	local ma=""
