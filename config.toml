@@ -9,7 +9,7 @@ patcher-args = "--continue-on-error"
 [YouTube-Morphe]
 enabled = true
 app-name = "YouTube"
-patches-source = ["github:MorpheApp/morphe-patches", "github:dj-tanjid/tanjid-morphe-update-check"]
+patches-source = "github:MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
 rv-brand = "Morphe"
 build-mode = "both" # Options 'apk', 'module', or 'both'
@@ -26,7 +26,7 @@ excluded-patches = """\
     'Custom branding icon for YouTube' \
     'Custom branding' \
     """
-patches-version = ["dev", "latest"] # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube"
 uptodown-dlurl = "https://youtube.en.uptodown.com/android"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.google.android.youtube"
@@ -35,7 +35,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.google.and
 [YT-Music-Morphe]
 enabled = true
 app-name = "YT Music"
-patches-source = ["github:MorpheApp/morphe-patches", "github:dj-tanjid/tanjid-morphe-update-check"]
+patches-source = "github:MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-desktop"
 rv-brand = "Morphe"
 build-mode = "both" # Options 'apk', 'module', or 'both'
@@ -50,7 +50,7 @@ excluded-patches = """\
     'Custom branding icon for YouTube Music' \
     'Custom branding' \
     """
-patches-version = ["dev", "latest"] # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube-music"
 uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
@@ -296,14 +296,14 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 [Twitter-Piko-NewX]
 enabled = true
 app-name = "Twitter"
-patches-source = ["github:crimera/piko-newx", "github:dj-tanjid/tanjid-morphe-update-check"]
+patches-source = "github:crimera/piko-newx"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Piko-NewX"
 build-mode = "apk" # Options 'apk', 'module', or 'both'
 # version = "latest" # 'auto', 'experimental', 'latest' or a version number
 version = "auto"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-patches-version = ["latest", "latest"] # Options 'latest', 'dev', or A specific version tag
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'NewX: Restore Twitter branding' \
     'NewX: Browse tweet object' \
@@ -316,14 +316,14 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 [X-Piko-NewX]
 enabled = true
 app-name = "X"
-patches-source = ["github:crimera/piko-newx", "github:dj-tanjid/tanjid-morphe-update-check"]
+patches-source = "github:crimera/piko-newx"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Piko-NewX"
 build-mode = "apk" # Options 'apk', 'module', or 'both'
 # version = "latest" # 'auto', 'experimental', 'latest' or a version number
 version = "auto"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-patches-version = ["latest", "latest"] # Options 'latest', 'dev', or A specific version tag
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'NewX: Browse tweet object' \
     """
