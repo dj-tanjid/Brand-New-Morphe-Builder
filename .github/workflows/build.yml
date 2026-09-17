@@ -47,14 +47,6 @@ jobs:
       - name: Start API Solver in background
         run: docker run -d -p 8000:8000 ghcr.io/sarperavci/cloudflarebypassforscraping:latest
 
-      - name: Fix utils.sh formatting and filters
-        run: |
-          # 1. Fix the \vert{} syntax crash globally
-          sed -i 's/\\vert{}/|/g' utils.sh
-
-          # 2. Fix the "More than 1 patch asset" GitHub warning
-          sed -i 's/endswith("asc") or endswith("json")/endswith("asc") or endswith("json") or endswith("zip") or endswith("tar.gz")/g' utils.sh
-          
       - name: Build modules/APKs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
