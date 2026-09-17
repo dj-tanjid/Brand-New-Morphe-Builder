@@ -26,9 +26,6 @@ excluded-patches = """\
     'Custom branding icon for YouTube' \
     'Custom branding' \
     """
-included-patches = """\
-    'TanJid Update Check' \
-    """
 patches-version = ["dev", "latest"] # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube"
 uptodown-dlurl = "https://youtube.en.uptodown.com/android"
@@ -52,9 +49,6 @@ excluded-patches = """\
     'Custom branding name for YouTube Music' \
     'Custom branding icon for YouTube Music' \
     'Custom branding' \
-    """
-included-patches = """\
-    'TanJid Update Check' \
     """
 patches-version = ["dev", "latest"] # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube-music"
@@ -313,7 +307,6 @@ patches-version = ["latest", "latest"] # Options 'latest', 'dev', or A specific 
 included-patches = """\
     'NewX: Restore Twitter branding' \
     'NewX: Browse tweet object' \
-    'TanJid Update Check' \
     """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter"
 uptodown-dlurl = "https://twitter.en.uptodown.com/android"
@@ -333,7 +326,6 @@ include-stock = "split" # Options 'split', 'merged', or 'disable'
 patches-version = ["latest", "latest"] # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'NewX: Browse tweet object' \
-    'TanJid Update Check' \
     """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter"
 uptodown-dlurl = "https://twitter.en.uptodown.com/android"
