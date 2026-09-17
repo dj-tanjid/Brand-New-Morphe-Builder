@@ -49,7 +49,10 @@ jobs:
 
       - name: Fix utils.sh formatting and filters
         run: |
-          # Fix the jq filter to ignore source code zip/tar.gz archives
+          # 1. Fix the \vert{} syntax crash globally
+          sed -i 's/\\vert{}/|/g' utils.sh
+
+          # 2. Fix the "More than 1 patch asset" GitHub warning
           sed -i 's/endswith("asc") or endswith("json")/endswith("asc") or endswith("json") or endswith("zip") or endswith("tar.gz")/g' utils.sh
           
       - name: Build modules/APKs
