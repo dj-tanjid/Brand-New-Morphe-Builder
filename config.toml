@@ -323,7 +323,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 [X-Piko-NewX]
 enabled = true
 app-name = "X"
-1patches-source = ["github:crimera/piko-newx", "github:dj-tanjid/tanjid-morphe-update-check"]
+patches-source = ["github:crimera/piko-newx", "github:dj-tanjid/tanjid-morphe-update-check"]
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Piko-NewX"
 build-mode = "apk" # Options 'apk', 'module', or 'both'
