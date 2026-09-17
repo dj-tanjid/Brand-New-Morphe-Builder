@@ -1,4 +1,8 @@
 📱 » **Reddit-Morphe** (all): `2026.37.0`    
+📱 » **Twitter-Piko-NewX** (all): `12.25.2-prod.01`    
+📱 » **X-Piko-NewX** (all): `12.25.2-prod.01`    
+📱 » **YT-Music-Morphe** (arm64-v8a): `9.36.50`    
+📱 » **YouTube-Morphe** (arm64-v8a): `21.37.42`    
 
 <br>
   
