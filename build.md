@@ -1,3 +1,5 @@
+📱 » **Gboard-Jason** (arm64-v8a): `18.0.3.954559732-release-arm64-v8a`    
+📱 » **Google-Photos-Akash** (arm64-v8a): `7.93.0.982110057`    
 📱 » **Reddit-Morphe** (all): `2026.37.0`    
 📱 » **Twitter-Piko-NewX** (all): `12.25.2-prod.01`    
 📱 » **X-Piko-NewX** (all): `12.25.2-prod.01`    
@@ -24,8 +26,10 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `MorpheApp/patches-1.44.0-dev.4.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.44.0-dev.4))
- ⚙️ » Patches: `crimera/patches-3.26.2.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.26.2))
+> ⚙️ » Patches: `jasonwu1994/patches-3.10.0.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v3.10.0))
+ ⚙️ » Patches: `Akash-Sriram/patches-1.4.1.mpp` ([Changelog](https://github.com/Akash-Sriram/De-Vanced/releases/tag/v1.4.1))
+ ⚙️ » Patches: `MorpheApp/patches-1.44.0-dev.6.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.44.0-dev.6))
+ ⚙️ » Patches: `crimera/patches-3.27.0.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.27.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.16.0-all.jar`
   
