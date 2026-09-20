@@ -502,6 +502,7 @@ included-patches = """\
     'Pro Manual Controls' \
     'Pixel Camera Clone (Non-Root)' \
     'Change installer source' \
+    'Clone app' \
     """
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/camera/"
