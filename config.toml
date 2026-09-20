@@ -7,7 +7,7 @@ remove-rv-integrations-checks = false # Automatically patch shared integration c
 # see https://github.com/dj-tanjid/Morphe-DeVanced-Builder/blob/teejay/CONFIG.md for more detailed explanations
 
 [YouTube-Morphe]
-enabled = true
+enabled = false
 app-name = "YouTube"
 patches-source = "github:MorpheApp/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -33,7 +33,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.google.and
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.youtube"
 
 [YT-Music-Morphe]
-enabled = true
+enabled = false
 app-name = "YT Music"
 patches-source = "github:MorpheApp/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -56,7 +56,7 @@ uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
 
 [Reddit-Morphe]
-enabled = true
+enabled = false
 app-name = "Reddit"
 patches-source = "github:MorpheApp/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -80,7 +80,7 @@ uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
 
 [Google-Photos-De-Vanced]
-enabled = true
+enabled = false
 app-name = "Google Photos"
 patches-source = "github:RookieEnough/De-Vanced"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -125,7 +125,7 @@ uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 [Google-Photos-Akash]
 enabled = true
 app-name = "Google Photos"
-patches-source = "github:Akash-Sriram/De-Vanced"
+patches-source = "github:Akash-Sriram/morphe-google-photos"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Akash"
 arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'universal'
@@ -289,7 +289,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [Twitter-Piko-NewX]
-enabled = true
+enabled = false
 app-name = "Twitter"
 patches-source = "github:crimera/piko-newx"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -309,7 +309,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko-NewX]
-enabled = true
+enabled = false
 app-name = "X"
 patches-source = "github:crimera/piko-newx"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -487,7 +487,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/gboard/"
 uptodown-dlurl = "https://gboard-go.en.uptodown.com/android"
 
 [Google-Camera-Akshayykadam]
-enabled = false
+enabled = true
 app-name = "Google Camera"
 patches-source = "github:Akshayykadam/Pixel-Camera"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -495,6 +495,14 @@ rv-brand = "Akshayykadam"
 # arch = "arm64-v8a"
 version = "11.0.073.972752740.32" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "both"
+included-patches = """\
+    'Camera Looks Backport' \
+    'Viewfinder Quick Access Controls' \
+    'Pixel Camera Creator Suite' \
+    'Pro Manual Controls' \
+    'Pixel Camera Clone (Non-Root)' \
+    'Change installer source' \
+    """
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/camera/"
 uptodown-dlurl = "https://google-camera.en.uptodown.com/android"
