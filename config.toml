@@ -26,7 +26,7 @@ excluded-patches = """\
     'Custom branding icon for YouTube' \
     'Custom branding' \
     """
-patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "v1.44.0-dev.11" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube"
 uptodown-dlurl = "https://youtube.en.uptodown.com/android"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.google.android.youtube"
@@ -50,7 +50,7 @@ excluded-patches = """\
     'Custom branding icon for YouTube Music' \
     'Custom branding' \
     """
-patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "v1.44.0-dev.11" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube-music"
 uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
@@ -74,13 +74,13 @@ excluded-patches = """\
     'Custom branding' \
     """
 # included-patches = ""
-patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "v1.44.0-dev.11" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/redditinc/reddit"
 uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
 
 [Google-Photos-De-Vanced]
-enabled = false
+enabled = true
 app-name = "Google Photos"
 patches-source = "github:RookieEnough/De-Vanced"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -183,7 +183,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Andrew]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:andrewliang25/morphe-patches"
@@ -487,12 +487,12 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/gboard/"
 uptodown-dlurl = "https://gboard-go.en.uptodown.com/android"
 
 [Google-Camera-Akshayykadam]
-enabled = false
+enabled = true
 app-name = "Google Camera"
 patches-source = "github:Akshayykadam/Pixel-Camera"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Akshayykadam"
-arch = "arm64-v8a"
+# arch = "arm64-v8a"
 version = "11.0.073.972752740.32" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "both"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
