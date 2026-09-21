@@ -476,7 +476,7 @@ rv-brand = "Jason"
 arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "both"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 excluded-patches = """\
     'Package Rename' \
     'Zhuyin Bottom Row Key Sizes' \
@@ -487,7 +487,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/gboard/"
 uptodown-dlurl = "https://gboard-go.en.uptodown.com/android"
 
 [Google-Camera-Akshayykadam]
-enabled = true
+enabled = false
 app-name = "Google Camera"
 patches-source = "github:Akshayykadam/Pixel-Camera"
 cli-source = "github:MorpheApp/morphe-desktop"
