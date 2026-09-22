@@ -1,5 +1,7 @@
+📱 » **Facebook-Andrew** (arm64-v8a): `577.0.0.50.72`    
 📱 » **Gboard-Jason** (arm64-v8a): `18.0.3.954559732-release-arm64-v8a`    
 📱 » **Google-Photos-Akash** (arm64-v8a): `7.93.0.982110057`    
+📱 » **Reddit-Morphe** (all): `2026.38.0`    
 📱 » **Twitter-Piko-NewX** (all): `12.27.0-prod.01`    
 📱 » **X-Piko-NewX** (all): `12.27.0-prod.01`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.37.54`    
@@ -25,10 +27,11 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `jasonwu1994/patches-3.11.0-dev.3.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v3.11.0-dev.3))
- ⚙️ » Patches: `Akash-Sriram/patches-1.7.0.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.7.0))
- ⚙️ » Patches: `MorpheApp/patches-1.44.0.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.44.0))
- ⚙️ » Patches: `crimera/patches-3.30.4.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.30.4))
+> ⚙️ » Patches: `andrewliang25/patches-3.2.0-dev.2.mpp` ([Changelog](https://github.com/andrewliang25/morphe-patches/releases/tag/v3.2.0-dev.2))
+ ⚙️ » Patches: `jasonwu1994/patches-3.11.0.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v3.11.0))
+ ⚙️ » Patches: `Akash-Sriram/patches-1.9.0.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.9.0))
+ ⚙️ » Patches: `MorpheApp/patches-1.45.0-dev.2.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.45.0-dev.2))
+ ⚙️ » Patches: `crimera/patches-3.31.0.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.31.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.16.0-all.jar`
   
