@@ -4,9 +4,9 @@ Adding an app is as simple as defining a table entry with download sources and p
 
 ```toml
 [YouTube-Morphe]
-apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube"
-# uptodown-dlurl = "https://youtube.en.uptodown.com/android"
-# github-dlurl = "https://github.com/owner/repo/releases/tag/com.google.android.youtube"
+apkmirror-dlurl = "[https://www.apkmirror.com/apk/google-inc/youtube](https://www.apkmirror.com/apk/google-inc/youtube)"
+# uptodown-dlurl = "[https://youtube.en.uptodown.com/android](https://youtube.en.uptodown.com/android)"
+# github-dlurl = "[https://github.com/owner/repo/releases/tag/com.google.android.youtube](https://github.com/owner/repo/releases/tag/com.google.android.youtube)"
 ```
 
 > [!WARNING]
@@ -72,7 +72,6 @@ cli-version = "latest"               # 'latest', 'dev', or a specific release ta
 | `github-dlurl` | `string` | `""` | GitHub Release tag URL holding raw APK/APKM assets. |
 | `archive-dlurl` | `string` | `""` | Archive.org APK repository directory URL. |
 | `direct-dlurl` | `string` | `""` | Direct link pointing to a standalone `.apk` or `.apkm` file. |
-| `enable-update-checks` | `boolean` | `false` | Enables in-app update checks for `apk` build mode (requires `bin/jhc-update-check.mpp`). |
 
 ---
 
@@ -100,7 +99,29 @@ github-dlurl = "[https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.a
 apkmirror-dlurl = "[https://www.apkmirror.com/apk/x-corp/twitter](https://www.apkmirror.com/apk/x-corp/twitter)"
 ```
 
-### 2. Multi-Architecture Building (`arch = "both"`)
+### 2. Injecting Custom or Private Update Checkers
+You can natively pull custom `.mpp` files from private repositories by supplying them alongside the main patches. Ensure the `UPDATE_REPO_PAT` secret is configured in your Action settings for private access.
+
+```toml
+[YouTube-Morphe]
+enabled = true
+app-name = "YouTube"
+# Combine the main patch source with your custom update-checker source
+patches-source = ["github:MorpheApp/morphe-patches", "github:dj-tanjid/tanjid-morphe-update-check"]
+patches-version = ["latest", "latest"]
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "Morphe"
+build-mode = "both"
+arch = "arm64-v8a"
+version = "auto"
+# Explicitly include your custom patch name
+included-patches = """\
+    'TanJid Update Check' \
+    """
+apkmirror-dlurl = "[https://www.apkmirror.com/apk/google-inc/youtube](https://www.apkmirror.com/apk/google-inc/youtube)"
+```
+
+### 3. Multi-Architecture Building (`arch = "both"`)
 Compile separate `arm64-v8a` and `arm-v7a` root modules and APKs automatically in a single run:
 
 ```toml
@@ -123,7 +144,7 @@ uptodown-dlurl = "[https://youtube.en.uptodown.com/android](https://youtube.en.u
 github-dlurl = "[https://github.com/dj-tanjid/AppRepo/releases/tag/com.google.android.youtube](https://github.com/dj-tanjid/AppRepo/releases/tag/com.google.android.youtube)"
 ```
 
-### 3. Setting an Explicit Package Name (`pkg-name`)
+### 4. Setting an Explicit Package Name (`pkg-name`)
 Bypasses web scraping for package identification, ensuring robust builds even when Cloudflare challenges occur:
 
 ```toml
