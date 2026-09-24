@@ -32,7 +32,7 @@ This builder is an advanced, hardened fork of [j-hc's revanced-magisk-module](ht
 * **Automated Split-APK Merging**: Natively downloads and extracts `.apkm`, `.xapk`, and `.zip` bundles, merging them dynamically before patching.
 * **Explicit Package ID Overrides (`pkg-name`)**: Eliminates scraping dependencies and guarantees continuous builds even during anti-bot protection updates.
 * **Smart Versioning & AAPT2 Badging**: Autonomously bypasses strict version mismatches (e.g., `-SECONDARY` suffixes) via automated `--force` flags and extracts exact `versionName` strings via `aapt2` to ensure perfect Magisk/KernelSU module mounting.
-* **In-App Update Checks**: Supports OTA module update notifications natively via `enable-update-checks`.
+* **In-App Update Checks**: Natively inject custom or privately-hosted OTA update checkers (e.g., `TanJid Update Check`) directly using multi-source configuration arrays and GitHub PATs.
 * **Multi-Architecture Matrix Compilation (`arch = "both"`)**: Concurrently packages architecture-tailored APKs and universal root modules (`arm64-v8a`, `armeabi-v7a`, `x86_64`) with automated odex optimization.
 
 ---
@@ -57,7 +57,7 @@ This builder is an advanced, hardened fork of [j-hc's revanced-magisk-module](ht
   </tr>
   <tr>
     <td><b>Google Photos</b></td>
-    <td>De-Vanced / Rushi</td>
+    <td>De-Vanced / Rushi / Akash</td>
     <td>Non-Root APK + Magisk/KSU Module</td>
   </tr>
   <tr>
@@ -77,13 +77,18 @@ This builder is an advanced, hardened fork of [j-hc's revanced-magisk-module](ht
   </tr>
   <tr>
     <td><b>Facebook & Messenger</b></td>
-    <td>De-Vanced / Rushi / Froggo</td>
+    <td>De-Vanced / Rushi / Froggo / Andrew</td>
     <td>Non-Root APK</td>
   </tr>
   <tr>
     <td><b>Threads</b></td>
     <td>De-Vanced / Chiggi</td>
     <td>Non-Root APK</td>
+  </tr>
+  <tr>
+    <td><b>Google Camera</b></td>
+    <td>Akshayykadam</td>
+    <td>Non-Root APK + Magisk/KSU Module</td>
   </tr>
   <tr>
     <td><b>Gboard</b></td>
@@ -96,7 +101,7 @@ This builder is an advanced, hardened fork of [j-hc's revanced-magisk-module](ht
     <td>Non-Root APK</td>
   </tr>
   <tr>
-    <td><b>Utilities (Speedtest, Send Files To TV, APKMirror Installer, Bluetooth Keyboard & Mouse)</b></td>
+    <td><b>Utilities (Speedtest, Send Files To TV, TeraBox, APKMirror Installer, Bluetooth Keyboard & Mouse)</b></td>
     <td>Rushi</td>
     <td>Non-Root APK</td>
   </tr>
@@ -136,10 +141,11 @@ If you prefer clean, uncluttered interfaces with optimal playback and layout def
 ## 🛠️ Build Your Own
 
 1. Fork this repository or click **Use this template**.
-2. Customize your build matrix in [`config.toml`](./config.toml).
+2. Go to **Settings** &rarr; **Secrets and variables** &rarr; **Actions** and add a Personal Access Token (PAT) with `repo` scopes as **`UPDATE_REPO_PAT`** if you are compiling patches from private repositories.
+3. Customize your build matrix in [`config.toml`](./config.toml).
    *(For a detailed breakdown of all configuration options, please refer to the [**Configuration Guide (`CONFIG.md`)**](./CONFIG.md)).*
-3. Go to **Actions** &rarr; **Build Modules** &rarr; **Run workflow**.
-4. Download your custom binaries directly from your GitHub Releases tab!
+4. Go to **Actions** &rarr; **Build Modules** &rarr; **Run workflow**.
+5. Download your custom binaries directly from your GitHub Releases tab!
 
 ---
 
@@ -166,9 +172,12 @@ Special thanks to the open-source developers who make this ecosystem possible:
 * [Sarthak Sinha (RookieEnough)](https://github.com/RookieEnough/) : De-Vanced patches.
 * [Rushi Ranpise](https://github.com/rushiranpise) : Morphe patches for utility applications and VPNs.
 * [Jason Wu](https://github.com/jasonwu1994) : Gboard optimization patches.
+* [Akshay Kadam (Akshayykadam)](https://github.com/Akshayykadam) : Pixel Camera (Google Camera) optimization patches.
 * [Sapito Sucio](https://github.com/SapitoSucio) : Froggo Morphe patches for Facebook.
+* [Andrew Liang (andrewliang25)](https://github.com/andrewliang25) : Morphe patches for Facebook.
 * [durgesh0505](https://github.com/durgesh0505) : Chiggi Morphe patches for Threads.
 * [Daniel Friedman](https://github.com/Dan1elTheMan1el) & [Nai64](https://github.com/Nai64) : PokeRaid module patches.
+* [Akash Sriram](https://github.com/Akash-Sriram) : Google Photos ecosystem patches.
 * [ReVanced Team](https://github.com/ReVanced) : Original patcher framework and bytecode tooling.
 
 ---
