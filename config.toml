@@ -195,6 +195,10 @@ version = "auto" # 'auto', 'experimental', 'latest' or a version number
 # version = "573.0.0.37.74"
 build-mode = "apk"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+included-patches = """\
+    '[General] AMOLED black theme' \
+    '[Reels] Download any reel' \
+    """
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
@@ -486,7 +490,7 @@ excluded-patches = """\
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/gboard/"
 uptodown-dlurl = "https://gboard-go.en.uptodown.com/android"
 
-[Google-Camera-Akshayykadam]
+[Google-Camera-Pro-Akshayykadam]
 enabled = true
 app-name = "Google Camera"
 patches-source = "github:Akshayykadam/Pixel-Camera"
@@ -495,15 +499,22 @@ rv-brand = "Akshayykadam"
 # arch = "arm64-v8a"
 version = "11.0.073.972752740.32" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "both"
-included-patches = """\
-    'Camera Looks Backport' \
-    'Viewfinder Quick Access Controls' \
-    'Pixel Camera Creator Suite' \
-    'Pro Manual Controls' \
-    'Pixel Camera Clone (Non-Root)' \
-    'Change installer source' \
-    'Clone app' \
-    """
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/camera/"
+uptodown-dlurl = "https://google-camera.en.uptodown.com/android"
+
+[Google-Camera-nonPro-Akshayykadam]
+enabled = true
+app-name = "Google Camera"
+patches-source = "github:Akshayykadam/Pixel-Camera"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "Akshayykadam"
+# arch = "arm64-v8a"
+version = "11.0.073.972752740.32" # 'auto', 'experimental', 'latest' or a version number
+build-mode = "both"
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+excluded-patches = """\
+    '10x Viewfinder Quick Zoom' \
+    """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/camera/"
 uptodown-dlurl = "https://google-camera.en.uptodown.com/android"
