@@ -241,7 +241,7 @@ version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
-    'AMOLED black theme \
+    'AMOLED black theme' \
     'Download any reel' \
     """
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
@@ -262,7 +262,7 @@ version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "module"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
-    'AMOLED black theme \
+    'AMOLED black theme' \
     'Download any reel' \
     """
 excluded-patches = """\
