@@ -1,6 +1,10 @@
-📱 » **Facebook-Andrew** (arm64-v8a): `577.0.0.50.72`    
-📱 » **Google-Camera-Akshayykadam** (all): `11.0.073.972752740.32`    
-📱 » **Reddit-Morphe** (all): `2026.38.0`    
+📱 » **Facebook-Andrew-A** (arm64-v8a): `577.0.0.50.72`    
+📱 » **Facebook-Andrew-R** (arm64-v8a): `577.0.0.50.72`    
+📱 » **Facebook-SysAdminDoc-A** (arm64-v8a): `580.0.0.51.74`    
+📱 » **Facebook-SysAdminDoc-R** (arm64-v8a): `580.0.0.51.74`    
+📱 » **Google-Camera-Pro-Akshayykadam** (all): `11.0.073.972752740.32`    
+📱 » **Google-Camera-nonPro-Akshayykadam** (all): `11.0.073.972752740.32`    
+📱 » **Reddit-Morphe** (all): `2026.39.0`    
 📱 » **Twitter-Piko-NewX** (all): `12.28.0-prod.01`    
 📱 » **X-Piko-NewX** (all): `12.28.0-prod.01`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.38.51`    
@@ -27,9 +31,10 @@
 Patches and CLI Sources :
   
 > ⚙️ » Patches: `andrewliang25/patches-3.2.0.mpp` ([Changelog](https://github.com/andrewliang25/morphe-patches/releases/tag/v3.2.0))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.1.2.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.1.2))
  ⚙️ » Patches: `Akshayykadam/morphe-patches-pixelcamera-1.0.3.mpp` ([Changelog](https://github.com/Akshayykadam/Pixel-Camera/releases/tag/1.0.3))
- ⚙️ » Patches: `MorpheApp/patches-1.45.0-dev.12.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.45.0-dev.12))
- ⚙️ » Patches: `crimera/patches-3.37.1.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.37.1))
+ ⚙️ » Patches: `MorpheApp/patches-1.45.0-dev.15.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.45.0-dev.15))
+ ⚙️ » Patches: `crimera/patches-3.38.0.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.38.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.17.0-all.jar`
   
