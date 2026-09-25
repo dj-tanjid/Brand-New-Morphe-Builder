@@ -182,7 +182,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.k
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
-[Facebook-Andrew-A]
+[Facebook-Andrew-APK]
 enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
@@ -203,7 +203,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.k
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
-[Facebook-Andrew-R]
+[Facebook-Andrew-Root]
 enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
@@ -227,7 +227,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.k
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
-[Facebook-SysAdminDoc-A]
+[Facebook-SysAdminDoc-APK]
 enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
@@ -248,7 +248,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.k
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
-[Facebook-SysAdminDoc-R]
+[Facebook-SysAdminDoc-Root]
 enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
