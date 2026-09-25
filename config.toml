@@ -182,7 +182,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.k
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
-[Facebook-Andrew]
+[Facebook-Andrew-A]
 enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
@@ -198,6 +198,75 @@ build-mode = "apk"
 included-patches = """\
     '[General] AMOLED black theme' \
     '[Reels] Download any reel' \
+    """
+github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
+uptodown-dlurl = "https://facebook.en.uptodown.com/android"
+
+[Facebook-Andrew-R]
+enabled = true
+app-name = "Facebook"
+pkg-name = "com.facebook.katana"
+patches-source = "github:andrewliang25/morphe-patches"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "Andrew"
+arch = "arm64-v8a"
+# version = "latest"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+# version = "573.0.0.37.74"
+build-mode = "module"
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+included-patches = """\
+    '[General] AMOLED black theme' \
+    '[Reels] Download any reel' \
+    """
+excluded-patches = """\
+    '[Fix] Restore screens on re-signed builds' \
+    """
+github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
+uptodown-dlurl = "https://facebook.en.uptodown.com/android"
+
+[Facebook-SysAdminDoc-A]
+enabled = true
+app-name = "Facebook"
+pkg-name = "com.facebook.katana"
+patches-source = "github:SysAdminDoc/Hushfacebook"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "Andrew"
+arch = "arm64-v8a"
+# version = "latest"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+# version = "573.0.0.37.74"
+build-mode = "apk"
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+included-patches = """\
+    'AMOLED black theme \
+    'Download any reel' \
+    """
+github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
+uptodown-dlurl = "https://facebook.en.uptodown.com/android"
+
+[Facebook-SysAdminDoc-R]
+enabled = true
+app-name = "Facebook"
+pkg-name = "com.facebook.katana"
+patches-source = "github:SysAdminDoc/Hushfacebook"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "Andrew"
+arch = "arm64-v8a"
+# version = "latest"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+# version = "573.0.0.37.74"
+build-mode = "module"
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+included-patches = """\
+    'AMOLED black theme \
+    'Download any reel' \
+    """
+excluded-patches = """\
+    'Restore screens on re-signed builds' \
     """
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
@@ -498,7 +567,7 @@ cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Akshayykadam"
 # arch = "arm64-v8a"
 version = "11.0.073.972752740.32" # 'auto', 'experimental', 'latest' or a version number
-build-mode = "both"
+build-mode = "apk"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/camera/"
 uptodown-dlurl = "https://google-camera.en.uptodown.com/android"
@@ -511,7 +580,7 @@ cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Akshayykadam"
 # arch = "arm64-v8a"
 version = "11.0.073.972752740.32" # 'auto', 'experimental', 'latest' or a version number
-build-mode = "both"
+build-mode = "apk"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 excluded-patches = """\
     '10x Viewfinder Quick Zoom' \
