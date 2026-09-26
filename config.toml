@@ -123,7 +123,7 @@ uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
 [Google-Photos-Akash]
-enabled = false
+enabled = true
 app-name = "Google Photos"
 patches-source = "github:Akash-Sriram/morphe-google-photos"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -183,7 +183,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Andrew-APK]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:andrewliang25/morphe-patches"
@@ -204,7 +204,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Andrew-Root]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:andrewliang25/morphe-patches"
@@ -243,6 +243,7 @@ build-mode = "apk"
 included-patches = """\
     'AMOLED black theme' \
     'Download any reel' \
+    'Download any video' \
     """
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
@@ -264,6 +265,7 @@ build-mode = "module"
 included-patches = """\
     'AMOLED black theme' \
     'Download any reel' \
+    'Download any video' \
     """
 excluded-patches = """\
     'Restore screens on re-signed builds' \
@@ -541,7 +543,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/pyde-technologies-ltd/pokeraid-
 uptodown-dlurl = "https://pokeraid-worldwide-remote-ra.en.uptodown.com/android"
 
 [Gboard-Jason]
-enabled = false
+enabled = true
 app-name = "Gboard"
 patches-source = "github:jasonwu1994/Gboard-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -549,7 +551,7 @@ rv-brand = "Jason"
 arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "both"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 excluded-patches = """\
     'Package Rename' \
     'Zhuyin Bottom Row Key Sizes' \
@@ -560,7 +562,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/gboard/"
 uptodown-dlurl = "https://gboard-go.en.uptodown.com/android"
 
 [Google-Camera-Pro-Akshayykadam]
-enabled = true
+enabled = false
 app-name = "Google Camera"
 patches-source = "github:Akshayykadam/Pixel-Camera"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -573,7 +575,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/camera/"
 uptodown-dlurl = "https://google-camera.en.uptodown.com/android"
 
 [Google-Camera-nonPro-Akshayykadam]
-enabled = true
+enabled = false
 app-name = "Google Camera"
 patches-source = "github:Akshayykadam/Pixel-Camera"
 cli-source = "github:MorpheApp/morphe-desktop"
