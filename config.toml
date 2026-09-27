@@ -595,6 +595,7 @@ uptodown-dlurl = "https://google-camera.en.uptodown.com/android"
 [Claude-by-Anthropic-SatanMerde]
 enabled = true
 app-name = "Claude by Anthropic"
+pkg-name = "com.anthropic.claude"
 patches-source = "github:SatanMerde/D-moniakPatches"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "SatanMerde"
@@ -602,6 +603,7 @@ arch = "both"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.anthropic.claude"
 uptodown-dlurl = "https://claude.en.uptodown.com/android"
 
 [DeepL-SatanMerde]
