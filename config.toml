@@ -591,3 +591,28 @@ excluded-patches = """\
     """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/camera/"
 uptodown-dlurl = "https://google-camera.en.uptodown.com/android"
+
+[Claude-by-Anthropic-SatanMerde]
+enabled = true
+app-name = "Claude by Anthropic"
+patches-source = "github:SatanMerde/D-moniakPatches"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "SatanMerde"
+arch = "both"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+build-mode = "apk"
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+uptodown-dlurl = "https://claude.en.uptodown.com/android"
+
+[DeepL-SatanMerde]
+enabled = true
+app-name = "DeepL"
+patches-source = "github:SatanMerde/D-moniakPatches"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "SatanMerde"
+arch = "both"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+build-mode = "apk"
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+apkmirror-dlurl = "https://www.apkmirror.com/apk/deepl-se/deepl-translate/"
+uptodown-dlurl = "https://deepl.en.uptodown.com/android"
