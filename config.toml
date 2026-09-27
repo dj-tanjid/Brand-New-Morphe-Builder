@@ -545,7 +545,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/pyde-technologies-ltd/pokeraid-
 uptodown-dlurl = "https://pokeraid-worldwide-remote-ra.en.uptodown.com/android"
 
 [Gboard-Jason]
-enabled = true
+enabled = false
 app-name = "Gboard"
 patches-source = "github:jasonwu1994/Gboard-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -603,6 +603,12 @@ arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+included-patches = """\
+    'AMOLED Dark Theme - Claude AI (Experimental)' \
+    'Bypass Input Length & Upload Limits - Claude AI (Experimental)' \
+    'Disable Telemetry & Tracking - Claude AI (Experimental)' \
+    'Export Full Chat & Copy Markdown - Claude AI (Experimental)' \
+    """
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.anthropic.claude"
 uptodown-dlurl = "https://claude.en.uptodown.com/android"
 
@@ -616,6 +622,12 @@ arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+included-patches = """\
+    'Block Ads & Promo Screens - DeepL (Experimental)' \
+    'Unlock Pro & Formality - DeepL (Experimental)' \
+    'Unlock Unlimited Document & PDF Translations - DeepL (Experimental)' \
+    'Unlock Unlimited Glossaries & Writing Styles - DeepL (Experimental)' \
+    """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/deepl-se/deepl-translate/"
 uptodown-dlurl = "https://deepl.en.uptodown.com/android"
 
