@@ -244,6 +244,7 @@ included-patches = """\
     'AMOLED black theme' \
     'Download any reel' \
     'Download any video' \
+    'Use the phone's emoji' \
     """
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
@@ -266,6 +267,7 @@ included-patches = """\
     'AMOLED black theme' \
     'Download any reel' \
     'Download any video' \
+    'Use the phone's emoji' \
     """
 excluded-patches = """\
     'Restore screens on re-signed builds' \
