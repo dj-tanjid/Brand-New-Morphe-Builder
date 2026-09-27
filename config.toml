@@ -616,3 +616,21 @@ build-mode = "apk"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/deepl-se/deepl-translate/"
 uptodown-dlurl = "https://deepl.en.uptodown.com/android"
+
+[Google-Maps-BearInMindCat]
+enabled = true
+app-name = "Google Maps"
+patches-source = "github:bearinmindcat/morphe-patches"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "BearInMindCat"
+arch = "both"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+build-mode = "both"
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+excluded-patches = """\
+    'Change app name' \
+    'Change package name' \
+    'Legacy icon' \
+    """
+apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/maps/"
+uptodown-dlurl = "https://google-maps.en.uptodown.com/android"
