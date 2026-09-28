@@ -183,7 +183,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Andrew-APK]
-enabled = false
+enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:andrewliang25/morphe-patches"
@@ -204,7 +204,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Andrew-Root]
-enabled = false
+enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:andrewliang25/morphe-patches"
@@ -468,7 +468,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/windscribe/windscribe-vpn"
 uptodown-dlurl = "https://windscribe.en.uptodown.com/android"
 
 [TeraBox-HXReborn]
-enabled = true
+enabled = false
 app-name = "TeraBox"
 patches-source = "github:hxreborn/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -481,7 +481,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/flextech-inc/terabox-cloud-stor
 uptodown-dlurl = "https://terabox.en.uptodown.com/android"
 
 [Speedtest-by-Ookla-SatanMerde]
-enabled = true
+enabled = false
 app-name = "Speedtest by Ookla"
 patches-source = "github:SatanMerde/D-moniakPatches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -593,7 +593,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/camera/"
 uptodown-dlurl = "https://google-camera.en.uptodown.com/android"
 
 [Claude-by-Anthropic-SatanMerde]
-enabled = true
+enabled = false
 app-name = "Claude by Anthropic"
 pkg-name = "com.anthropic.claude"
 patches-source = "github:SatanMerde/D-moniakPatches"
@@ -613,7 +613,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.anthropic.
 uptodown-dlurl = "https://claude.en.uptodown.com/android"
 
 [DeepL-SatanMerde]
-enabled = true
+enabled = false
 app-name = "DeepL"
 patches-source = "github:SatanMerde/D-moniakPatches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -632,7 +632,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/deepl-se/deepl-translate/"
 uptodown-dlurl = "https://deepl.en.uptodown.com/android"
 
 [Google-Maps-BearInMindCat]
-enabled = true
+enabled = false
 app-name = "Google Maps"
 patches-source = "github:bearinmindcat/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
