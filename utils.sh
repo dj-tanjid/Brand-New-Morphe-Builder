@@ -1644,6 +1644,11 @@ build_rv() {
 		p_patcher_args+=("-f")
 	fi
 
+	# Apply manual version code from config.toml if provided
+	if [[ -n "${version_code_mode:-}" ]]; then
+		export __TARGET_VERSION_CODE__="$version_code_mode"
+	fi
+
 	if [[ $get_latest_ver == true ]]; then
 		if [[ "$version_mode" == beta ]]; then __AAV__="true"; else __AAV__="false"; fi
 		
