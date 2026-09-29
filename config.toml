@@ -80,7 +80,7 @@ uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
 
 [Google-Photos-De-Vanced]
-enabled = false
+enabled = true
 app-name = "Google Photos"
 patches-source = "github:RookieEnough/De-Vanced"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -142,7 +142,7 @@ uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
 [Facebook-De-Vanced]
-enabled = false
+enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:RookieEnough/De-Vanced"
@@ -228,7 +228,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-SysAdminDoc-APK]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:SysAdminDoc/Hushfacebook"
@@ -252,7 +252,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-SysAdminDoc-Root]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:SysAdminDoc/Hushfacebook"
@@ -279,7 +279,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Messenger-De-Vanced]
-enabled = false
+enabled = true
 app-name = "Facebook Messenger"
 pkg-name = "com.facebook.orca"
 patches-source = "github:RookieEnough/De-Vanced"
@@ -342,7 +342,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads-an-instagram-
 uptodown-dlurl = "https://threads.en.uptodown.com/android"
 
 [Twitter-Piko]
-enabled = false
+enabled = true
 app-name = "Twitter"
 patches-source = "github:crimera/piko"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -363,7 +363,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko]
-enabled = false
+enabled = true
 app-name = "X"
 patches-source = "github:crimera/piko"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -422,7 +422,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [Instagram-Piko]
-enabled = false
+enabled = true
 app-name = "Instagram"
 patches-source = "github:crimera/piko"
 cli-source = "github:MorpheApp/morphe-desktop"
