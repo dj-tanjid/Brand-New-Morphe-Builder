@@ -242,6 +242,7 @@ build-mode = "apk"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'AMOLED black theme' \
+    'Default comment order' \
     'Download any reel' \
     'Download any video' \
     'Use the phone's emoji' \
@@ -265,6 +266,7 @@ build-mode = "module"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'AMOLED black theme' \
+    'Default comment order' \
     'Download any reel' \
     'Download any video' \
     'Use the phone's emoji' \
