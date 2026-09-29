@@ -204,7 +204,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Andrew-Root]
-enabled = false
+enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:andrewliang25/morphe-patches"
