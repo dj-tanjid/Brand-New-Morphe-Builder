@@ -311,6 +311,21 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.o
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/messenger"
 uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
 
+[Facebook-Messenger-SysAdminDoc]
+enabled = true
+app-name = "Facebook Messenger"
+pkg-name = "com.facebook.orca"
+patches-source = "github:SysAdminDoc/HushMessenger"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "SysAdminDoc"
+arch = "arm64-v8a"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+build-mode = "both"
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.orca"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/messenger"
+uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
+
 [Threads-Chiggi]
 enabled = false
 app-name = "Threads"
@@ -444,7 +459,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/cloudflare/1-1-1-1-faster-safer
 uptodown-dlurl = "https://1-1-1-1.en.uptodown.com/android"
 
 [Proton-VPN-HXReborn]
-enabled = true
+enabled = false
 app-name = "Proton VPN"
 patches-source = "github:hxreborn/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
