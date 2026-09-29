@@ -1,4 +1,3 @@
-📱 » **Facebook-Andrew-Root** (arm64-v8a): `577.0.0.50.72`    
 📱 » **Facebook-De-Vanced** (arm64-v8a): `580.0.0.51.74`    
 📱 » **Facebook-Messenger-SysAdminDoc** (arm64-v8a): `580.0.0.49.91`    
 
@@ -22,8 +21,7 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `andrewliang25/patches-3.3.2.mpp` ([Changelog](https://github.com/andrewliang25/morphe-patches/releases/tag/v3.3.2))
- ⚙️ » Patches: `RookieEnough/patches-1.5.0-dev.4.mpp` ([Changelog](https://github.com/RookieEnough/De-Vanced/releases/tag/v1.5.0-dev.4))
+> ⚙️ » Patches: `RookieEnough/patches-1.5.0-dev.4.mpp` ([Changelog](https://github.com/RookieEnough/De-Vanced/releases/tag/v1.5.0-dev.4))
  ⚙️ » Patches: `SysAdminDoc/patches-0.5.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushMessenger/releases/tag/v0.5.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.17.0-all.jar`
