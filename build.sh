@@ -9,7 +9,6 @@ source utils.sh
 for func_name in _req req gh_req gh_dl build_rv patches_list patches_list_versions toml_get toml_get_table toml_get_table_names toml_get_table_main dl_direct dl_github dl_archive dl_apkmirror dl_uptodown get_direct_vers get_github_vers get_archive_vers get_apkmirror_vers get_uptodown_vers get_direct_pkg_name get_github_pkg_name get_archive_pkg_name get_apkmirror_pkg_name get_uptodown_pkg_name get_direct_resp get_github_resp get_archive_resp get_apkmirror_resp get_uptodown_resp apkmirror_search merge_splits check_sig patch_apk isoneof log get_highest_ver semver_validate get_patch_last_supported_ver list_args join_args module_config module_prop abort epr wpr pr java run_python_backend; do
     export -f "$func_name" 2>/dev/null || true
 done
-export UPDATE_REPO_PAT="${UPDATE_REPO_PAT:-}"
 export MODULE_TEMPLATE_DIR CWD TEMP_DIR BIN_DIR BUILD_DIR DL_SRCS GH_HEADER NEXT_VER_CODE OS UPDATE_REPO_PAT
 # ---------------------------------------
 
@@ -108,12 +107,8 @@ for table_name in $(toml_get_table_names); do
 	app_args[included_patches]=$(toml_get "$t" included-patches) || app_args[included_patches]=""
 	if [ -n "${app_args[included_patches]}" ] && [[ ${app_args[included_patches]} != *'"'* ]]; then abort "patch names inside included-patches must be quoted"; fi
 	app_args[exclusive_patches]=$(toml_get "$t" exclusive-patches) && vtf "${app_args[exclusive_patches]}" "exclusive-patches" || app_args[exclusive_patches]=false
-	
-    # Version code parsing
-    app_args[version]=$(toml_get "$t" version) || app_args[version]="auto"
-	app_args[version_code]=$(toml_get "$t" version-code) || app_args[version_code]=""
-	
-    app_args[app_name]=$(toml_get "$t" app-name) || app_args[app_name]=$table_name
+	app_args[version]=$(toml_get "$t" version) || app_args[version]="auto"
+	app_args[app_name]=$(toml_get "$t" app-name) || app_args[app_name]=$table_name
 
 	# Merge global patcher-args and app-specific patcher-args
 	cur_patcher_args=$(toml_get "$t" patcher-args) || cur_patcher_args=""
