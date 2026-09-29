@@ -204,7 +204,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Andrew-Root]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:andrewliang25/morphe-patches"
@@ -320,7 +320,7 @@ cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "SysAdminDoc"
 arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
-version-code = "346013370"
+version-code = "346013387"
 build-mode = "both"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.orca"
