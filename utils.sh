@@ -1580,7 +1580,7 @@ build_rv() {
 	export __TARGET_VERSION_CODE__=""
 	export __TARGET_VERSION__=""
 	local version="" pkg_name=""
-	local mode_arg=${args[build_mode]:-} version_mode=${args[version]:-}
+	local mode_arg=${args[build_mode]:-} version_mode=${args[version]:-} version_code_mode=${args[version_code]:-}
 	local app_name=${args[app_name]:-}
 	local app_name_l
 	app_name_l=$(iconv -f utf-8 -t ascii//TRANSLIT <<<"$app_name" 2>/dev/null || echo "$app_name")
