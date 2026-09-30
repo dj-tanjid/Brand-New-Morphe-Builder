@@ -228,7 +228,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-SysAdminDoc-APK]
-enabled = false
+enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:SysAdminDoc/Hushfacebook"
@@ -246,13 +246,15 @@ included-patches = """\
     'Download any reel' \
     'Download any video' \
     'Use the phone's emoji' \
+    'Default playback quality' \
+    'Hold a reel for 2x' \
     """
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-SysAdminDoc-Root]
-enabled = false
+enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:SysAdminDoc/Hushfacebook"
@@ -270,9 +272,12 @@ included-patches = """\
     'Download any reel' \
     'Download any video' \
     'Use the phone's emoji' \
+    'Default playback quality' \
+    'Hold a reel for 2x' \
     """
 excluded-patches = """\
     'Restore screens on re-signed builds' \
+    'Install beside Meta's apps' \
     """
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/facebook"
