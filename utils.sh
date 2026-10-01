@@ -93,7 +93,7 @@ get_prebuilts() {
 		fi
 
 		local org="${clean_src%/*}"
-		local dir="${TEMP_DIR}/${org,,}-rv"
+		local dir="${TEMP_DIR}/${clean_src,,}-rv"
 		[[ -d "$dir" ]] || mkdir -p "$dir"
 
 		pr "Getting prebuilts (${clean_src})" >&2
