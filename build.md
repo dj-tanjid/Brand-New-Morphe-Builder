@@ -27,9 +27,10 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `SysAdminDoc/patches-0.6.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushMessenger/releases/tag/v0.6.0))
- ⚙️ » Patches: `MorpheApp/patches-1.45.0-dev.21.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.45.0-dev.21))
- ⚙️ » Patches: `crimera/patches-3.45.0.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.45.0))
+> ⚙️ » Patches: `SysAdminDoc/patches-0.7.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushMessenger/releases/tag/v0.7.0))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.5.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.5.0))
+ ⚙️ » Patches: `MorpheApp/patches-1.45.0-dev.23.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.45.0-dev.23))
+ ⚙️ » Patches: `crimera/patches-3.47.0.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.47.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.18.0-all.jar`
   
