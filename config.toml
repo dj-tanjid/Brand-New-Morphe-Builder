@@ -492,6 +492,10 @@ included-patches = """\
     'Start Home on Following' \
     'Default playback quality' \
     'Download any video' \
+    'Copy comment' \
+    'Show a story's exact time' \
+    'Save comment photo' \
+    'Keep a seek bar on Reels' \
     """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram"
 uptodown-dlurl = "https://instagram.en.uptodown.com/android"
@@ -518,6 +522,10 @@ included-patches = """\
     'Start Home on Following' \
     'Default playback quality' \
     'Download any video' \
+    'Copy comment' \
+    'Show a story's exact time' \
+    'Save comment photo' \
+    'Keep a seek bar on Reels' \
     """
 excluded-patches = """\
     'Restore trust on re-signed builds' \
