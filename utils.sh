@@ -1866,12 +1866,17 @@ build_rv() {
 		pr "Packing module ${table}"
 		cp -f "$patched_apk" "${base_template}/base.apk"
 
-				if [[ "${args[include_stock]:-}" != "disable" ]]; then
+			if [[ "${args[include_stock]:-}" != "disable" ]]; then
 			mkdir -p "${base_template}/stock/"
 			if [[ "${args[include_stock]:-}" == "merged" ]]; then
-				gh_dl "$TEMP_DIR/apkeditor.jar" "https://github.com/REAndroid/APKEditor/releases/download/V1.4.9/APKEditor-1.4.9.jar" >/dev/null || true
-				java -jar "$TEMP_DIR/apkeditor.jar" sign -i "$stock_apk" -o "${base_template}/stock/base.apk" -clean-meta -f
+				cp -f "$stock_apk" "${base_template}/stock/base.apk"
+				
+				# Strip original Meta signatures
+				zip -d "${base_template}/stock/base.apk" "META-INF/*" >/dev/null 2>&1 || true
+				
+				# Re-sign with custom keystore to match the patched APK's signature
 				java -jar "$APKSIGNER" sign --ks ks-p12.keystore --ks-pass pass:123456789 --key-pass pass:123456789 --ks-key-alias jhc --out "${base_template}/stock/base.apk" "${base_template}/stock/base.apk"
+
 			elif [[ "${args[include_stock]:-}" == "split" ]]; then
 				if [[ ! -f "${stock_apk}.apkm" ]]; then
 					epr "Cannot include as 'split' because stock apk of $table is not a bundle"
