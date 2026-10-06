@@ -1,10 +1,9 @@
 📱 » **Facebook-Messenger-SysAdminDoc** (arm64-v8a): `581.0.0.49.91`    
-📱 » **Instagram-Piko** (arm64-v8a): `447.0.0.55.81`    
+📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `581.0.0.45.58`    
+📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `581.0.0.45.58`    
 📱 » **Reddit-Morphe** (all): `2026.40.0`    
-📱 » **Twitter-Piko** (all): `12.19.1-release.0`    
-📱 » **X-Piko** (all): `12.19.1-release.0`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.40.51`    
-📱 » **YouTube-Morphe** (arm64-v8a): `21.40.161-SECONDARY`    
+📱 » **YouTube-Morphe** (arm64-v8a): `21.40.161`    
 
 <br>
   
@@ -27,8 +26,9 @@
 Patches and CLI Sources :
   
 > ⚙️ » Patches: `SysAdminDoc/patches-0.21.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushMessenger/releases/tag/v0.21.0))
- ⚙️ » Patches: `crimera/patches-3.10.0-dev.11.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.10.0-dev.11))
- ⚙️ » Patches: `MorpheApp/patches-1.46.0-dev.7.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.46.0-dev.7))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.7.2.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.7.2))
+ ⚙️ » Patches: `MorpheApp/patches-1.46.0.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.46.0))
+ ⚙️ » Patches: `crimera/patches-3.53.0.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.53.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.18.1-all.jar`
   
