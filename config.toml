@@ -7,7 +7,7 @@ remove-rv-integrations-checks = false # Automatically patch shared integration c
 # see https://github.com/dj-tanjid/Morphe-DeVanced-Builder/blob/teejay/CONFIG.md for more detailed explanations
 
 [YouTube-Morphe]
-enabled = false
+enabled = true
 app-name = "YouTube"
 patches-source = "github:MorpheApp/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -33,7 +33,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.google.and
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.youtube"
 
 [YT-Music-Morphe]
-enabled = false
+enabled = true
 app-name = "YT Music"
 patches-source = "github:MorpheApp/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -56,7 +56,7 @@ uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
 
 [Reddit-Morphe]
-enabled = false
+enabled = true
 app-name = "Reddit"
 patches-source = "github:MorpheApp/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -249,6 +249,10 @@ included-patches = """\
     'Use the phone's emoji' \
     'Default playback quality' \
     'Hold a reel for 2x' \
+    'Allow screenshots' \
+    'Block screenshot detection' \
+    'Hold back analytics uploads' \
+    'Picture-in-picture' \
     'Material You theme' \
     """
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.facebook.katana"
@@ -277,6 +281,10 @@ included-patches = """\
     'Use the phone's emoji' \
     'Default playback quality' \
     'Hold a reel for 2x' \
+    'Allow screenshots' \
+    'Block screenshot detection' \
+    'Hold back analytics uploads' \
+    'Picture-in-picture' \
     'Material You theme' \
     """
 excluded-patches = """\
@@ -414,14 +422,14 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [Twitter-Piko-NewX]
-enabled = false
+enabled = true
 app-name = "Twitter"
 patches-source = "github:crimera/piko-newx"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Piko-NewX"
 build-mode = "apk" # Options 'apk', 'module', or 'both'
 # version = "latest" # 'auto', 'experimental', 'latest' or a version number
-version = "auto"
+version = "experimental"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
@@ -434,14 +442,14 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko-NewX]
-enabled = false
+enabled = true
 app-name = "X"
 patches-source = "github:crimera/piko-newx"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Piko-NewX"
 build-mode = "apk" # Options 'apk', 'module', or 'both'
 # version = "latest" # 'auto', 'experimental', 'latest' or a version number
-version = "auto"
+version = "experimental"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
