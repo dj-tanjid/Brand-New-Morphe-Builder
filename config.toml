@@ -123,7 +123,7 @@ uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
 [Google-Photos-Akash]
-enabled = false
+enabled = true
 app-name = "Google Photos"
 patches-source = "github:Akash-Sriram/morphe-google-photos"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -183,7 +183,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Andrew-APK]
-enabled = false
+enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:andrewliang25/morphe-patches"
@@ -204,7 +204,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-Andrew-Root]
-enabled = false
+enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:andrewliang25/morphe-patches"
@@ -381,7 +381,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads-an-instagram-
 uptodown-dlurl = "https://threads.en.uptodown.com/android"
 
 [Twitter-Piko]
-enabled = true
+enabled = false
 app-name = "Twitter"
 patches-source = "github:crimera/piko"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -402,7 +402,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko]
-enabled = true
+enabled = false
 app-name = "X"
 patches-source = "github:crimera/piko"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -422,7 +422,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [Twitter-Piko-NewX]
-enabled = true
+enabled = false
 app-name = "Twitter"
 patches-source = "github:crimera/piko-newx"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -442,7 +442,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko-NewX]
-enabled = true
+enabled = false
 app-name = "X"
 patches-source = "github:crimera/piko-newx"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -461,7 +461,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [Instagram-Piko]
-enabled = true
+enabled = false
 app-name = "Instagram"
 patches-source = "github:crimera/piko"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -484,7 +484,7 @@ uptodown-dlurl = "https://instagram.en.uptodown.com/android"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram.android"
 
 [Instagram-SysAdminDoc-APK]
-enabled = true
+enabled = false
 app-name = "Instagram"
 patches-source = "github:SysAdminDoc/HushGram"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -507,6 +507,9 @@ included-patches = """\
     'Show a story's exact time' \
     'Save comment photo' \
     'Keep a seek bar on Reels' \
+    'Read messages without the seen receipt' \
+    'Hide that you're typing' \
+    'Show a post's exact time' \
     """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram"
 uptodown-dlurl = "https://instagram.en.uptodown.com/android"
@@ -514,7 +517,7 @@ uptodown-dlurl = "https://instagram.en.uptodown.com/android"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram.android"
 
 [Instagram-SysAdminDoc-Root]
-enabled = true
+enabled = false
 app-name = "Instagram"
 patches-source = "github:SysAdminDoc/HushGram"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -537,6 +540,9 @@ included-patches = """\
     'Show a story's exact time' \
     'Save comment photo' \
     'Keep a seek bar on Reels' \
+    'Read messages without the seen receipt' \
+    'Hide that you're typing' \
+    'Show a post's exact time' \
     """
 excluded-patches = """\
     'Restore trust on re-signed builds' \
