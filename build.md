@@ -1,11 +1,7 @@
-📱 » **Instagram-Piko** (arm64-v8a): `447.0.0.55.81`    
-📱 » **Instagram-SysAdminDoc-APK** (arm64-v8a): `450.0.0.50.77`    
-📱 » **Instagram-SysAdminDoc-Root** (arm64-v8a): `450.0.0.50.77`    
+📱 » **Facebook-Andrew-APK** (arm64-v8a): `577.0.0.50.72`    
+📱 » **Facebook-Andrew-Root** (arm64-v8a): `577.0.0.50.72`    
+📱 » **Google-Photos-Akash** (arm64-v8a): `7.96.0.993165104`    
 📱 » **Reddit-Morphe** (all): `2026.40.0`    
-📱 » **Twitter-Piko** (all): `12.19.1-release.0`    
-📱 » **Twitter-Piko-NewX** (all): `12.29.1-prod.01`    
-📱 » **X-Piko** (all): `12.19.1-release.0`    
-📱 » **X-Piko-NewX** (all): `12.29.1-prod.01`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.40.51`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.40.161`    
 
@@ -29,10 +25,9 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `crimera/patches-3.10.0-dev.12.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.10.0-dev.12))
- ⚙️ » Patches: `SysAdminDoc/patches-0.0.6.mpp` ([Changelog](https://github.com/SysAdminDoc/HushGram/releases/tag/v0.0.6))
- ⚙️ » Patches: `MorpheApp/patches-1.47.0-dev.1.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.47.0-dev.1))
- ⚙️ » Patches: `crimera/patches-3.53.1.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.53.1))
+> ⚙️ » Patches: `andrewliang25/patches-3.5.0.mpp` ([Changelog](https://github.com/andrewliang25/morphe-patches/releases/tag/v3.5.0))
+ ⚙️ » Patches: `Akash-Sriram/patches-1.14.1.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.14.1))
+ ⚙️ » Patches: `MorpheApp/patches-1.47.0-dev.4.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.47.0-dev.4))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.18.1-all.jar`
   
