@@ -1866,17 +1866,10 @@ build_rv() {
 		pr "Packing module ${table}"
 		cp -f "$patched_apk" "${base_template}/base.apk"
 
-			if [[ "${args[include_stock]:-}" != "disable" ]]; then
+		if [[ "${args[include_stock]:-}" != "disable" ]]; then
 			mkdir -p "${base_template}/stock/"
 			if [[ "${args[include_stock]:-}" == "merged" ]]; then
 				cp -f "$stock_apk" "${base_template}/stock/base.apk"
-				
-				# Strip original Meta signatures
-				zip -d "${base_template}/stock/base.apk" "META-INF/*" >/dev/null 2>&1 || true
-				
-				# Re-sign with custom keystore to match the patched APK's signature
-				java -jar "$APKSIGNER" sign --ks ks-p12.keystore --ks-pass pass:123456789 --key-pass pass:123456789 --ks-key-alias jhc --out "${base_template}/stock/base.apk" "${base_template}/stock/base.apk"
-
 			elif [[ "${args[include_stock]:-}" == "split" ]]; then
 				if [[ ! -f "${stock_apk}.apkm" ]]; then
 					epr "Cannot include as 'split' because stock apk of $table is not a bundle"
@@ -1895,6 +1888,7 @@ build_rv() {
 				fi
 			fi
 		fi
+
 
 		pushd >/dev/null "$base_template" || abort "Module template dir not found"
 		zip -"$COMPRESSION_LEVEL" -FSqr "${CWD}/${BUILD_DIR}/${module_output}" .
