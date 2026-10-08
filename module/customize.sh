@@ -88,7 +88,7 @@ install() {
 
 		if ! op=$(pmex install-commit "$SES"); then
 			ui_print "$op"
-			if echo "$op" | grep -q -e INSTALL_FAILED_VERSION_DOWNGRADE -e INSTALL_FAILED_UPDATE_INCOMPATIBLE -e INSTALL_FAILED_DUPLICATE; then
+			if echo "$op" | grep -q -e INSTALL_FAILED_VERSION_DOWNGRADE -e INSTALL_FAILED_UPDATE_INCOMPATIBLE -e INSTALL_FAILED_DUPLICATE_PACKAGE; then
 				if [ "$IS_SYSTEM_APP" = true ] && [ "$UPDATED_SYSTEM_APP" = false ]; then
 					if ! BASEPATH=$(get_basepath); then
 						install_err="ERROR: basepath failed."
