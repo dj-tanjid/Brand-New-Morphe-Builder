@@ -228,7 +228,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-SysAdminDoc-APK]
-enabled = false
+enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:SysAdminDoc/Hushfacebook"
@@ -260,7 +260,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-SysAdminDoc-Root]
-enabled = false
+enabled = true
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:SysAdminDoc/Hushfacebook"
@@ -363,7 +363,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads-an-instagram-
 uptodown-dlurl = "https://threads.en.uptodown.com/android"
 
 [Threads-SysAdminDoc]
-enabled = false
+enabled = true
 app-name = "Threads"
 pkg-name = "com.instagram.barcelona"
 patches-source = "github:SysAdminDoc/HushThreads"
@@ -375,6 +375,9 @@ build-mode = "both"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'Disable video autoplay' \
+    'Disable screenshot detection' \
+    'Max image quality' \
+    'Pure black dark mode' \
     """
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram.barcelona"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads-an-instagram-app"
@@ -510,6 +513,7 @@ included-patches = """\
     'Read messages without the seen receipt' \
     'Hide that you're typing' \
     'Show a post's exact time' \
+    'See who a story mentions' \
     """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram"
 uptodown-dlurl = "https://instagram.en.uptodown.com/android"
@@ -543,6 +547,7 @@ included-patches = """\
     'Read messages without the seen receipt' \
     'Hide that you're typing' \
     'Show a post's exact time' \
+    'See who a story mentions' \
     """
 excluded-patches = """\
     'Restore trust on re-signed builds' \
