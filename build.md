@@ -1,7 +1,17 @@
-📱 » **Facebook-Andrew-APK** (arm64-v8a): `577.0.0.50.72`    
-📱 » **Facebook-Andrew-Root** (arm64-v8a): `577.0.0.50.72`    
-📱 » **Google-Photos-Akash** (arm64-v8a): `7.96.0.993165104`    
+📱 » **Facebook-Messenger-SysAdminDoc** (arm64-v8a): `581.0.0.49.91`    
+📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `581.0.0.45.58`    
+📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `581.0.0.45.58`    
+📱 » **Google-Camera-Pro-Akshayykadam** (all): `11.0.073.972752740.32`    
+📱 » **Google-Camera-nonPro-Akshayykadam** (all): `11.0.073.972752740.32`    
+📱 » **Instagram-Piko** (arm64-v8a): `447.0.0.55.81`    
+📱 » **Instagram-SysAdminDoc-APK** (arm64-v8a): `450.0.0.50.77`    
+📱 » **Instagram-SysAdminDoc-Root** (arm64-v8a): `450.0.0.50.77`    
 📱 » **Reddit-Morphe** (all): `2026.40.0`    
+📱 » **Threads-SysAdminDoc** (arm64-v8a): `450.0.0.51.78`    
+📱 » **Twitter-Piko** (all): `12.19.1-release.0`    
+📱 » **Twitter-Piko-NewX** (all): `12.30.0-prod.01`    
+📱 » **X-Piko** (all): `12.19.1-release.0`    
+📱 » **X-Piko-NewX** (all): `12.30.0-prod.01`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.40.51`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.40.161`    
 
@@ -25,9 +35,14 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `andrewliang25/patches-3.5.0.mpp` ([Changelog](https://github.com/andrewliang25/morphe-patches/releases/tag/v3.5.0))
- ⚙️ » Patches: `Akash-Sriram/patches-1.14.1.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.14.1))
- ⚙️ » Patches: `MorpheApp/patches-1.47.0-dev.4.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.47.0-dev.4))
+> ⚙️ » Patches: `SysAdminDoc/patches-0.22.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushMessenger/releases/tag/v0.22.0))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.8.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.8.0))
+ ⚙️ » Patches: `Akshayykadam/morphe-patches-pixelcamera-1.0.4.mpp` ([Changelog](https://github.com/Akshayykadam/Pixel-Camera/releases/tag/1.0.4))
+ ⚙️ » Patches: `crimera/patches-3.10.0-dev.13.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.10.0-dev.13))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.0.7.mpp` ([Changelog](https://github.com/SysAdminDoc/HushGram/releases/tag/v0.0.7))
+ ⚙️ » Patches: `MorpheApp/patches-1.47.0-dev.12.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.47.0-dev.12))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.0.12.mpp` ([Changelog](https://github.com/SysAdminDoc/HushThreads/releases/tag/v0.0.12))
+ ⚙️ » Patches: `crimera/patches-3.54.0.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.54.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.18.1-all.jar`
   
