@@ -693,9 +693,9 @@ excluded-patches = """\
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/gboard/"
 uptodown-dlurl = "https://gboard-go.en.uptodown.com/android"
 
-[Google-Camera-Pro-Akshayykadam]
+[Pixel-Camera-Pro-Akshayykadam]
 enabled = true
-app-name = "Google Camera"
+app-name = "Pixel Camera Pro"
 patches-source = "github:Akshayykadam/Pixel-Camera"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Akshayykadam"
@@ -707,9 +707,9 @@ build-mode = "apk"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/camera/"
 uptodown-dlurl = "https://google-camera.en.uptodown.com/android"
 
-[Google-Camera-nonPro-Akshayykadam]
+[Pixel-Camera-Akshayykadam]
 enabled = true
-app-name = "Google Camera"
+app-name = "Pixel Camera"
 patches-source = "github:Akshayykadam/Pixel-Camera"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Akshayykadam"
