@@ -1,18 +1,16 @@
+📱 » **Facebook-Messenger-SysAdminDoc** (arm64-v8a): `582.0.0.61.92`    
 📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `582.0.0.50.54`    
 📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `582.0.0.50.54`    
-📱 » **Google-Camera-Pro-Akshayykadam** (all): `11.1.040.982810059.19`    
-📱 » **Google-Camera-nonPro-Akshayykadam** (all): `11.1.040.982810059.19`    
-📱 » **Google-Photos-Akash** (arm64-v8a): `7.96.0.996044120`    
-📱 » **Instagram-Piko** (arm64-v8a): `447.0.0.55.81`    
 📱 » **Instagram-SysAdminDoc-APK** (arm64-v8a): `450.0.0.50.77`    
 📱 » **Instagram-SysAdminDoc-Root** (arm64-v8a): `450.0.0.50.77`    
+📱 » **Pixel-Camera-Basic-Akshayykadam** (all): `11.1.040.982810059.19`    
+📱 » **Pixel-Camera-Pro-Akshayykadam** (all): `11.1.040.982810059.19`    
 📱 » **Reddit-Morphe** (all): `2026.41.0`    
-📱 » **Twitter-Piko** (all): `12.19.1-release.0`    
-📱 » **Twitter-Piko-NewX** (all): `12.30.0-prod.01`    
-📱 » **X-Piko** (all): `12.19.1-release.0`    
-📱 » **X-Piko-NewX** (all): `12.30.0-prod.01`    
+📱 » **Threads-SysAdminDoc** (arm64-v8a): `450.0.0.51.78`    
+📱 » **Twitter-Piko-NewX** (all): `12.33.1-prod.01`    
+📱 » **X-Piko-NewX** (all): `12.33.1-prod.01`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.40.51`    
-📱 » **YouTube-Morphe** (arm64-v8a): `21.40.161`    
+📱 » **YouTube-Morphe** (arm64-v8a): `21.41.525-SECONDARY`    
 
 <br>
   
@@ -34,14 +32,13 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `SysAdminDoc/patches-0.9.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.9.0))
+> ⚙️ » Patches: `SysAdminDoc/patches-0.23.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushMessenger/releases/tag/v0.23.0))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.11.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.11.0))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.0.9.mpp` ([Changelog](https://github.com/SysAdminDoc/HushGram/releases/tag/v0.0.9))
  ⚙️ » Patches: `Akshayykadam/morphe-patches-pixelcamera-1.0.5.mpp` ([Changelog](https://github.com/Akshayykadam/Pixel-Camera/releases/tag/1.0.5))
- ⚙️ » Patches: `Akash-Sriram/patches-1.14.3.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.14.3))
- ⚙️ » Patches: `crimera/patches-3.10.0.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.10.0))
- ⚙️ » Patches: `SysAdminDoc/patches-0.0.8.mpp` ([Changelog](https://github.com/SysAdminDoc/HushGram/releases/tag/v0.0.8))
- ⚙️ » Patches: `MorpheApp/patches-1.47.0-dev.20.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.47.0-dev.20))
- ⚙️ » Patches: `crimera/patches-3.54.2.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.54.2))
- ⚙️ » Patches: `MorpheApp/patches-1.47.0-dev.21.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.47.0-dev.21))
+ ⚙️ » Patches: `MorpheApp/patches-1.48.0-dev.3.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.48.0-dev.3))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.0.13.mpp` ([Changelog](https://github.com/SysAdminDoc/HushThreads/releases/tag/v0.0.13))
+ ⚙️ » Patches: `crimera/patches-3.56.1.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.56.1))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.18.1-all.jar`
   
