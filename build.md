@@ -1,8 +1,5 @@
-📱 » **Facebook-Messenger-SysAdminDoc** (arm64-v8a): `582.0.0.61.92`    
-📱 » **Gboard-Jason** (arm64-v8a): `18.0.3.954559732-release-arm64-v8a`    
-📱 » **Reddit-Morphe** (all): `2026.41.0`    
-📱 » **YT-Music-Morphe** (arm64-v8a): `9.41.52`    
-📱 » **YouTube-Morphe** (arm64-v8a): `21.41.525-SECONDARY`    
+📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `582.0.0.50.54`    
+📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `582.0.0.50.54`    
 
 <br>
   
@@ -24,9 +21,7 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `SysAdminDoc/patches-0.23.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushMessenger/releases/tag/v0.23.0))
- ⚙️ » Patches: `jasonwu1994/patches-3.12.0.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v3.12.0))
- ⚙️ » Patches: `MorpheApp/patches-1.48.0-dev.6.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.48.0-dev.6))
+> ⚙️ » Patches: `SysAdminDoc/patches-0.11.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.11.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.18.1-all.jar`
   
