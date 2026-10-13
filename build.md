@@ -1,5 +1,4 @@
-📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `582.0.0.50.54`    
-📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `582.0.0.50.54`    
+📱 » **Gboard-Jason** (arm64-v8a): `18.0.3.954559732-release-arm64-v8a`    
 
 <br>
   
@@ -21,7 +20,7 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `SysAdminDoc/patches-0.11.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.11.0))
+> ⚙️ » Patches: `jasonwu1994/patches-3.12.1-dev.1.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v3.12.1-dev.1))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.18.1-all.jar`
   
