@@ -1,10 +1,7 @@
-📱 » **Facebook-Messenger-SysAdminDoc** (arm64-v8a): `583.0.0.29.95`    
-📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `582.0.0.50.54`    
-📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `582.0.0.50.54`    
-📱 » **Gboard-Jason** (arm64-v8a): `18.0.3.954559732-release-arm64-v8a`    
 📱 » **Google-Photos-Akash** (arm64-v8a): `7.97.0.997578476`    
+📱 » **Instagram-SysAdminDoc-APK** (arm64-v8a): `451.0.0.53.80`    
+📱 » **Instagram-SysAdminDoc-Root** (arm64-v8a): `451.0.0.53.80`    
 📱 » **Reddit-Morphe** (all): `2026.41.0`    
-📱 » **Threads-SysAdminDoc** (arm64-v8a): `451.0.0.51.80`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.41.52`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.41.525-EXTENDED`    
 
@@ -28,12 +25,9 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `SysAdminDoc/patches-0.24.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushMessenger/releases/tag/v0.24.0))
- ⚙️ » Patches: `SysAdminDoc/patches-0.13.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.13.0))
- ⚙️ » Patches: `jasonwu1994/patches-3.13.0-dev.1.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v3.13.0-dev.1))
- ⚙️ » Patches: `Akash-Sriram/patches-1.14.4.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.14.4))
- ⚙️ » Patches: `MorpheApp/patches-1.48.0-dev.7.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.48.0-dev.7))
- ⚙️ » Patches: `SysAdminDoc/patches-0.0.14.mpp` ([Changelog](https://github.com/SysAdminDoc/HushThreads/releases/tag/v0.0.14))
+> ⚙️ » Patches: `Akash-Sriram/patches-1.15.0.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.15.0))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.0.11.mpp` ([Changelog](https://github.com/SysAdminDoc/HushGram/releases/tag/v0.0.11))
+ ⚙️ » Patches: `MorpheApp/patches-1.48.0-dev.8.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.48.0-dev.8))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.18.1-all.jar`
   
