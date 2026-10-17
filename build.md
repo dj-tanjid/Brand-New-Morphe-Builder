@@ -1,10 +1,11 @@
-📱 » **Gboard-Jason** (arm64-v8a): `18.0.3.954559732-release-arm64-v8a`    
-📱 » **Google-Photos-Akash** (arm64-v8a): `7.97.0.997578476`    
-📱 » **Proton-VPN-Rahaatul** (all): `5.20.57.0`    
+📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `583.0.0.39.55`    
+📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `583.0.0.39.55`    
+📱 » **Google-Photos-Akash** (arm64-v8a): `7.97.0.1000520730`    
+📱 » **Instagram-SysAdminDoc-APK** (arm64-v8a): `451.0.0.53.80`    
+📱 » **Instagram-SysAdminDoc-Root** (arm64-v8a): `451.0.0.53.80`    
 📱 » **Reddit-Morphe** (all): `2026.42.0`    
-📱 » **TeraBox-HXReborn** (arm64-v8a): `4.26.0`    
-📱 » **Twitter-Piko-NewX** (all): `12.34.0-prod.01`    
-📱 » **X-Piko-NewX** (all): `12.34.0-prod.01`    
+📱 » **Twitter-Piko-NewX** (all): `12.35.0-prod.01`    
+📱 » **X-Piko-NewX** (all): `12.35.0-prod.01`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.41.52`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.42.241`    
 
@@ -28,12 +29,11 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `jasonwu1994/patches-3.13.0.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v3.13.0))
- ⚙️ » Patches: `Akash-Sriram/patches-1.15.3.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.15.3))
- ⚙️ » Patches: `rahaaatul/patches-1.2.1.mpp` ([Changelog](https://github.com/rahaaatul/morphe-patches/releases/tag/v1.2.1))
- ⚙️ » Patches: `MorpheApp/patches-1.48.0-dev.9.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.48.0-dev.9))
- ⚙️ » Patches: `hxreborn/patches-1.53.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.53.0))
- ⚙️ » Patches: `crimera/patches-3.57.0.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.57.0))
+> ⚙️ » Patches: `SysAdminDoc/patches-0.14.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.14.0))
+ ⚙️ » Patches: `Akash-Sriram/patches-1.15.4.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.15.4))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.0.12.mpp` ([Changelog](https://github.com/SysAdminDoc/HushGram/releases/tag/v0.0.12))
+ ⚙️ » Patches: `MorpheApp/patches-1.48.0-dev.11.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.48.0-dev.11))
+ ⚙️ » Patches: `crimera/patches-3.57.1.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.57.1))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.18.1-all.jar`
   
