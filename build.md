@@ -1,6 +1,10 @@
+📱 » **Facebook-Messenger-SysAdminDoc** (arm64-v8a): `583.0.0.29.95`    
+📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `583.0.0.39.55`    
+📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `583.0.0.39.55`    
+📱 » **Instagram-SysAdminDoc-APK** (arm64-v8a): `451.0.0.53.80`    
+📱 » **Instagram-SysAdminDoc-Root** (arm64-v8a): `451.0.0.53.80`    
 📱 » **Reddit-Morphe** (all): `2026.42.0`    
 📱 » **TeraBox-HXReborn** (arm64-v8a): `4.26.5`    
-📱 » **Threads-SysAdminDoc** (arm64-v8a): `451.0.0.51.80`    
 📱 » **Twitter-Piko-NewX** (all): `12.35.0-prod.01`    
 📱 » **X-Piko-NewX** (all): `12.35.0-prod.01`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.41.52`    
@@ -26,9 +30,11 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `MorpheApp/patches-1.48.0-dev.12.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.48.0-dev.12))
+> ⚙️ » Patches: `SysAdminDoc/patches-0.25.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushMessenger/releases/tag/v0.25.0))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.15.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.15.0))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.0.13.mpp` ([Changelog](https://github.com/SysAdminDoc/HushGram/releases/tag/v0.0.13))
+ ⚙️ » Patches: `MorpheApp/patches-1.48.0-dev.13.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.48.0-dev.13))
  ⚙️ » Patches: `hxreborn/patches-1.55.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.55.0))
- ⚙️ » Patches: `SysAdminDoc/patches-0.0.15.mpp` ([Changelog](https://github.com/SysAdminDoc/HushThreads/releases/tag/v0.0.15))
  ⚙️ » Patches: `crimera/patches-3.59.0.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.59.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.18.1-all.jar`
