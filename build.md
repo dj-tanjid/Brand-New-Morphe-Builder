@@ -1,8 +1,6 @@
-📱 » **Discord-Venus** (arm64-v8a): `349.9 - Stable`    
-📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `583.0.0.39.55`    
-📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `583.0.0.39.55`    
-📱 » **Instagram-SysAdminDoc-APK** (arm64-v8a): `452.0.0.48.64`    
-📱 » **Instagram-SysAdminDoc-Root** (arm64-v8a): `452.0.0.48.64`    
+📱 » **Google-Maps-BearInMindCat-APK** (arm64-v8a): `26.36.04.973607363`    
+📱 » **Google-Maps-BearInMindCat-Root** (arm64-v8a): `26.36.04.973607363`    
+📱 » **Proton-VPN-HXReborn** (all): `5.20.39.0`    
 📱 » **Reddit-Morphe** (all): `2026.42.0`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.42.52`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.42.241`    
@@ -27,10 +25,9 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `VenusIsJaded/patches-1.17.0.mpp` ([Changelog](https://github.com/VenusIsJaded/Venus-Patches/releases/tag/v1.17.0))
- ⚙️ » Patches: `SysAdminDoc/patches-0.16.1.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.16.1))
- ⚙️ » Patches: `SysAdminDoc/patches-0.0.14.mpp` ([Changelog](https://github.com/SysAdminDoc/HushGram/releases/tag/v0.0.14))
- ⚙️ » Patches: `MorpheApp/patches-1.48.0-dev.18.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.48.0-dev.18))
+> ⚙️ » Patches: `bearinmindcat/patches-2.5.5.mpp` ([Changelog](https://github.com/bearinmindcat/morphe-patches/releases/tag/v2.5.5))
+ ⚙️ » Patches: `hxreborn/patches-1.58.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.58.0))
+ ⚙️ » Patches: `MorpheApp/patches-1.48.0.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.48.0))
   
-> ⚙️ » CLI: `MorpheApp/morphe-desktop-1.18.1-all.jar`
+> ⚙️ » CLI: `MorpheApp/morphe-desktop-1.19.0-all.jar`
   
