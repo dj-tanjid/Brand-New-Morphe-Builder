@@ -1,6 +1,6 @@
 {
-  "version": "v21.42.241 (Patch v1.48.0)",
-  "versionCode": 238,
-  "zipUrl": "https://github.com/dj-tanjid/Brand-New-Morphe-Builder/releases/download/238/youtube-morphe-module-v21.42.241-arm64-v8a.zip",
+  "version": "v21.42.241 (Patch v1.49.0-dev.1)",
+  "versionCode": 239,
+  "zipUrl": "https://github.com/dj-tanjid/Brand-New-Morphe-Builder/releases/download/239/youtube-morphe-module-v21.42.241-arm64-v8a.zip",
   "changelog": "https://raw.githubusercontent.com/dj-tanjid/Brand-New-Morphe-Builder/update/build.md"
 }
