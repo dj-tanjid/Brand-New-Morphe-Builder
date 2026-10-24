@@ -1,22 +1,17 @@
-📱 » **Facebook-Messenger-SysAdminDoc** (arm64-v8a): `584.0.0.49.98`    
+📱 » **Discord-Venus** (arm64-v8a): `350.8 - Stable`    
 📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `584.0.0.51.56`    
 📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `584.0.0.51.56`    
 📱 » **Gboard-Jason** (arm64-v8a): `18.5.3.993608717-release-arm64-v8a`    
-📱 » **Google-Maps-BearInMindCat-APK** (arm64-v8a): `26.36.04.973607363`    
-📱 » **Google-Maps-BearInMindCat-Root** (arm64-v8a): `26.36.04.973607363`    
 📱 » **Instagram-SysAdminDoc-APK** (arm64-v8a): `452.1.0.53.64`    
 📱 » **Instagram-SysAdminDoc-Root** (arm64-v8a): `452.1.0.53.64`    
 📱 » **Proton-VPN-HXReborn** (all): `5.20.39.0`    
 📱 » **Reddit-Morphe** (all): `2026.42.0`    
-📱 » **Threads-SysAdminDoc** (arm64-v8a): `452.0.0.50.64`    
-📱 » **Twitter-Piko** (all): `12.19.1-release.0`    
-📱 » **Twitter-Piko-NewX** (all): `12.36.1-prod.01`    
-📱 » **Waze-BearInMindCat-APK** (arm64-v8a): `5.25.5.0`    
-📱 » **Waze-BearInMindCat-Root** (arm64-v8a): `5.25.5.0`    
-📱 » **X-Piko** (all): `12.19.1-release.0`    
-📱 » **X-Piko-NewX** (all): `12.36.1-prod.01`    
+📱 » **Twitter-Piko-NewX** (all): `12.37.2-prod.01`    
+📱 » **Waze-BearInMindCat-APK** (arm64-v8a): `5.24.5.0`    
+📱 » **Waze-BearInMindCat-Root** (arm64-v8a): `5.24.5.0`    
+📱 » **X-Piko-NewX** (all): `12.37.2-prod.01`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.42.52`    
-📱 » **YouTube-Morphe** (arm64-v8a): `21.42.241`    
+📱 » **YouTube-Morphe** (arm64-v8a): `21.43.523`    
 
 <br>
   
@@ -38,16 +33,14 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `SysAdminDoc/patches-0.26.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushMessenger/releases/tag/v0.26.0))
- ⚙️ » Patches: `SysAdminDoc/patches-0.17.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.17.0))
- ⚙️ » Patches: `jasonwu1994/patches-4.0.0-dev.1.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.0.0-dev.1))
- ⚙️ » Patches: `bearinmindcat/patches-2.5.6.mpp` ([Changelog](https://github.com/bearinmindcat/morphe-patches/releases/tag/v2.5.6))
- ⚙️ » Patches: `SysAdminDoc/patches-0.0.15.mpp` ([Changelog](https://github.com/SysAdminDoc/HushGram/releases/tag/v0.0.15))
- ⚙️ » Patches: `hxreborn/patches-1.59.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.59.0))
- ⚙️ » Patches: `MorpheApp/patches-1.49.0-dev.1.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.49.0-dev.1))
- ⚙️ » Patches: `SysAdminDoc/patches-0.0.16.mpp` ([Changelog](https://github.com/SysAdminDoc/HushThreads/releases/tag/v0.0.16))
- ⚙️ » Patches: `crimera/patches-3.11.0-dev.1.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.11.0-dev.1))
- ⚙️ » Patches: `crimera/patches-3.61.0.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.61.0))
+> ⚙️ » Patches: `VenusIsJaded/patches-1.18.0.mpp` ([Changelog](https://github.com/VenusIsJaded/Venus-Patches/releases/tag/v1.18.0))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.18.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.18.0))
+ ⚙️ » Patches: `jasonwu1994/patches-4.0.0-dev.3.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.0.0-dev.3))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.0.16.mpp` ([Changelog](https://github.com/SysAdminDoc/HushGram/releases/tag/v0.0.16))
+ ⚙️ » Patches: `hxreborn/patches-1.60.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.60.0))
+ ⚙️ » Patches: `MorpheApp/patches-1.49.0-dev.5.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.49.0-dev.5))
+ ⚙️ » Patches: `crimera/patches-3.64.0.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.64.0))
+ ⚙️ » Patches: `bearinmindcat/patches-2.5.7.mpp` ([Changelog](https://github.com/bearinmindcat/morphe-patches/releases/tag/v2.5.7))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.19.0-all.jar`
   
