@@ -1,11 +1,12 @@
-📱 » **Gboard-Jason** (arm64-v8a): `18.5.3.993608717-release-arm64-v8a`    
+📱 » **Gboard-Jason** (arm64-v8a): `18.5.4.993608717-release-arm64-v8a`    
 📱 » **Google-Maps-BearInMindCat-APK** (arm64-v8a): `26.36.04.973607363`    
 📱 » **Google-Maps-BearInMindCat-Root** (arm64-v8a): `26.36.04.973607363`    
 📱 » **Google-Photos-Akash** (arm64-v8a): `7.98.0.1001971222`    
-📱 » **Instagram-Piko** (arm64-v8a): `452.1.0.53.64`    
 📱 » **Reddit-Morphe** (all): `2026.43.0`    
+📱 » **Twitter-Piko-NewX** (all): `12.37.2-prod.01`    
 📱 » **Waze-BearInMindCat-APK** (arm64-v8a): `5.24.5.0`    
 📱 » **Waze-BearInMindCat-Root** (arm64-v8a): `5.24.5.0`    
+📱 » **X-Piko-NewX** (all): `12.37.2-prod.01`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.42.52`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.43.523-SECONDARY`    
 
@@ -29,11 +30,11 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `jasonwu1994/patches-4.0.0-dev.4.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.0.0-dev.4))
- ⚙️ » Patches: `bearinmindcat/patches-2.6.0.mpp` ([Changelog](https://github.com/bearinmindcat/morphe-patches/releases/tag/v2.6.0))
- ⚙️ » Patches: `Akash-Sriram/patches-1.16.0.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.16.0))
- ⚙️ » Patches: `crimera/patches-3.11.0-dev.3.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.11.0-dev.3))
- ⚙️ » Patches: `MorpheApp/patches-1.49.0-dev.6.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.49.0-dev.6))
+> ⚙️ » Patches: `jasonwu1994/patches-4.0.0-dev.5.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.0.0-dev.5))
+ ⚙️ » Patches: `bearinmindcat/patches-2.6.3.mpp` ([Changelog](https://github.com/bearinmindcat/morphe-patches/releases/tag/v2.6.3))
+ ⚙️ » Patches: `Akash-Sriram/patches-1.16.1.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.16.1))
+ ⚙️ » Patches: `MorpheApp/patches-1.49.0-dev.7.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.49.0-dev.7))
+ ⚙️ » Patches: `crimera/patches-3.64.1.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.64.1))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.19.1-all.jar`
   
