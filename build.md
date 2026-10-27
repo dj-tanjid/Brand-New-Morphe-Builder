@@ -1,12 +1,15 @@
+📱 » **Discord-Venus** (arm64-v8a): `350.8 - Stable`    
+📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `584.0.0.51.56`    
+📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `584.0.0.51.56`    
 📱 » **Gboard-Jason** (arm64-v8a): `18.5.4.993608717-release-arm64-v8a`    
 📱 » **Google-Maps-BearInMindCat-APK** (arm64-v8a): `26.36.04.973607363`    
 📱 » **Google-Maps-BearInMindCat-Root** (arm64-v8a): `26.36.04.973607363`    
-📱 » **Google-Photos-Akash** (arm64-v8a): `7.98.0.1001971222`    
+📱 » **Pixel-Camera-Basic-Akshayykadam** (all): `11.1.040.982810059.19`    
+📱 » **Pixel-Camera-Pro-Akshayykadam** (all): `11.1.040.982810059.19`    
+📱 » **Proton-VPN-HXReborn** (all): `5.20.39.0`    
 📱 » **Reddit-Morphe** (all): `2026.43.0`    
-📱 » **Twitter-Piko-NewX** (all): `12.37.2-prod.01`    
 📱 » **Waze-BearInMindCat-APK** (arm64-v8a): `5.24.5.0`    
 📱 » **Waze-BearInMindCat-Root** (arm64-v8a): `5.24.5.0`    
-📱 » **X-Piko-NewX** (all): `12.37.2-prod.01`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.42.52`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.43.523-SECONDARY`    
 
@@ -30,11 +33,13 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `jasonwu1994/patches-4.0.0-dev.5.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.0.0-dev.5))
- ⚙️ » Patches: `bearinmindcat/patches-2.6.3.mpp` ([Changelog](https://github.com/bearinmindcat/morphe-patches/releases/tag/v2.6.3))
- ⚙️ » Patches: `Akash-Sriram/patches-1.16.1.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.16.1))
- ⚙️ » Patches: `MorpheApp/patches-1.49.0-dev.7.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.49.0-dev.7))
- ⚙️ » Patches: `crimera/patches-3.64.1.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.64.1))
+> ⚙️ » Patches: `VenusIsJaded/patches-1.19.0.mpp` ([Changelog](https://github.com/VenusIsJaded/Venus-Patches/releases/tag/v1.19.0))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.18.1.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.18.1))
+ ⚙️ » Patches: `jasonwu1994/patches-4.0.0.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.0.0))
+ ⚙️ » Patches: `bearinmindcat/patches-2.7.1.mpp` ([Changelog](https://github.com/bearinmindcat/morphe-patches/releases/tag/v2.7.1))
+ ⚙️ » Patches: `Akshayykadam/morphe-patches-pixelcamera-1.0.6.mpp` ([Changelog](https://github.com/Akshayykadam/Pixel-Camera/releases/tag/1.0.6))
+ ⚙️ » Patches: `hxreborn/patches-1.64.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.64.0))
+ ⚙️ » Patches: `MorpheApp/patches-1.49.0-dev.8.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.49.0-dev.8))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.19.1-all.jar`
   
