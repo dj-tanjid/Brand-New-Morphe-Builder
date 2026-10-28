@@ -1188,7 +1188,7 @@ def main():
                 if not detail_soup:
                     continue
                 detail_text = detail_soup.get_text(" ", strip=True).lower()
-                split_counts = re.findall(r"\\b(\\d+)\\s+splits?\\b", detail_text)
+                split_counts = re.findall(r"\b(\d+)\s+splits?\b", detail_text)
                 if split_counts and all(int(n) == 1 for n in split_counts):
                     log(f"Confirmed Instagram APKMirror variant with 1 split: {candidate_url}")
                     return candidate_url, candidate_is_bundle
