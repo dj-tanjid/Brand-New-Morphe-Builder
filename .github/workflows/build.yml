@@ -41,7 +41,7 @@ jobs:
           fi
 
       - name: Filter selected app
-        if: ${{ inputs.app_filter != 'all' }}
+        if: ${{ inputs.app_filter == 'twitter' || inputs.app_filter == 'instagram' }}
         env:
           APP_FILTER: ${{ inputs.app_filter }}
         shell: bash
