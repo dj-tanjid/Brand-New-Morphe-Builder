@@ -1142,7 +1142,7 @@ def main():
                             if row.select("div.table-cell") else None
                         )
                         href = link.get("href", "") if link else ""
-                        return 1 if re.search(r"-\\d+-android-apk-download(?:/|$)", href, re.I) else 0
+                        return 1 if re.search(r"-\d+-android-apk-download(?:/|$)", href, re.I) else 0
 
                     candidate_rows.sort(key=instagram_variant_rank)
 
