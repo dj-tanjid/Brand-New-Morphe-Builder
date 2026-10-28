@@ -67,13 +67,13 @@ jobs:
           result = []
 
           for line in lines:
-              match = re.match(r"^\\[([^\\]]+)\\]\\s*$", line.strip())
+              match = re.match(r"^\[([^\]]+)\]\s*$", line.strip())
               if match:
                   section = match.group(1)
                   if section == target:
                       found_target = True
-              if section is not None and re.match(r"^\\s*enabled\\s*=", line):
-                  line = re.sub(
+              if section is not None and re.match(r"^\s*enabled\s*=", line):
+                  line = re.sub(r"^(\s*enabled\s*=\s*)(true|false)(\s*(?:#.*)?\n?)$", lambda m: m.group(1) + ("true" if section == target else "false") + m.group(3), line)
                       r"^(\\s*enabled\\s*=\\s*)(true|false)(\\s*(?:#.*)?\\n?)$",
                       lambda m: m.group(1) + ("true" if section == target else "false") + m.group(3),
                       line,
