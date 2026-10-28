@@ -81,9 +81,9 @@ jobs:
           TAG=""
           for ATTEMPT in $(seq 1 100); do
             if [ "$ATTEMPT" -eq 1 ]; then
-              CANDIDATE="morphe-$DATE"
+              CANDIDATE="$DATE"
             else
-              CANDIDATE="morphe-$DATE-$((ATTEMPT - 1))"
+              CANDIDATE="$DATE-$((ATTEMPT - 1))"
             fi
             if gh release view "$CANDIDATE" >/dev/null 2>&1; then
               echo "Release $CANDIDATE already exists; trying next tag."
