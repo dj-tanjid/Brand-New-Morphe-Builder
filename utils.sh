@@ -6,7 +6,7 @@ TEMP_DIR="temp"
 BIN_DIR="bin"
 BUILD_DIR="build"
 # Prioritized source list: APKMirror -> Uptodown -> GitHub -> Direct override -> Archive
-DL_SRCS=("apkmirror" "uptodown" "github" "direct" "archive")
+DL_SRCS=("uptodown" "apkmirror" "github" "direct" "archive")
 
 if [ "${GITHUB_TOKEN-}" ]; then GH_HEADER="Authorization: token ${GITHUB_TOKEN}"; else GH_HEADER=; fi
 NEXT_VER_CODE=${NEXT_VER_CODE:-$(date +'%Y%m%d')}
@@ -639,8 +639,8 @@ patch_apk() {
 		p_flags+=("-p" "$pj")
 	done
 
-	local cmd="java -jar '$cli_jar' patch '$stock_input' -o '$patched_apk' "${p_flags[@]}" --keystore=ks.keystore \
-    --keystore-entry-password=123456789 --keystore-password=123456789 --signer=jhc --keystore-entry-alias=jhc -t '$patched_apk-tmp' $patcher_args"
+	local cmd="java -jar '$cli_jar' patch '$stock_input' -o '$patched_apk' "${p_flags[@]}" --keystore=Morphe.keystore \
+    --keystore-entry-password=Morphe --keystore-password= --signer=Morphe --keystore-entry-alias=Morphe -t '$patched_apk-tmp' $patcher_args"
 
 	local cli_name
 	cli_name=$(basename "$cli_jar")

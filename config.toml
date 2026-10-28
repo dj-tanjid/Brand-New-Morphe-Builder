@@ -7,7 +7,7 @@ remove-rv-integrations-checks = false # Automatically patch shared integration c
 # see https://github.com/dj-tanjid/Morphe-DeVanced-Builder/blob/teejay/CONFIG.md for more detailed explanations
 
 [YouTube-Morphe]
-enabled = true
+enabled = false
 app-name = "YouTube"
 patches-source = "github:MorpheApp/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -33,7 +33,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.google.and
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.youtube"
 
 [YT-Music-Morphe]
-enabled = true
+enabled = false
 app-name = "YT Music"
 patches-source = "github:MorpheApp/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -56,7 +56,7 @@ uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
 
 [Reddit-Morphe]
-enabled = true
+enabled = false
 app-name = "Reddit"
 patches-source = "github:MorpheApp/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -230,7 +230,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-SysAdminDoc-APK]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:SysAdminDoc/Hushfacebook"
@@ -263,7 +263,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-SysAdminDoc-Root]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:SysAdminDoc/Hushfacebook"
@@ -451,18 +451,21 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko-NewX]
-enabled = false
-app-name = "X"
+enabled = true
+app-name = "X Piko"
 patches-source = "github:crimera/piko-newx"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Piko-NewX"
 build-mode = "apk" # Options 'apk', 'module', or 'both'
 # version = "latest" # 'auto', 'experimental', 'latest' or a version number
 version = "auto"
+arch = "arm64-v8a" # ARM64 architecture
 include-stock = "split" # Options 'split', 'merged', or 'disable'
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patcher-args = '-O appName="X Piko"'
 included-patches = """\
     'NewX: Browse tweet object' \
+    'NewX: Clone' \
     """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter"
 uptodown-dlurl = "https://twitter.en.uptodown.com/android"
@@ -493,8 +496,8 @@ uptodown-dlurl = "https://instagram.en.uptodown.com/android"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram.android"
 
 [Instagram-SysAdminDoc-APK]
-enabled = false
-app-name = "Instagram"
+enabled = true
+app-name = "HushGram"
 patches-source = "github:SysAdminDoc/HushGram"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "SysAdminDoc"
@@ -505,6 +508,7 @@ version = "auto" # 'auto', 'experimental', 'latest' or a version number
 arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'universal'
 include-stock = "split" # Options 'split', 'merged', or 'disable'
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patcher-args = "-O appName=HushGram -O markIcon=true"
 included-patches = """\
     'Open developer options' \
     'Remove the empty space at the bottom' \
@@ -522,6 +526,7 @@ included-patches = """\
     'Show a post's exact time' \
     'See who a story mentions' \
     'View DM photos and videos anonymously' \
+    'Install next to Instagram' \
     """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram"
 uptodown-dlurl = "https://instagram.en.uptodown.com/android"
@@ -582,7 +587,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/cloudflare/1-1-1-1-faster-safer
 uptodown-dlurl = "https://1-1-1-1.en.uptodown.com/android"
 
 [Proton-VPN-HXReborn]
-enabled = true
+enabled = false
 app-name = "Proton VPN"
 patches-source = "github:hxreborn/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -688,7 +693,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/pyde-technologies-ltd/pokeraid-
 uptodown-dlurl = "https://pokeraid-worldwide-remote-ra.en.uptodown.com/android"
 
 [Gboard-Jason]
-enabled = true
+enabled = false
 app-name = "Gboard"
 patches-source = "github:jasonwu1994/Gboard-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -708,7 +713,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/gboard/"
 uptodown-dlurl = "https://gboard-go.en.uptodown.com/android"
 
 [Pixel-Camera-Pro-Akshayykadam]
-enabled = true
+enabled = false
 app-name = "Pixel Camera Pro"
 pkg-name = "com.google.android.GoogleCamera"
 patches-source = "github:Akshayykadam/Pixel-Camera"
@@ -724,7 +729,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/camera/"
 uptodown-dlurl = "https://google-camera.en.uptodown.com/android"
 
 [Pixel-Camera-Basic-Akshayykadam]
-enabled = true
+enabled = false
 app-name = "Pixel Camera Basic"
 pkg-name = "com.google.android.GoogleCamera"
 patches-source = "github:Akshayykadam/Pixel-Camera"
@@ -783,7 +788,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/deepl-se/deepl-translate/"
 uptodown-dlurl = "https://deepl.en.uptodown.com/android"
 
 [Google-Maps-BearInMindCat-APK]
-enabled = true
+enabled = false
 app-name = "Google Maps"
 patches-source = "github:bearinmindcat/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -805,7 +810,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/maps/"
 uptodown-dlurl = "https://google-maps.en.uptodown.com/android"
 
 [Google-Maps-BearInMindCat-Root]
-enabled = true
+enabled = false
 app-name = "Google Maps"
 patches-source = "github:bearinmindcat/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -828,7 +833,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/maps/"
 uptodown-dlurl = "https://google-maps.en.uptodown.com/android"
 
 [Waze-BearInMindCat-APK]
-enabled = true
+enabled = false
 app-name = "Waze"
 patches-source = "github:bearinmindcat/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -853,7 +858,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/waze/"
 uptodown-dlurl = "https://waze.en.uptodown.com/android"
 
 [Waze-BearInMindCat-Root]
-enabled = true
+enabled = false
 app-name = "Waze"
 patches-source = "github:bearinmindcat/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -881,7 +886,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/waze/"
 uptodown-dlurl = "https://waze.en.uptodown.com/android"
 
 [Discord-Venus]
-enabled = true
+enabled = false
 app-name = "Discord"
 pkg-name = "com.discord"
 patches-source = "github:VenusIsJaded/Venus-Patches"
