@@ -1129,6 +1129,25 @@ def main():
             for target_type in ["APK", "BUNDLE"]:
                 candidate_rows = list(reversed(rows))
 
+                # Prefer Instagram's single-split variant over the multi-split one.
+                if "instagram" in cat.lower():
+                    def instagram_variant_rank(row):
+                        row_text = row.get_text(" ", strip=True).lower()
+                        split_match = re.search(r"\b(\d+)\s+splits?\b", row_text)
+                        if split_match:
+                            split_rank = 0 if int(split_match.group(1)) == 1 else 2
+                        else:
+                            split_rank = 1
+                        link = row.find("a", href=re.compile(r"/download/")) or (
+                            row.select("div.table-cell")[0].find("a")
+                            if row.select("div.table-cell") else None
+                        )
+                        href = link.get("href", "") if link else ""
+                        numbered_variant = bool(re.search(r"-\d+-android-apk-download(?:/|$)", href, re.I))
+                        return (split_rank, 1 if numbered_variant else 0)
+
+                    candidate_rows.sort(key=instagram_variant_rank)
+
                 for row in candidate_rows:
                     cells = row.select("div.table-cell")
                     if len(cells) < 4: continue
@@ -1151,18 +1170,6 @@ def main():
                     if not href: continue
                     
                     row_text = row.get_text(" ", strip=True)
-
-                    # Enforce a 160 MB maximum for APKMirror candidates.
-                    # Skip rows with unknown size too, so an unverified large
-                    # package cannot be selected accidentally.
-                    size_match = re.search(r"(\d+(?:[.,]\d+)?)\s*(GB|MB|KB)\b", row_text, re.I)
-                    if not size_match:
-                        continue
-                    size_value = float(size_match.group(1).replace(",", "."))
-                    size_unit = size_match.group(2).upper()
-                    size_mb = size_value * (1024 if size_unit == "GB" else (1 / 1024 if size_unit == "KB" else 1))
-                    if size_mb > 160:
-                        continue
 
                     if check_func(row_text, href):
                         return urljoin("https://www.apkmirror.com", href), (target_type == "BUNDLE")
