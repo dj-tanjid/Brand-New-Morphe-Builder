@@ -6,6 +6,10 @@ on:
         type: boolean
         required: false
         default: true
+      app_filter:
+        type: string
+        required: false
+        default: all
 
   workflow_dispatch:
 
@@ -14,13 +18,13 @@ jobs:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6  # v6.0.1
         with:
-          distribution: "zulu"
+          distribution: "temurin"
           java-version: "21"
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           fetch-depth: 0
           submodules: true
@@ -36,21 +40,135 @@ jobs:
             fi
           fi
 
+      - name: Filter selected app
+        if: ${{ inputs.app_filter == 'twitter' || inputs.app_filter == 'instagram' }}
+        env:
+          APP_FILTER: ${{ inputs.app_filter }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "$APP_FILTER" in
+            twitter) TARGET="X-Piko-NewX" ;;
+            instagram) TARGET="Instagram-SysAdminDoc-APK" ;;
+            *) echo "::error::Unknown app_filter: $APP_FILTER"; exit 1 ;;
+          esac
+          export TARGET
+          rm -f config.json
+          python3 - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          path = Path("config.toml")
+          lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
+          target = os.environ["TARGET"]
+          section = None
+          found_target = False
+          result = []
+
+          for line in lines:
+              match = re.match(r"^\[([^\]]+)\]\s*$", line.strip())
+              if match:
+                  section = match.group(1)
+                  if section == target:
+                      found_target = True
+              if section is not None and re.match(r"^\s*enabled\s*=", line):
+                  line = re.sub(r"^(\s*enabled\s*=\s*)(true|false)(\s*(?:#.*)?\n?)$", lambda m: m.group(1) + ("true" if section == target else "false") + m.group(3), line)
+              result.append(line)
+
+          if not found_target:
+              raise SystemExit(f"Target config section not found: {target}")
+          path.write_text("".join(result), encoding="utf-8")
+          print(f"Enabled only [{target}] in config.toml")
+          PY
+
       - name: Get next version code
         id: next_ver_code
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
         run: |
-          TAG=$(gh release list -L 1 | awk -F '\t' '{print $3}')
-          if [ -z "$TAG" ]; then TAG=0; fi
-          echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
+          set -euo pipefail
+          MAX_CODE=0
+
+          if git fetch origin update 2>/dev/null; then
+            while IFS= read -r FILE; do
+              [ -n "$FILE" ] || continue
+              CODE=$(git show "refs/remotes/origin/update:$FILE" 2>/dev/null |
+                jq -r '.versionCode // empty' |
+                grep -E '^[0-9]+$' || true)
+              if [ -n "$CODE" ] && [ "$CODE" -gt "$MAX_CODE" ]; then
+                MAX_CODE="$CODE"
+              fi
+            done < <(
+              git ls-tree -r --name-only refs/remotes/origin/update |
+                grep -E '(^|/)[^/]*-update\.json$' || true
+            )
+          fi
+
+          if [ "$MAX_CODE" -eq 0 ]; then
+            LEGACY_MAX=$(gh release list --limit 1000 --json tagName \
+              -q '.[].tagName' |
+              grep -E '^[0-9]+$' | sort -n | tail -n 1 || true)
+            MAX_CODE="${LEGACY_MAX:-0}"
+          fi
+
+          echo "NEXT_VER_CODE=$((MAX_CODE + 1))" >> "$GITHUB_OUTPUT"
+          echo "Previous versionCode: $MAX_CODE"
+          echo "Next versionCode: $((MAX_CODE + 1))"
+      - name: Create release tag
+        id: release_tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          DATE=$(date -u +%F)
+          TAG=""
+          for ATTEMPT in $(seq 1 100); do
+            if [ "$ATTEMPT" -eq 1 ]; then
+              CANDIDATE="$DATE"
+            else
+              CANDIDATE="$DATE-$((ATTEMPT - 1))"
+            fi
+            if gh release view "$CANDIDATE" >/dev/null 2>&1; then
+              echo "Release $CANDIDATE already exists; trying next tag."
+              continue
+            fi
+            TAG="$CANDIDATE"
+            break
+          done
+          if [ -z "$TAG" ]; then
+            echo "::error::Could not allocate a unique release tag"
+            exit 1
+          fi
+          echo "TAG=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Release tag: $TAG"
+      - name: Start API Solver in background
+        run: docker run -d -p 8000:8000 ghcr.io/sarperavci/cloudflarebypassforscraping:latest
+
+      - name: Restore signing keystore
+        env:
+          MORPHE_KEYSTORE_BASE64: ${{ secrets.MORPHE_KEYSTORE_BASE64 }}
+        run: |
+          set -euo pipefail
+          test -n "$MORPHE_KEYSTORE_BASE64"
+          printf '%s' "$MORPHE_KEYSTORE_BASE64" | base64 --decode > Morphe.keystore
+          chmod 600 Morphe.keystore
 
       - name: Build modules/APKs
-        run: if [ -f "config.json" ]; then ./build.sh config.json; else ./build.sh config.toml; fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: $GITHUB_REPOSITORY
+          GITHUB_REPOSITORY: ${{ github.repository }}
           NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
+          PYTHONUNBUFFERED: 1
+          UPDATE_REPO_PAT: ${{ secrets.UPDATE_REPO_PAT }}
+        run: |
+          if [ -f "config.json" ]; then 
+            stdbuf -o0 bash ./build.sh config.json
+          else 
+            stdbuf -o0 bash ./build.sh config.toml
+          fi
 
       - name: Get output
         id: get_output
@@ -61,18 +179,44 @@ jobs:
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
           cp -f build.md build.tmp
       
+      - name: Generate release title
+        id: release_title
+        env:
+          NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import re
+          import tomllib
+          from pathlib import Path
+
+          config = tomllib.loads(Path("config.toml").read_text(encoding="utf-8"))
+          log = Path("build.md").read_text(encoding="utf-8")
+          pattern = re.compile(r"📱 » \*\*(.+?)\*\* \([^)]*\): `([^`]+)`")
+          apps = []
+          for table, version in pattern.findall(log):
+              app_name = config.get(table, {}).get("app-name", table).strip()
+              item = f"{app_name} {version}"
+              if item not in apps:
+                  apps.append(item)
+          title = " & ".join(apps) if apps else f"Morphe R{os.environ['NEXT_VER_CODE']}"
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"RELEASE_TITLE={title}\n")
+          print(f"Release title: {title}")
+          PY
       - name: Upload release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
+          TAG: ${{ steps.release_tag.outputs.TAG }}
           BODY: ${{ steps.get_output.outputs.BUILD_LOG }}
+          RELEASE_TITLE: ${{ steps.release_title.outputs.RELEASE_TITLE }}
         run: |
           ls -lh ./build/*
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release edit "$TAG" --title "Release" --notes "$BODY"
+            gh release edit "$TAG" --title "$RELEASE_TITLE" --notes "$BODY"
             gh release upload "$TAG" ./build/* --clobber
           else
-            gh release create "$TAG" ./build/* --title "Release" --notes "$BODY"
+            gh release create "$TAG" ./build/* --title "$RELEASE_TITLE" --notes "$BODY"
           fi
 
       - name: Update modules changelog and update json
@@ -97,7 +241,7 @@ jobs:
             UPDATE_JSON="${UPDATE_JSON##*/}"
             VER=$(echo "$ZIP_S" | grep version=)
             VER="${VER##*=}"
-            DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
+            DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.release_tag.outputs.TAG }}/${OUTPUT}"
             get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
           done
           cd ..
@@ -117,41 +261,3 @@ jobs:
           else
             echo "no changes!"
           fi
-
-      - name: Report to Telegram
-        env:
-          TG_TOKEN: ${{ secrets.TG_TOKEN }}
-        if: env.TG_TOKEN != null
-        run: |
-          cd build || { echo "build folder not found"; exit 1; }
-
-          TG_CHAT="@rvc_magisk"
-          NL=$'\n'
-          APKS=""
-          MODULES=""
-          for OUTPUT in *; do
-            DL_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
-            if [[ $OUTPUT = *.apk ]]; then
-              APKS+="${NL}📦[${OUTPUT}](${DL_URL})"
-            elif [[ $OUTPUT = *.zip ]]; then
-              MODULES+="${NL}📦[${OUTPUT}](${DL_URL})"
-            fi
-          done
-          if [ -n "$MODULES" ]; then
-            MODULES="Modules:${NL}${MODULES#"$NL"}"
-            if [ -n "$APKS" ]; then MODULES+=${NL}${NL}; fi
-          fi
-          if [ -n "$APKS" ]; then APKS="APKs:${NL}${APKS#"$NL"}"; fi
-
-          BODY="$(cat ../build.md)"
-          MSG="*New build!*
-
-          ${BODY}
-
-          *▼ Download Links:*
-          ${MODULES}${APKS}
-          "
-          echo "'$MSG'"
-          MSG=${MSG:0:9450}
-          POST="https://api.telegram.org/bot${TG_TOKEN}/sendMessage"
-          curl -X POST --data-urlencode "parse_mode=Markdown" --data-urlencode "disable_web_page_preview=true" --data-urlencode "text=${MSG}" --data-urlencode "chat_id=${TG_CHAT}" "$POST"

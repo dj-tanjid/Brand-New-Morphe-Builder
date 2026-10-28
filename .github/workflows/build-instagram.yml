@@ -1,0 +1,15 @@
+name: Build Instagram / HushGram
+
+on:
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+    with:
+      from_ci: false
+      app_filter: instagram
+    permissions: write-all
