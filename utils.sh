@@ -1127,59 +1127,85 @@ def main():
 
         def find_candidate_row(check_func, match_dpi=True):
             for target_type in ["APK", "BUNDLE"]:
-                candidate_rows = list(reversed(rows))
-
-                # Prefer Instagram's single-split variant over the multi-split one.
-                if "instagram" in cat.lower():
-                    def instagram_variant_rank(row):
-                        row_text = row.get_text(" ", strip=True).lower()
-                        split_match = re.search(r"\b(\d+)\s+splits?\b", row_text)
-                        if split_match:
-                            split_rank = 0 if int(split_match.group(1)) == 1 else 2
-                        else:
-                            split_rank = 1
-                        link = row.find("a", href=re.compile(r"/download/")) or (
-                            row.select("div.table-cell")[0].find("a")
-                            if row.select("div.table-cell") else None
-                        )
-                        href = link.get("href", "") if link else ""
-                        numbered_variant = bool(re.search(r"-\d+-android-apk-download(?:/|$)", href, re.I))
-                        return (split_rank, 1 if numbered_variant else 0)
-
-                    candidate_rows.sort(key=instagram_variant_rank)
-
-                for row in candidate_rows:
+                for row in reversed(rows):
                     cells = row.select("div.table-cell")
-                    if len(cells) < 4: continue
+                    if len(cells) < 4:
+                        continue
                     badge = cells[0].select_one(".apkm-badge")
                     b_type = badge.get_text(strip=True).upper() if badge else "APK"
-                    if b_type != target_type: continue
-                    
+                    if b_type != target_type:
+                        continue
+
                     arch_text = cells[1].get_text(strip=True)
                     dpi_text = cells[3].get_text(strip=True)
-                    
                     if not is_arch_compat(arch_text, arch):
                         continue
-                    
-                    dpi_ok = (not dpi) or (dpi in dpi_text) or (dpi_text in {"nodpi", "anydpi"}) or bool(re.search(r"\d+-\d+dpi", dpi_text))
+
+                    dpi_ok = (not dpi) or (dpi in dpi_text) or (dpi_text in {"nodpi", "anydpi"}) or bool(re.search(r"\\d+-\\d+dpi", dpi_text))
                     if match_dpi and not dpi_ok:
                         continue
-                    
+
                     link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
                     href = link.get("href", "") if link else ""
-                    if not href: continue
-                    
-                    row_text = row.get_text(" ", strip=True)
+                    if not href:
+                        continue
 
+                    row_text = row.get_text(" ", strip=True)
                     if check_func(row_text, href):
                         return urljoin("https://www.apkmirror.com", href), (target_type == "BUNDLE")
+            return None, False
+
+        def find_instagram_single_split():
+            # Do not guess from URL suffix or listing size. Open each matching
+            # APKMirror variant page and select only one whose own page explicitly
+            # reports exactly "1 split". If that cannot be confirmed, fail closed
+            # so the source loop can try Uptodown rather than build the wrong APK.
+            candidates = []
+            for row in rows:
+                cells = row.select("div.table-cell")
+                if len(cells) < 4:
+                    continue
+                badge = cells[0].select_one(".apkm-badge")
+                b_type = badge.get_text(strip=True).upper() if badge else "APK"
+                if b_type not in ("APK", "BUNDLE"):
+                    continue
+                if not is_arch_compat(cells[1].get_text(strip=True), arch):
+                    continue
+
+                row_text = row.get_text(" ", strip=True)
+                if version_code and version_code not in row_text:
+                    continue
+                if not version_code and clean_ver.lower() not in row_text.lower() and search_term.lower() not in row_text.lower():
+                    continue
+
+                link = row.find("a", href=re.compile(r"/download/")) or cells[0].find("a")
+                href = link.get("href", "") if link else ""
+                if href:
+                    candidates.append((urljoin("https://www.apkmirror.com", href), b_type == "BUNDLE", row_text))
+
+            for candidate_url, candidate_is_bundle, row_text in candidates:
+                detail_soup, _ = scraper.get_soup(candidate_url, referer=release_url)
+                if not detail_soup:
+                    continue
+                detail_text = detail_soup.get_text(" ", strip=True).lower()
+                split_counts = re.findall(r"\\b(\\d+)\\s+splits?\\b", detail_text)
+                if split_counts and all(int(n) == 1 for n in split_counts):
+                    log(f"Confirmed Instagram APKMirror variant with 1 split: {candidate_url}")
+                    return candidate_url, candidate_is_bundle
+                if split_counts:
+                    log(f"Skipping Instagram APKMirror variant; split count reported: {', '.join(split_counts)}")
+            log("Could not confirm an Instagram APKMirror variant with exactly 1 split; refusing unverified variants.")
             return None, False
 
         dl_sub_url = None
         is_bundle = False
 
+        if "instagram" in cat.lower():
+            dl_sub_url, is_bundle = find_instagram_single_split()
+
+
         # Priority 1: Match version_code AND requested suffix (bypassing restrictive DPI range filters)
-        if version_code and req_suffix:
+        if not dl_sub_url and not ("instagram" in cat.lower()) and version_code and req_suffix:
             dl_sub_url, is_bundle = find_candidate_row(
                 lambda t, h: version_code in t and (
                     req_suffix in f"{t} {h}".lower() and
@@ -1189,14 +1215,14 @@ def main():
             )
 
         # Priority 2: Match version_code exactly (bypassing restrictive DPI range filters)
-        if not dl_sub_url and version_code:
+        if not dl_sub_url and not ("instagram" in cat.lower()) and version_code:
             dl_sub_url, is_bundle = find_candidate_row(
                 lambda t, h: version_code in t,
                 match_dpi=False
             )
 
         # Priority 3: Match clean_ver or requested suffix (e.g. "release", excluding "lite" / "beta")
-        if not dl_sub_url and req_suffix:
+        if not dl_sub_url and not ("instagram" in cat.lower()) and req_suffix:
             dl_sub_url, is_bundle = find_candidate_row(
                 lambda t, h: clean_ver.lower() in t.lower() or (
                     req_suffix in f"{t} {h}".lower() and 
@@ -1206,14 +1232,14 @@ def main():
             )
 
         # Priority 4: Match search_term avoiding beta/alpha/lite
-        if not dl_sub_url:
+        if not dl_sub_url and not ("instagram" in cat.lower()):
             dl_sub_url, is_bundle = find_candidate_row(
                 lambda t, h: search_term.lower() in t.lower() and not is_beta_or_alpha(f"{t} {h}"),
                 match_dpi=True
             )
 
         # Priority 5: Match search_term
-        if not dl_sub_url:
+        if not dl_sub_url and not ("instagram" in cat.lower()):
             dl_sub_url, is_bundle = find_candidate_row(
                 lambda t, h: search_term.lower() in t.lower() and (
                     not req_suffix or is_beta_or_alpha(req_suffix) or not is_beta_or_alpha(f"{t} {h}")
@@ -1222,7 +1248,7 @@ def main():
             )
 
         # Priority 6: Fallback to any matching arch
-        if not dl_sub_url:
+        if not dl_sub_url and not ("instagram" in cat.lower()):
             dl_sub_url, is_bundle = find_candidate_row(
                 lambda t, h: not req_suffix or is_beta_or_alpha(req_suffix) or not is_beta_or_alpha(f"{t} {h}"),
                 match_dpi=False
