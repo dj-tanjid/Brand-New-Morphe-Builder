@@ -1188,10 +1188,14 @@ def main():
                 if not detail_soup:
                     continue
                 detail_text = detail_soup.get_text(" ", strip=True).lower()
-                split_counts = re.findall(r"\b(\d+)\s+splits?\b", detail_text)
-                if split_counts and all(int(n) == 1 for n in split_counts):
-                    log(f"Confirmed Instagram APKMirror variant with 1 split: {candidate_url}")
+                # APKMirror labels the desired package as "1 split bundle".
+                # Treat that exact phrase as authoritative, and do not confuse
+                # it with a variant that reports 11 splits.
+                if re.search(r"\b1\s+split\s+bundle\b", detail_text):
+                    log(f"Confirmed Instagram APKMirror variant with 1 split bundle: {candidate_url}")
                     return candidate_url, candidate_is_bundle
+
+                split_counts = re.findall(r"\b(\d+)\s+splits?\b", detail_text)
                 if split_counts:
                     log(f"Skipping Instagram APKMirror variant; split count reported: {', '.join(split_counts)}")
             log("Could not confirm an Instagram APKMirror variant with exactly 1 split; refusing unverified variants.")
