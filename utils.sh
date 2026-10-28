@@ -639,8 +639,8 @@ patch_apk() {
 		p_flags+=("-p" "$pj")
 	done
 
-	local cmd="java -jar '$cli_jar' patch '$stock_input' -o '$patched_apk' "${p_flags[@]}" --keystore=ks.keystore \
-    --keystore-entry-password=123456789 --keystore-password=123456789 --signer=jhc --keystore-entry-alias=jhc -t '$patched_apk-tmp' $patcher_args"
+	local cmd="java -jar '$cli_jar' patch '$stock_input' -o '$patched_apk' "${p_flags[@]}" --keystore=Morphe.keystore \
+    --keystore-entry-password=Morphe --keystore-password= --signer=Morphe --keystore-entry-alias=Morphe -t '$patched_apk-tmp' $patcher_args"
 
 	local cli_name
 	cli_name=$(basename "$cli_jar")
