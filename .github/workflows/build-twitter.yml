@@ -1,0 +1,14 @@
+name: Build Twitter / X Piko-NewX
+
+on:
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      from_ci: false
+      app_filter: twitter
+    permissions: write-all
