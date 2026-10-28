@@ -74,10 +74,6 @@ jobs:
                       found_target = True
               if section is not None and re.match(r"^\s*enabled\s*=", line):
                   line = re.sub(r"^(\s*enabled\s*=\s*)(true|false)(\s*(?:#.*)?\n?)$", lambda m: m.group(1) + ("true" if section == target else "false") + m.group(3), line)
-                      r"^(\\s*enabled\\s*=\\s*)(true|false)(\\s*(?:#.*)?\\n?)$",
-                      lambda m: m.group(1) + ("true" if section == target else "false") + m.group(3),
-                      line,
-                  )
               result.append(line)
 
           if not found_target:
