@@ -50,384 +50,26 @@ jobs:
               [ -n "$FILE" ] || continue
               CODE=$(git show "refs/remotes/origin/update:$FILE" 2>/dev/null |
                 jq -r '.versionCode // empty' |
-                grep -E '^[0-9]+
-      - name: Start API Solver in background
-        run: docker run -d -p 8000:8000 ghcr.io/sarperavci/cloudflarebypassforscraping:latest
-
-      - name: Restore signing keystore
-        env:
-          MORPHE_KEYSTORE_BASE64: ${{ secrets.MORPHE_KEYSTORE_BASE64 }}
-        run: |
-          set -euo pipefail
-          test -n "$MORPHE_KEYSTORE_BASE64"
-          printf '%s' "$MORPHE_KEYSTORE_BASE64" | base64 --decode > Morphe.keystore
-          chmod 600 Morphe.keystore
-
-      - name: Build modules/APKs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
-          PYTHONUNBUFFERED: 1
-          UPDATE_REPO_PAT: ${{ secrets.UPDATE_REPO_PAT }}
-        run: |
-          if [ -f "config.json" ]; then 
-            stdbuf -o0 bash ./build.sh config.json
-          else 
-            stdbuf -o0 bash ./build.sh config.toml
-          fi
-
-      - name: Get output
-        id: get_output
-        run: |
-          DELIM="$(openssl rand -hex 8)"
-          echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
-          cat build.md >> "$GITHUB_OUTPUT"
-          echo "${DELIM}" >> "$GITHUB_OUTPUT"
-          cp -f build.md build.tmp
-      
-      - name: Generate release title
-        id: release_title
-        env:
-          NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
-        run: |
-          python3 - <<'PY'
-          import os
-          import re
-          import tomllib
-          from pathlib import Path
-
-          config = tomllib.loads(Path("config.toml").read_text(encoding="utf-8"))
-          log = Path("build.md").read_text(encoding="utf-8")
-          pattern = re.compile(r"📱 » \*\*(.+?)\*\* \([^)]*\): `([^`]+)`")
-          apps = []
-          for table, version in pattern.findall(log):
-              app_name = config.get(table, {}).get("app-name", table).strip()
-              item = f"{app_name} {version}"
-              if item not in apps:
-                  apps.append(item)
-
-          title = " & ".join(apps) if apps else f"Morphe R{os.environ['NEXT_VER_CODE']}"
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"RELEASE_TITLE={title}\n")
-          print(f"Release title: {title}")
-          PY
-      - name: Upload release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ steps.release_tag.outputs.TAG }}
-          BODY: ${{ steps.get_output.outputs.BUILD_LOG }}
-          RELEASE_TITLE: ${{ steps.release_title.outputs.RELEASE_TITLE }}
-        run: |
-          ls -lh ./build/*
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release edit "$TAG" --title "$RELEASE_TITLE" --notes "$BODY"
-            gh release upload "$TAG" ./build/* --clobber
-          else
-            gh release create "$TAG" ./build/* --title "$RELEASE_TITLE" --notes "$BODY"
-          fi
-
-      - name: Update modules changelog and update json
-        id: update_config
-        run: |
-          git checkout -f update || git switch --discard-changes --orphan update
-          cp -f build.tmp build.md
-          get_update_json() {
-            echo "{
-            \"version\": \"$1\",
-            \"versionCode\": ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }},
-            \"zipUrl\": \"$2\",
-            \"changelog\": \"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/update/build.md\"
-          }"
-          }
-
-          cd build || { echo "build folder not found"; exit 1; }
-          for OUTPUT in *module*.zip; do
-            [ "$OUTPUT" = "*module*.zip" ] && continue
-            ZIP_S=$(unzip -p "$OUTPUT" module.prop)
-            if ! UPDATE_JSON=$(echo "$ZIP_S" | grep updateJson); then continue; fi
-            UPDATE_JSON="${UPDATE_JSON##*/}"
-            VER=$(echo "$ZIP_S" | grep version=)
-            VER="${VER##*=}"
-            DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.release_tag.outputs.TAG }}/${OUTPUT}"
-            get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
-          done
-          cd ..
-
-          find . -name "*-update.json" | grep . || : >dummy-update.json
-
-      - name: Commit module json changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-      
-          git add build.md *-update.json
-      
-          if ! git diff --cached --quiet; then
-            git commit -m "Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}"
-            git push origin HEAD:update
-          else
-            echo "no changes!"
-          fi
- || true)
+                grep -E '^[0-9]+$' || true)
               if [ -n "$CODE" ] && [ "$CODE" -gt "$MAX_CODE" ]; then
                 MAX_CODE="$CODE"
               fi
             done < <(
               git ls-tree -r --name-only refs/remotes/origin/update |
-                grep -E '(^|/)[^/]*-update\.json
-      - name: Start API Solver in background
-        run: docker run -d -p 8000:8000 ghcr.io/sarperavci/cloudflarebypassforscraping:latest
-
-      - name: Restore signing keystore
-        env:
-          MORPHE_KEYSTORE_BASE64: ${{ secrets.MORPHE_KEYSTORE_BASE64 }}
-        run: |
-          set -euo pipefail
-          test -n "$MORPHE_KEYSTORE_BASE64"
-          printf '%s' "$MORPHE_KEYSTORE_BASE64" | base64 --decode > Morphe.keystore
-          chmod 600 Morphe.keystore
-
-      - name: Build modules/APKs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
-          PYTHONUNBUFFERED: 1
-          UPDATE_REPO_PAT: ${{ secrets.UPDATE_REPO_PAT }}
-        run: |
-          if [ -f "config.json" ]; then 
-            stdbuf -o0 bash ./build.sh config.json
-          else 
-            stdbuf -o0 bash ./build.sh config.toml
-          fi
-
-      - name: Get output
-        id: get_output
-        run: |
-          DELIM="$(openssl rand -hex 8)"
-          echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
-          cat build.md >> "$GITHUB_OUTPUT"
-          echo "${DELIM}" >> "$GITHUB_OUTPUT"
-          cp -f build.md build.tmp
-      
-      - name: Generate release title
-        id: release_title
-        env:
-          NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
-        run: |
-          python3 - <<'PY'
-          import os
-          import re
-          import tomllib
-          from pathlib import Path
-
-          config = tomllib.loads(Path("config.toml").read_text(encoding="utf-8"))
-          log = Path("build.md").read_text(encoding="utf-8")
-          pattern = re.compile(r"📱 » \*\*(.+?)\*\* \([^)]*\): `([^`]+)`")
-          apps = []
-          for table, version in pattern.findall(log):
-              app_name = config.get(table, {}).get("app-name", table).strip()
-              item = f"{app_name} {version}"
-              if item not in apps:
-                  apps.append(item)
-
-          title = " & ".join(apps) if apps else f"Morphe R{os.environ['NEXT_VER_CODE']}"
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"RELEASE_TITLE={title}\n")
-          print(f"Release title: {title}")
-          PY
-      - name: Upload release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ steps.release_tag.outputs.TAG }}
-          BODY: ${{ steps.get_output.outputs.BUILD_LOG }}
-          RELEASE_TITLE: ${{ steps.release_title.outputs.RELEASE_TITLE }}
-        run: |
-          ls -lh ./build/*
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release edit "$TAG" --title "$RELEASE_TITLE" --notes "$BODY"
-            gh release upload "$TAG" ./build/* --clobber
-          else
-            gh release create "$TAG" ./build/* --title "$RELEASE_TITLE" --notes "$BODY"
-          fi
-
-      - name: Update modules changelog and update json
-        id: update_config
-        run: |
-          git checkout -f update || git switch --discard-changes --orphan update
-          cp -f build.tmp build.md
-          get_update_json() {
-            echo "{
-            \"version\": \"$1\",
-            \"versionCode\": ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }},
-            \"zipUrl\": \"$2\",
-            \"changelog\": \"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/update/build.md\"
-          }"
-          }
-
-          cd build || { echo "build folder not found"; exit 1; }
-          for OUTPUT in *module*.zip; do
-            [ "$OUTPUT" = "*module*.zip" ] && continue
-            ZIP_S=$(unzip -p "$OUTPUT" module.prop)
-            if ! UPDATE_JSON=$(echo "$ZIP_S" | grep updateJson); then continue; fi
-            UPDATE_JSON="${UPDATE_JSON##*/}"
-            VER=$(echo "$ZIP_S" | grep version=)
-            VER="${VER##*=}"
-            DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.release_tag.outputs.TAG }}/${OUTPUT}"
-            get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
-          done
-          cd ..
-
-          find . -name "*-update.json" | grep . || : >dummy-update.json
-
-      - name: Commit module json changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-      
-          git add build.md *-update.json
-      
-          if ! git diff --cached --quiet; then
-            git commit -m "Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}"
-            git push origin HEAD:update
-          else
-            echo "no changes!"
-          fi
- || true
+                grep -E '(^|/)[^/]*-update\.json$' || true
             )
           fi
 
           if [ "$MAX_CODE" -eq 0 ]; then
             LEGACY_MAX=$(gh release list --limit 1000 --json tagName \
               -q '.[].tagName' |
-              grep -E '^[0-9]+
-      - name: Start API Solver in background
-        run: docker run -d -p 8000:8000 ghcr.io/sarperavci/cloudflarebypassforscraping:latest
-
-      - name: Restore signing keystore
-        env:
-          MORPHE_KEYSTORE_BASE64: ${{ secrets.MORPHE_KEYSTORE_BASE64 }}
-        run: |
-          set -euo pipefail
-          test -n "$MORPHE_KEYSTORE_BASE64"
-          printf '%s' "$MORPHE_KEYSTORE_BASE64" | base64 --decode > Morphe.keystore
-          chmod 600 Morphe.keystore
-
-      - name: Build modules/APKs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
-          PYTHONUNBUFFERED: 1
-          UPDATE_REPO_PAT: ${{ secrets.UPDATE_REPO_PAT }}
-        run: |
-          if [ -f "config.json" ]; then 
-            stdbuf -o0 bash ./build.sh config.json
-          else 
-            stdbuf -o0 bash ./build.sh config.toml
-          fi
-
-      - name: Get output
-        id: get_output
-        run: |
-          DELIM="$(openssl rand -hex 8)"
-          echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
-          cat build.md >> "$GITHUB_OUTPUT"
-          echo "${DELIM}" >> "$GITHUB_OUTPUT"
-          cp -f build.md build.tmp
-      
-      - name: Generate release title
-        id: release_title
-        env:
-          NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
-        run: |
-          python3 - <<'PY'
-          import os
-          import re
-          import tomllib
-          from pathlib import Path
-
-          config = tomllib.loads(Path("config.toml").read_text(encoding="utf-8"))
-          log = Path("build.md").read_text(encoding="utf-8")
-          pattern = re.compile(r"📱 » \*\*(.+?)\*\* \([^)]*\): `([^`]+)`")
-          apps = []
-          for table, version in pattern.findall(log):
-              app_name = config.get(table, {}).get("app-name", table).strip()
-              item = f"{app_name} {version}"
-              if item not in apps:
-                  apps.append(item)
-
-          title = " & ".join(apps) if apps else f"Morphe R{os.environ['NEXT_VER_CODE']}"
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"RELEASE_TITLE={title}\n")
-          print(f"Release title: {title}")
-          PY
-      - name: Upload release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ steps.release_tag.outputs.TAG }}
-          BODY: ${{ steps.get_output.outputs.BUILD_LOG }}
-          RELEASE_TITLE: ${{ steps.release_title.outputs.RELEASE_TITLE }}
-        run: |
-          ls -lh ./build/*
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release edit "$TAG" --title "$RELEASE_TITLE" --notes "$BODY"
-            gh release upload "$TAG" ./build/* --clobber
-          else
-            gh release create "$TAG" ./build/* --title "$RELEASE_TITLE" --notes "$BODY"
-          fi
-
-      - name: Update modules changelog and update json
-        id: update_config
-        run: |
-          git checkout -f update || git switch --discard-changes --orphan update
-          cp -f build.tmp build.md
-          get_update_json() {
-            echo "{
-            \"version\": \"$1\",
-            \"versionCode\": ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }},
-            \"zipUrl\": \"$2\",
-            \"changelog\": \"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/update/build.md\"
-          }"
-          }
-
-          cd build || { echo "build folder not found"; exit 1; }
-          for OUTPUT in *module*.zip; do
-            [ "$OUTPUT" = "*module*.zip" ] && continue
-            ZIP_S=$(unzip -p "$OUTPUT" module.prop)
-            if ! UPDATE_JSON=$(echo "$ZIP_S" | grep updateJson); then continue; fi
-            UPDATE_JSON="${UPDATE_JSON##*/}"
-            VER=$(echo "$ZIP_S" | grep version=)
-            VER="${VER##*=}"
-            DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.release_tag.outputs.TAG }}/${OUTPUT}"
-            get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
-          done
-          cd ..
-
-          find . -name "*-update.json" | grep . || : >dummy-update.json
-
-      - name: Commit module json changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-      
-          git add build.md *-update.json
-      
-          if ! git diff --cached --quiet; then
-            git commit -m "Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}"
-            git push origin HEAD:update
-          else
-            echo "no changes!"
-          fi
- | sort -n | tail -n 1 || true)
+              grep -E '^[0-9]+$' | sort -n | tail -n 1 || true)
             MAX_CODE="${LEGACY_MAX:-0}"
           fi
 
           echo "NEXT_VER_CODE=$((MAX_CODE + 1))" >> "$GITHUB_OUTPUT"
           echo "Previous versionCode: $MAX_CODE"
           echo "Next versionCode: $((MAX_CODE + 1))"
-
       - name: Create release tag
         id: release_tag
         env:
@@ -443,24 +85,19 @@ jobs:
             else
               CANDIDATE="morphe-$DATE-$((ATTEMPT - 1))"
             fi
-
             if gh release view "$CANDIDATE" >/dev/null 2>&1; then
               echo "Release $CANDIDATE already exists; trying next tag."
               continue
             fi
-
             TAG="$CANDIDATE"
             break
           done
-
           if [ -z "$TAG" ]; then
             echo "::error::Could not allocate a unique release tag"
             exit 1
           fi
-
           echo "TAG=$TAG" >> "$GITHUB_OUTPUT"
           echo "Release tag: $TAG"
-
       - name: Start API Solver in background
         run: docker run -d -p 8000:8000 ghcr.io/sarperavci/cloudflarebypassforscraping:latest
 
@@ -516,7 +153,6 @@ jobs:
               item = f"{app_name} {version}"
               if item not in apps:
                   apps.append(item)
-
           title = " & ".join(apps) if apps else f"Morphe R{os.environ['NEXT_VER_CODE']}"
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
               output.write(f"RELEASE_TITLE={title}\n")
