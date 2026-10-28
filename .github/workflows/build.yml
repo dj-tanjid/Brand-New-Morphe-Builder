@@ -6,6 +6,10 @@ on:
         type: boolean
         required: false
         default: true
+      app_filter:
+        type: string
+        required: false
+        default: all
 
   workflow_dispatch:
 
@@ -35,6 +39,52 @@ jobs:
               echo "$UPDATE_CFG" > config.json
             fi
           fi
+
+      - name: Filter selected app
+        if: ${{ inputs.app_filter != 'all' }}
+        env:
+          APP_FILTER: ${{ inputs.app_filter }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "$APP_FILTER" in
+            twitter) TARGET="X-Piko-NewX" ;;
+            instagram) TARGET="Instagram-SysAdminDoc-APK" ;;
+            *) echo "::error::Unknown app_filter: $APP_FILTER"; exit 1 ;;
+          esac
+          export TARGET
+          rm -f config.json
+          python3 - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          path = Path("config.toml")
+          lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
+          target = os.environ["TARGET"]
+          section = None
+          found_target = False
+          result = []
+
+          for line in lines:
+              match = re.match(r"^\\[([^\\]]+)\\]\\s*$", line.strip())
+              if match:
+                  section = match.group(1)
+                  if section == target:
+                      found_target = True
+              if section is not None and re.match(r"^\\s*enabled\\s*=", line):
+                  line = re.sub(
+                      r"^(\\s*enabled\\s*=\\s*)(true|false)(\\s*(?:#.*)?\\n?)$",
+                      lambda m: m.group(1) + ("true" if section == target else "false") + m.group(3),
+                      line,
+                  )
+              result.append(line)
+
+          if not found_target:
+              raise SystemExit(f"Target config section not found: {target}")
+          path.write_text("".join(result), encoding="utf-8")
+          print(f"Enabled only [{target}] in config.toml")
+          PY
 
       - name: Get next version code
         id: next_ver_code
