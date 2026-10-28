@@ -452,7 +452,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 
 [X-Piko-NewX]
 enabled = true
-app-name = "X"
+app-name = "X Piko"
 patches-source = "github:crimera/piko-newx"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "Piko-NewX"
@@ -462,8 +462,10 @@ version = "auto"
 arch = "arm64-v8a" # ARM64 architecture
 include-stock = "split" # Options 'split', 'merged', or 'disable'
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patcher-args = '-O appName="X Piko"'
 included-patches = """\
     'NewX: Browse tweet object' \
+    'NewX: Clone' \
     """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter"
 uptodown-dlurl = "https://twitter.en.uptodown.com/android"
