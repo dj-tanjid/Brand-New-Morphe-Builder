@@ -80,18 +80,45 @@ jobs:
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
           cp -f build.md build.tmp
       
+      - name: Generate release title
+        id: release_title
+        env:
+          NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import re
+          import tomllib
+          from pathlib import Path
+
+          config = tomllib.loads(Path("config.toml").read_text(encoding="utf-8"))
+          log = Path("build.md").read_text(encoding="utf-8")
+          pattern = re.compile(r"📱 » \*\*(.+?)\*\* \([^)]*\): `([^`]+)`")
+          apps = []
+          for table, version in pattern.findall(log):
+              app_name = config.get(table, {}).get("app-name", table).strip()
+              item = f"{app_name} {version}"
+              if item not in apps:
+                  apps.append(item)
+
+          title = " & ".join(apps) if apps else f"Morphe R{os.environ['NEXT_VER_CODE']}"
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"RELEASE_TITLE={title}\n")
+          print(f"Release title: {title}")
+          PY
       - name: Upload release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
           BODY: ${{ steps.get_output.outputs.BUILD_LOG }}
+          RELEASE_TITLE: ${{ steps.release_title.outputs.RELEASE_TITLE }}
         run: |
           ls -lh ./build/*
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release edit "$TAG" --title "Morphe x TanJid R${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}" --notes "$BODY"
+            gh release edit "$TAG" --title "$RELEASE_TITLE" --notes "$BODY"
             gh release upload "$TAG" ./build/* --clobber
           else
-            gh release create "$TAG" ./build/* --title "Morphe x TanJid R${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}" --notes "$BODY"
+            gh release create "$TAG" ./build/* --title "$RELEASE_TITLE" --notes "$BODY"
           fi
 
       - name: Update modules changelog and update json
