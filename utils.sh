@@ -1127,7 +1127,26 @@ def main():
 
         def find_candidate_row(check_func, match_dpi=True):
             for target_type in ["APK", "BUNDLE"]:
-                for row in reversed(rows):
+                candidate_rows = list(reversed(rows))
+
+                # Instagram sometimes has multiple APKMirror APK entries for the
+                # same version: a numbered variant (for example, "-11-") can
+                # resolve to a large multi-split package, while the unnumbered
+                # variant can be a single APK. Prefer the unnumbered download
+                # slug for Instagram, without bypassing the normal version,
+                # architecture, DPI, or APK/BUNDLE checks.
+                if "instagram" in cat.lower():
+                    def instagram_variant_rank(row):
+                        link = row.find("a", href=re.compile(r"/download/")) or (
+                            row.select("div.table-cell")[0].find("a")
+                            if row.select("div.table-cell") else None
+                        )
+                        href = link.get("href", "") if link else ""
+                        return 1 if re.search(r"-\\d+-android-apk-download(?:/|$)", href, re.I) else 0
+
+                    candidate_rows.sort(key=instagram_variant_rank)
+
+                for row in candidate_rows:
                     cells = row.select("div.table-cell")
                     if len(cells) < 4: continue
                     badge = cells[0].select_one(".apkm-badge")
