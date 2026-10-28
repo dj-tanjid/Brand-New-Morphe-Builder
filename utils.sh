@@ -6,7 +6,7 @@ TEMP_DIR="temp"
 BIN_DIR="bin"
 BUILD_DIR="build"
 # Prioritized source list: Uptodown -> APKMirror -> GitHub -> Direct override -> Archive
-DL_SRCS=("uptodown" "apkmirror" "github" "direct" "archive")
+DL_SRCS=("apkmirror" "uptodown" "github" "direct" "archive")
 
 if [ "${GITHUB_TOKEN-}" ]; then GH_HEADER="Authorization: token ${GITHUB_TOKEN}"; else GH_HEADER=; fi
 NEXT_VER_CODE=${NEXT_VER_CODE:-$(date +'%Y%m%d')}
@@ -1129,23 +1129,6 @@ def main():
             for target_type in ["APK", "BUNDLE"]:
                 candidate_rows = list(reversed(rows))
 
-                # Instagram sometimes has multiple APKMirror APK entries for the
-                # same version: a numbered variant (for example, "-11-") can
-                # resolve to a large multi-split package, while the unnumbered
-                # variant can be a single APK. Prefer the unnumbered download
-                # slug for Instagram, without bypassing the normal version,
-                # architecture, DPI, or APK/BUNDLE checks.
-                if "instagram" in cat.lower():
-                    def instagram_variant_rank(row):
-                        link = row.find("a", href=re.compile(r"/download/")) or (
-                            row.select("div.table-cell")[0].find("a")
-                            if row.select("div.table-cell") else None
-                        )
-                        href = link.get("href", "") if link else ""
-                        return 1 if re.search(r"-\d+-android-apk-download(?:/|$)", href, re.I) else 0
-
-                    candidate_rows.sort(key=instagram_variant_rank)
-
                 for row in candidate_rows:
                     cells = row.select("div.table-cell")
                     if len(cells) < 4: continue
@@ -1167,7 +1150,20 @@ def main():
                     href = link.get("href", "") if link else ""
                     if not href: continue
                     
-                    row_text = row.get_text()
+                    row_text = row.get_text(" ", strip=True)
+
+                    # Enforce a 160 MB maximum for APKMirror candidates.
+                    # Skip rows with unknown size too, so an unverified large
+                    # package cannot be selected accidentally.
+                    size_match = re.search(r"(\d+(?:[.,]\d+)?)\s*(GB|MB|KB)\b", row_text, re.I)
+                    if not size_match:
+                        continue
+                    size_value = float(size_match.group(1).replace(",", "."))
+                    size_unit = size_match.group(2).upper()
+                    size_mb = size_value * (1024 if size_unit == "GB" else (1 / 1024 if size_unit == "KB" else 1))
+                    if size_mb > 160:
+                        continue
+
                     if check_func(row_text, href):
                         return urljoin("https://www.apkmirror.com", href), (target_type == "BUNDLE")
             return None, False
