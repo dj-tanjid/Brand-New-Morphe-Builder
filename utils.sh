@@ -1161,6 +1161,15 @@ def main():
             # reports exactly "1 split". If that cannot be confirmed, fail closed
             # so the source loop can try Uptodown rather than build the wrong APK.
             candidates = []
+
+            # First try APKMirror's canonical unnumbered download page for this
+            # exact release. For the Instagram version discussed, this is the
+            # page labeled "1 split bundle"; it may not appear in the search
+            # result rows, which can contain only the 2-split and 10-split variants.
+            canonical_url = re.sub(r"-release/?$", "-android-apk-download/", release_url.rstrip("/"))
+            if canonical_url != release_url.rstrip("/"):
+                candidates.append((canonical_url, True, "canonical unnumbered APK download page"))
+
             for row in rows:
                 cells = row.select("div.table-cell")
                 if len(cells) < 4:
