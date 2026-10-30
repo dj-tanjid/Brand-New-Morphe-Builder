@@ -124,7 +124,7 @@ uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
 [Google-Photos-Akash]
-enabled = false
+enabled = true
 app-name = "Google Photos"
 patches-source = "github:Akash-Sriram/morphe-google-photos"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -230,7 +230,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-SysAdminDoc-APK]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:SysAdminDoc/Hushfacebook"
@@ -263,7 +263,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/faceb
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 
 [Facebook-SysAdminDoc-Root]
-enabled = true
+enabled = false
 app-name = "Facebook"
 pkg-name = "com.facebook.katana"
 patches-source = "github:SysAdminDoc/Hushfacebook"
@@ -333,7 +333,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/messe
 uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
 
 [Facebook-Messenger-SysAdminDoc]
-enabled = true
+enabled = false
 app-name = "Facebook Messenger"
 pkg-name = "com.facebook.orca"
 patches-source = "github:SysAdminDoc/HushMessenger"
@@ -493,7 +493,7 @@ uptodown-dlurl = "https://instagram.en.uptodown.com/android"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram.android"
 
 [Instagram-SysAdminDoc-APK]
-enabled = true
+enabled = false
 app-name = "Instagram"
 patches-source = "github:SysAdminDoc/HushGram"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -529,7 +529,7 @@ uptodown-dlurl = "https://instagram.en.uptodown.com/android"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram.android"
 
 [Instagram-SysAdminDoc-Root]
-enabled = true
+enabled = false
 app-name = "Instagram"
 patches-source = "github:SysAdminDoc/HushGram"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -608,7 +608,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/windscribe/windscribe-vpn"
 uptodown-dlurl = "https://windscribe.en.uptodown.com/android"
 
 [TeraBox-HXReborn]
-enabled = false
+enabled = true
 app-name = "TeraBox"
 patches-source = "github:hxreborn/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -688,7 +688,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/pyde-technologies-ltd/pokeraid-
 uptodown-dlurl = "https://pokeraid-worldwide-remote-ra.en.uptodown.com/android"
 
 [Gboard-Jason]
-enabled = false
+enabled = true
 app-name = "Gboard"
 patches-source = "github:jasonwu1994/Gboard-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -877,7 +877,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/waze/"
 uptodown-dlurl = "https://waze.en.uptodown.com/android"
 
 [Discord-Venus]
-enabled = false
+enabled = true
 app-name = "Discord"
 pkg-name = "com.discord"
 patches-source = "github:VenusIsJaded/Venus-Patches"
