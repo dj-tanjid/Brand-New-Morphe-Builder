@@ -1,19 +1,10 @@
-📱 » **Discord-Venus** (arm64-v8a): `350.8 - Stable`    
+📱 » **Facebook-Messenger-SysAdminDoc** (arm64-v8a): `585.0.0.53.94`    
 📱 » **Gboard-Jason** (arm64-v8a): `18.5.4.993608717-release-arm64-v8a`    
-📱 » **Google-Maps-BearInMindCat-APK** (arm64-v8a): `26.36.04.973607363`    
-📱 » **Google-Maps-BearInMindCat-Root** (arm64-v8a): `26.36.04.973607363`    
-📱 » **Google-Photos-Akash** (arm64-v8a): `7.99.0.1007655401`    
-📱 » **Pixel-Camera-Basic-Akshayykadam** (all): `11.1.040.982810059.19`    
-📱 » **Pixel-Camera-Pro-Akshayykadam** (all): `11.1.040.982810059.19`    
-📱 » **Proton-VPN-HXReborn** (all): `5.20.39.0`    
+📱 » **Proton-VPN-HXReborn** (all): `5.21.9.0`    
 📱 » **Reddit-Morphe** (all): `2026.44.0`    
 📱 » **TeraBox-HXReborn** (arm64-v8a): `4.27.5`    
-📱 » **Twitter-Piko-NewX** (all): `12.38.1-prod.01`    
-📱 » **Waze-BearInMindCat-APK** (arm64-v8a): `5.24.5.0`    
-📱 » **Waze-BearInMindCat-Root** (arm64-v8a): `5.24.5.0`    
-📱 » **X-Piko-NewX** (all): `12.38.1-prod.01`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.43.51`    
-📱 » **YouTube-Morphe** (arm64-v8a): `21.43.523-SECONDARY`    
+📱 » **YouTube-Morphe** (arm64-v8a): `21.44.528`    
 
 <br>
   
@@ -35,14 +26,10 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `VenusIsJaded/patches-1.20.0.mpp` ([Changelog](https://github.com/VenusIsJaded/Venus-Patches/releases/tag/v1.20.0))
- ⚙️ » Patches: `jasonwu1994/patches-4.1.0-dev.2.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.1.0-dev.2))
- ⚙️ » Patches: `bearinmindcat/patches-2.7.5.mpp` ([Changelog](https://github.com/bearinmindcat/morphe-patches/releases/tag/v2.7.5))
- ⚙️ » Patches: `Akash-Sriram/patches-1.17.0.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.17.0))
- ⚙️ » Patches: `Akshayykadam/morphe-patches-pixelcamera-1.0.9.mpp` ([Changelog](https://github.com/Akshayykadam/Pixel-Camera/releases/tag/1.0.9))
- ⚙️ » Patches: `hxreborn/patches-1.66.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.66.0))
- ⚙️ » Patches: `MorpheApp/patches-2.0.0.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.0.0))
- ⚙️ » Patches: `crimera/patches-3.72.3.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.72.3))
+> ⚙️ » Patches: `SysAdminDoc/patches-0.28.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushMessenger/releases/tag/v0.28.0))
+ ⚙️ » Patches: `jasonwu1994/patches-4.1.1.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.1.1))
+ ⚙️ » Patches: `hxreborn/patches-1.67.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.67.0))
+ ⚙️ » Patches: `MorpheApp/patches-2.1.0-dev.4.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.1.0-dev.4))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.20.0-all.jar`
   
