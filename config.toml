@@ -124,7 +124,7 @@ uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
 [Google-Photos-Akash]
-enabled = true
+enabled = false
 app-name = "Google Photos"
 patches-source = "github:Akash-Sriram/morphe-google-photos"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -333,7 +333,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-technologies-llc/messe
 uptodown-dlurl = "https://facebook-messenger.en.uptodown.com/android"
 
 [Facebook-Messenger-SysAdminDoc]
-enabled = false
+enabled = true
 app-name = "Facebook Messenger"
 pkg-name = "com.facebook.orca"
 patches-source = "github:SysAdminDoc/HushMessenger"
@@ -431,7 +431,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [Twitter-Piko-NewX]
-enabled = true
+enabled = false
 app-name = "Twitter"
 patches-source = "github:crimera/piko-newx"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -451,7 +451,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko-NewX]
-enabled = true
+enabled = false
 app-name = "X"
 patches-source = "github:crimera/piko-newx"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -708,7 +708,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/gboard/"
 uptodown-dlurl = "https://gboard-go.en.uptodown.com/android"
 
 [Pixel-Camera-Pro-Akshayykadam]
-enabled = true
+enabled = false
 app-name = "Pixel Camera Pro"
 pkg-name = "com.google.android.GoogleCamera"
 patches-source = "github:Akshayykadam/Pixel-Camera"
@@ -724,7 +724,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/camera/"
 uptodown-dlurl = "https://google-camera.en.uptodown.com/android"
 
 [Pixel-Camera-Basic-Akshayykadam]
-enabled = true
+enabled = false
 app-name = "Pixel Camera Basic"
 pkg-name = "com.google.android.GoogleCamera"
 patches-source = "github:Akshayykadam/Pixel-Camera"
@@ -783,7 +783,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/deepl-se/deepl-translate/"
 uptodown-dlurl = "https://deepl.en.uptodown.com/android"
 
 [Google-Maps-BearInMindCat-APK]
-enabled = true
+enabled = false
 app-name = "Google Maps"
 patches-source = "github:bearinmindcat/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -801,7 +801,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/maps/"
 uptodown-dlurl = "https://google-maps.en.uptodown.com/android"
 
 [Google-Maps-BearInMindCat-Root]
-enabled = true
+enabled = false
 app-name = "Google Maps"
 patches-source = "github:bearinmindcat/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -824,7 +824,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/maps/"
 uptodown-dlurl = "https://google-maps.en.uptodown.com/android"
 
 [Waze-BearInMindCat-APK]
-enabled = true
+enabled = false
 app-name = "Waze"
 patches-source = "github:bearinmindcat/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -849,7 +849,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/waze/"
 uptodown-dlurl = "https://waze.en.uptodown.com/android"
 
 [Waze-BearInMindCat-Root]
-enabled = true
+enabled = false
 app-name = "Waze"
 patches-source = "github:bearinmindcat/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -877,7 +877,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/waze/"
 uptodown-dlurl = "https://waze.en.uptodown.com/android"
 
 [Discord-Venus]
-enabled = true
+enabled = false
 app-name = "Discord"
 pkg-name = "com.discord"
 patches-source = "github:VenusIsJaded/Venus-Patches"
