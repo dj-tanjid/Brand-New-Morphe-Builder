@@ -1,4 +1,9 @@
 name: Build Modules
+
+# Serialize publishing runs so two builds cannot select the same release tag.
+concurrency:
+  group: morphe-release-publishing-${{ github.repository }}
+  cancel-in-progress: false
 on:
   workflow_call:
     inputs:
@@ -95,11 +100,9 @@ jobs:
           [ ${#APK_FILES[@]} -gt 0 ] || { echo "No APK files were produced"; exit 1; }
 
           BASE_TAG=$(TZ=Europe/Kyiv date +%d-%m-%Y)
-          RELEASES_JSON=$(gh release list --limit 1000 --json tagName)
 
-          # GitHub sorts releases by the date of the commit behind the tag,
-          # not by the APK publication time. Create a fresh timestamp commit
-          # on the update branch for each APK and point its release tag to it.
+          # Use a new tag for every publication. Check the remote Git refs,
+          # not only the Releases list: an existing tag must never be reused.
           git fetch origin update
           git checkout -B update origin/update
           git config user.name "github-actions[bot]"
@@ -135,14 +138,12 @@ jobs:
             RELEASE_TITLE="$APP_TITLE $PATCH_VERSION"
 
             BASE_APP_TAG="$BASE_TAG-$APP_SLUG"
-            if ! printf '%s\n' "$RELEASES_JSON" | jq -e --arg tag "$BASE_APP_TAG" '.[] | select(.tagName == $tag)' >/dev/null; then
-              RELEASE_TAG="$BASE_APP_TAG"
-            else
-              LAST_SUFFIX=$(printf '%s\n' "$RELEASES_JSON" | jq -r --arg base "$BASE_APP_TAG" '
-                [.[] | .tagName | select(test("^" + $base + "-[0-9]+$")) |
-                 capture("^" + $base + "-(?<n>[0-9]+)$").n | tonumber] | max // 0')
-              RELEASE_TAG="$BASE_APP_TAG-$((LAST_SUFFIX + 1))"
-            fi
+            RELEASE_TAG="$BASE_APP_TAG"
+            SUFFIX=0
+            while git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; do
+              SUFFIX=$((SUFFIX + 1))
+              RELEASE_TAG="$BASE_APP_TAG-$SUFFIX"
+            done
 
             NOTES="APK: $FILE
           App: $APP_TITLE
