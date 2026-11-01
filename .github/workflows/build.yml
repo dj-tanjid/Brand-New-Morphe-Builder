@@ -97,6 +97,14 @@ jobs:
           BASE_TAG=$(TZ=Europe/Kyiv date +%d-%m-%Y)
           RELEASES_JSON=$(gh release list --limit 1000 --json tagName)
 
+          # GitHub sorts releases by the date of the commit behind the tag,
+          # not by the APK publication time. Create a fresh timestamp commit
+          # on the update branch for each APK and point its release tag to it.
+          git fetch origin update
+          git checkout -B update origin/update
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
           for APK in "${APK_FILES[@]}"; do
             FILE=${APK##*/}
             case "$FILE" in
@@ -140,8 +148,14 @@ jobs:
           App: $APP_TITLE
           Patch source: https://github.com/$PATCH_REPO/releases/tag/v$PATCH_VERSION"
 
-            echo "Publishing $FILE as $RELEASE_TAG ($RELEASE_TITLE)"
-            gh release create "$RELEASE_TAG" "$APK" --title "$RELEASE_TITLE" --notes "$NOTES"
+            # Give this APK release its own commit timestamp, independent
+            # of the patch-source commit date.
+            git commit --allow-empty -m "Release $APP_SLUG: $RELEASE_TAG"
+            git push origin HEAD:update
+            RELEASE_COMMIT=$(git rev-parse HEAD)
+
+            echo "Publishing $FILE as $RELEASE_TAG ($RELEASE_TITLE) from $RELEASE_COMMIT"
+            gh release create "$RELEASE_TAG" "$APK" --target "$RELEASE_COMMIT" --title "$RELEASE_TITLE" --notes "$NOTES"
           done
       - name: Update modules changelog and update json
         id: update_config
