@@ -506,6 +506,7 @@ build-mode = "apk" # Options 'apk', 'module', or 'both'
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 # version = "439.0.0.37.89"
 arch = "arm64-v8a" # Options 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64', or 'universal'
+dpi = "320dpi"
 include-stock = "disable" # Options 'split', 'merged', or 'disable'
 included-patches = "'Install next to Instagram'"
 patcher-args = """\
