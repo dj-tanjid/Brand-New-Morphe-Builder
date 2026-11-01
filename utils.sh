@@ -1129,6 +1129,10 @@ def main():
             rows = [r for r in soup_rel.select("div.table-row") if len(r.select("div.table-cell")) >= 4]
 
         def find_candidate_row(check_func, match_dpi=True):
+            requested_dpis = {
+                re.sub(r"\s+", "", item.lower())
+                for item in dpi.split()
+            }
             for target_type in ["APK", "BUNDLE"]:
                 for row in reversed(rows):
                     cells = row.select("div.table-cell")
@@ -1143,7 +1147,8 @@ def main():
                     if not is_arch_compat(arch_text, arch):
                         continue
                     
-                    dpi_ok = (not dpi) or (dpi in dpi_text) or (dpi_text in {"nodpi", "anydpi"}) or bool(re.search(r"\d+-\d+dpi", dpi_text))
+                    normalized_dpi = re.sub(r"\s+", "", dpi_text.lower())
+                    dpi_ok = (not dpi) or (normalized_dpi in requested_dpis)
                     if match_dpi and not dpi_ok:
                         continue
                     
@@ -1166,14 +1171,14 @@ def main():
                     req_suffix in f"{t} {h}".lower() and
                     not (req_suffix == "release" and is_beta_or_alpha(t))
                 ),
-                match_dpi=False
+                match_dpi=True
             )
 
         # Priority 2: Match version_code exactly (bypassing restrictive DPI range filters)
         if not dl_sub_url and version_code:
             dl_sub_url, is_bundle = find_candidate_row(
                 lambda t, h: version_code in t,
-                match_dpi=False
+                match_dpi=True
             )
 
         # Priority 3: Match clean_ver or requested suffix (e.g. "release", excluding "lite" / "beta")
@@ -1206,7 +1211,7 @@ def main():
         if not dl_sub_url:
             dl_sub_url, is_bundle = find_candidate_row(
                 lambda t, h: not req_suffix or is_beta_or_alpha(req_suffix) or not is_beta_or_alpha(f"{t} {h}"),
-                match_dpi=False
+                match_dpi=True
             )
 
         if not dl_sub_url:
