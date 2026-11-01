@@ -99,7 +99,8 @@ jobs:
           APK_FILES=(./build/*.apk)
           [ ${#APK_FILES[@]} -gt 0 ] || { echo "No APK files were produced"; exit 1; }
 
-          BASE_TAG=$(TZ=Europe/Kyiv date +%d-%m-%Y)
+          # Timestamp-based SemVer tags keep all apps in one chronological sequence.
+          BASE_TAG=$(TZ=Europe/Kyiv date +%Y%m%d%H%M%S)
 
           # Use a new tag for every publication. Check the remote Git refs,
           # not only the Releases list: an existing tag must never be reused.
@@ -137,7 +138,7 @@ jobs:
             [ -n "$PATCH_VERSION" ] || PATCH_VERSION="unknown"
             RELEASE_TITLE="$APP_TITLE $PATCH_VERSION"
 
-            BASE_APP_TAG="$BASE_TAG-$APP_SLUG"
+            BASE_APP_TAG="v$BASE_TAG-$APP_SLUG"
             RELEASE_TAG="$BASE_APP_TAG"
             SUFFIX=0
             while git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; do
