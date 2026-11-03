@@ -688,7 +688,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/pyde-technologies-ltd/pokeraid-
 uptodown-dlurl = "https://pokeraid-worldwide-remote-ra.en.uptodown.com/android"
 
 [Gboard-Jason]
-enabled = false
+enabled = true
 app-name = "Gboard"
 patches-source = "github:jasonwu1994/Gboard-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -877,7 +877,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/waze/"
 uptodown-dlurl = "https://waze.en.uptodown.com/android"
 
 [Discord-Venus]
-enabled = false
+enabled = true
 app-name = "Discord"
 pkg-name = "com.discord"
 patches-source = "github:VenusIsJaded/Venus-Patches"
