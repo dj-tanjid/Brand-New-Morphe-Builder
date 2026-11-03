@@ -1,7 +1,9 @@
+📱 » **Discord-Venus** (arm64-v8a): `351.11 - Stable`    
+📱 » **Gboard-Jason** (arm64-v8a): `18.5.4.993608717-release-arm64-v8a`    
 📱 » **Google-Photos-Akash** (arm64-v8a): `7.99.0.1007655401`    
 📱 » **Reddit-Morphe** (all): `2026.44.0`    
 📱 » **TeraBox-HXReborn** (arm64-v8a): `4.27.5`    
-📱 » **YT-Music-Morphe** (arm64-v8a): `9.43.51`    
+📱 » **YT-Music-Morphe** (arm64-v8a): `9.44.52`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.44.528`    
 
 <br>
@@ -24,9 +26,11 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `Akash-Sriram/patches-1.17.7.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.17.7))
- ⚙️ » Patches: `MorpheApp/patches-2.1.0-dev.6.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.1.0-dev.6))
- ⚙️ » Patches: `hxreborn/patches-1.69.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.69.0))
+> ⚙️ » Patches: `VenusIsJaded/patches-1.21.1.mpp` ([Changelog](https://github.com/VenusIsJaded/Venus-Patches/releases/tag/v1.21.1))
+ ⚙️ » Patches: `jasonwu1994/patches-4.2.0-dev.5.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.2.0-dev.5))
+ ⚙️ » Patches: `Akash-Sriram/patches-1.17.8.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.17.8))
+ ⚙️ » Patches: `MorpheApp/patches-2.1.0-dev.7.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.1.0-dev.7))
+ ⚙️ » Patches: `hxreborn/patches-1.70.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.70.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-1.20.0-all.jar`
   
