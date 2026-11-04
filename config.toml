@@ -26,7 +26,8 @@ excluded-patches = """\
     'Custom branding icon for YouTube' \
     'Custom branding' \
     """
-patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "v2.1.0-dev.10"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube"
 uptodown-dlurl = "https://youtube.en.uptodown.com/android"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.google.android.youtube"
@@ -50,7 +51,8 @@ excluded-patches = """\
     'Custom branding icon for YouTube Music' \
     'Custom branding' \
     """
-patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "v2.1.0-dev.10"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube-music"
 uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
@@ -75,7 +77,8 @@ excluded-patches = """\
     """
 # included-patches = ""
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "v2.1.0-dev.10"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/redditinc/reddit"
 uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
@@ -608,7 +611,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/windscribe/windscribe-vpn"
 uptodown-dlurl = "https://windscribe.en.uptodown.com/android"
 
 [TeraBox-HXReborn]
-enabled = true
+enabled = false
 app-name = "TeraBox"
 patches-source = "github:hxreborn/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -708,7 +711,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/gboard/"
 uptodown-dlurl = "https://gboard-go.en.uptodown.com/android"
 
 [Pixel-Camera-Pro-Akshayykadam]
-enabled = false
+enabled = true
 app-name = "Pixel Camera Pro"
 pkg-name = "com.google.android.GoogleCamera"
 patches-source = "github:Akshayykadam/Pixel-Camera"
@@ -724,7 +727,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/camera/"
 uptodown-dlurl = "https://google-camera.en.uptodown.com/android"
 
 [Pixel-Camera-Basic-Akshayykadam]
-enabled = false
+enabled = true
 app-name = "Pixel Camera Basic"
 pkg-name = "com.google.android.GoogleCamera"
 patches-source = "github:Akshayykadam/Pixel-Camera"
@@ -877,7 +880,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/waze/"
 uptodown-dlurl = "https://waze.en.uptodown.com/android"
 
 [Discord-Venus]
-enabled = true
+enabled = false
 app-name = "Discord"
 pkg-name = "com.discord"
 patches-source = "github:VenusIsJaded/Venus-Patches"
