@@ -631,16 +631,20 @@ isoneof() {
 
 patch_apk() {
 	local stock_input=$1 patched_apk=$2 patcher_args=$3 cli_jar=$4 patches_jars=$5
-	local tmp_files
-	tmp_files="$(pwd)/$(mktemp -d -p "$TEMP_DIR")"
+	
+	# Convert relative paths to absolute paths to prevent CLI 2.0.0+ path resolution bugs
+	[[ "$stock_input" != /* ]] && stock_input="${CWD}/${stock_input}"
+	[[ "$patched_apk" != /* ]] && patched_apk="${CWD}/${patched_apk}"
+	[[ "$cli_jar" != /* ]] && cli_jar="${CWD}/${cli_jar}"
 
 	local p_flags=()
 	for pj in $patches_jars; do
+		[[ "$pj" != /* ]] && pj="${CWD}/${pj}"
 		p_flags+=("-p" "$pj")
 	done
 
 	local cmd="java -jar '$cli_jar' patch '$stock_input' -o '$patched_apk' "${p_flags[@]}" --keystore=ks.keystore \
-    --keystore-entry-password=123456789 --keystore-password=123456789 --signer=jhc --keystore-entry-alias=jhc -t '$patched_apk-tmp' $patcher_args"
+    --keystore-entry-password=123456789 --keystore-password=123456789 --signer=jhc --keystore-entry-alias=jhc -t '${patched_apk}-tmp' $patcher_args"
 
 	local cli_name
 	cli_name=$(basename "$cli_jar")
