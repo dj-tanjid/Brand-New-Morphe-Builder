@@ -1,8 +1,11 @@
-📱 » **Gboard-Jason** (arm64-v8a): `18.5.4.993608717-release-arm64-v8a`    
-📱 » **Google-Photos-Akash** (arm64-v8a): `8.0.0.1011730683`    
+📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `585.0.0.47.54`    
+📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `585.0.0.47.54`    
 📱 » **Pixel-Camera-Basic-Akshayykadam** (all): `11.1.040.982810059.19`    
 📱 » **Pixel-Camera-Pro-Akshayykadam** (all): `11.1.040.982810059.19`    
 📱 » **Reddit-Morphe** (all): `2026.44.0`    
+📱 » **TeraBox-HXReborn** (arm64-v8a): `4.27.5`    
+📱 » **Twitter-Piko-NewX** (all): `12.40.1-prod.01`    
+📱 » **X-Piko-NewX** (all): `12.40.1-prod.01`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.44.52`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.44.528`    
 
@@ -26,10 +29,11 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `jasonwu1994/patches-4.2.0.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.2.0))
- ⚙️ » Patches: `Akash-Sriram/patches-1.17.10.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.17.10))
+> ⚙️ » Patches: `SysAdminDoc/patches-0.21.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.21.0))
  ⚙️ » Patches: `Akshayykadam/morphe-patches-pixelcamera-1.1.2.mpp` ([Changelog](https://github.com/Akshayykadam/Pixel-Camera/releases/tag/1.1.2))
  ⚙️ » Patches: `MorpheApp/patches-2.1.0-dev.10.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.1.0-dev.10))
+ ⚙️ » Patches: `hxreborn/patches-1.72.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.72.0))
+ ⚙️ » Patches: `crimera/patches-3.74.0.mpp` ([Changelog](https://github.com/crimera/piko-newx/releases/tag/v3.74.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-2.0.0-all.jar`
   
