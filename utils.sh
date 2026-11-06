@@ -634,11 +634,15 @@ isoneof() {
 
 patch_apk() {
 	local stock_input=$1 patched_apk=$2 patcher_args=$3 cli_jar=$4 patches_jars=$5
-	local tmp_files
-	tmp_files="$(pwd)/$(mktemp -d -p "$TEMP_DIR")"
+
+	# Resolve relative paths before invoking Morphe CLI 2.0.0+.
+	[[ "$stock_input" != /* ]] && stock_input="${CWD}/${stock_input}"
+	[[ "$patched_apk" != /* ]] && patched_apk="${CWD}/${patched_apk}"
+	[[ "$cli_jar" != /* ]] && cli_jar="${CWD}/${cli_jar}"
 
 	local p_flags=()
 	for pj in $patches_jars; do
+		[[ "$pj" != /* ]] && pj="${CWD}/${pj}"
 		p_flags+=("-p" "$pj")
 	done
 
