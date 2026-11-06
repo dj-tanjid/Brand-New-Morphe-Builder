@@ -19,6 +19,13 @@ jobs:
       - name: Start Cloudflare solver
         run: docker run -d --name cf-solver -p 8000:8000 ghcr.io/sarperavci/cloudflarebypassforscraping:latest
 
+      - name: Verify isolated test branch
+        run: |
+          if [[ "$GITHUB_REF" != "refs/heads/test/uptodown-instagram" ]]; then
+            echo "Select branch test/uptodown-instagram in the Run workflow branch dropdown. This workflow does not run the normal build."
+            exit 1
+          fi
+
       - name: Run Uptodown-only Instagram download
         env:
           PYTHONUNBUFFERED: 1
