@@ -146,6 +146,9 @@ get_prebuilts() {
 				matches=$(jq -e '.assets | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$resp") || return 1
 			fi
 
+			# Patch bundles must be .mpp files; ignore checksum and other release assets.
+			matches=$(jq -e 'map(select(.name | endswith(".mpp")))' <<<"$matches") || return 1
+
 			if [[ "$(jq 'length' <<<"$matches")" -gt 1 ]]; then
 				local matches_new
 				matches_new=$(jq -e -r 'map(select(.name | contains("-dev") | not))' <<<"$matches" 2>/dev/null)
@@ -642,10 +645,10 @@ patch_apk() {
 		[[ "$pj" != /* ]] && pj="${CWD}/${pj}"
 		p_flags+=("-p" "$pj")
 	done
-
-	local cmd="java -jar '$cli_jar' patch '$stock_input' -o '$patched_apk' "${p_flags[@]}" --keystore=ks.keystore \
-    --keystore-entry-password=123456789 --keystore-password=123456789 --signer=jhc --keystore-entry-alias=jhc -t '${patched_apk}-tmp' $patcher_args"
-
+	
+	local cmd="java -jar '$cli_jar' patch '$stock_input' -o '$patched_apk' "${p_flags[@]}" --keystore=Morphe.keystore \
+    --keystore-entry-password=Morphe --keystore-password= --signer=Morphe --keystore-entry-alias=Morphe -t '${patched_apk}-tmp' $patcher_args"
+	
 	local cli_name
 	cli_name=$(basename "$cli_jar")
 	if [[ "${cli_name::8}" == revanced ]]; then cmd+=" -b"; fi
