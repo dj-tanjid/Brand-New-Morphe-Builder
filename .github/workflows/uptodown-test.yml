@@ -1,0 +1,34 @@
+name: Uptodown Instagram Download Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  download-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout selected test branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Start Cloudflare solver
+        run: docker run -d --name cf-solver -p 8000:8000 ghcr.io/sarperavci/cloudflarebypassforscraping:latest
+
+      - name: Run Uptodown-only Instagram download
+        env:
+          PYTHONUNBUFFERED: 1
+          CF_SOLVER_URL: http://localhost:8000
+        run: bash ./scripts/test-uptodown.sh ./uptodown-test.toml
+
+      - name: Upload downloaded APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: instagram-uptodown-test
+          path: build/instagram-uptodown-*
+          if-no-files-found: error
+          retention-days: 3
