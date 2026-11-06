@@ -163,3 +163,6 @@ github-dlurl = "[https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram
 apkmirror-dlurl = "[https://www.apkmirror.com/apk/instagram/threads-an-instagram-app](https://www.apkmirror.com/apk/instagram/threads-an-instagram-app)"
 uptodown-dlurl = "[https://threads.en.uptodown.com/android](https://threads.en.uptodown.com/android)"
 ```
+
+> [!WARNING]
+> When a patch name itself contains a single quote, double it inside the string (e.g. 'Hide ''Get Music Premium''').
