@@ -1,9 +1,9 @@
 📱 » **Google-Photos-Akash** (arm64-v8a): `8.0.0.1011730683`    
 📱 » **Proton-VPN-HXReborn** (all): `5.21.9.0`    
-📱 » **Reddit-Morphe** (all): `2026.44.0`    
+📱 » **Reddit-Morphe** (all): `2026.45.0`    
 📱 » **TeraBox-HXReborn** (arm64-v8a): `4.27.5`    
-📱 » **YT-Music-Morphe** (arm64-v8a): `9.44.52`    
-📱 » **YouTube-Morphe** (arm64-v8a): `21.44.528`    
+📱 » **YT-Music-Morphe** (arm64-v8a): `9.45.51`    
+📱 » **YouTube-Morphe** (arm64-v8a): `21.45.82`    
 
 <br>
   
@@ -27,7 +27,7 @@ Patches and CLI Sources :
   
 > ⚙️ » Patches: `Akash-Sriram/patches-1.17.11.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.17.11))
  ⚙️ » Patches: `hxreborn/patches-1.75.1.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.75.1))
- ⚙️ » Patches: `MorpheApp/patches-2.1.0-dev.10.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.1.0-dev.10))
+ ⚙️ » Patches: `MorpheApp/patches-2.2.0-dev.4.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.2.0-dev.4))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-2.1.1-all.jar`
   
