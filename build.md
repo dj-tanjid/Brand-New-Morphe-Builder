@@ -1,3 +1,4 @@
+📱 » **Proton-VPN-HXReborn** (all): `5.21.9.0`    
 📱 » **Reddit-Morphe** (all): `2026.45.0`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.45.51`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.45.82`    
@@ -22,8 +23,8 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `hxreborn/patches-1.76.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.76.0))
- ⚙️ » Patches: `MorpheApp/patches-2.2.0.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.2.0))
+> ⚙️ » Patches: `hxreborn/patches-1.77.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.77.0))
+ ⚙️ » Patches: `MorpheApp/patches-2.3.0-dev.2.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.3.0-dev.2))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-2.1.1-all.jar`
   
