@@ -1,6 +1,6 @@
 {
-  "version": "v18.5.4.993608717-release-arm64-v8a (Patch v4.3.0-dev.1)",
-  "versionCode": 253,
-  "zipUrl": "https://github.com/dj-tanjid/Brand-New-Morphe-Builder/releases/download/253/gboard-jason-module-v18.5.4.993608717-release-arm64-v8a-arm64-v8a.zip",
+  "version": "v18.5.4.993608717-release-arm64-v8a (Patch v4.4.0-dev.1)",
+  "versionCode": 257,
+  "zipUrl": "https://github.com/dj-tanjid/Brand-New-Morphe-Builder/releases/download/257/gboard-jason-module-v18.5.4.993608717-release-arm64-v8a-arm64-v8a.zip",
   "changelog": "https://raw.githubusercontent.com/dj-tanjid/Brand-New-Morphe-Builder/update/build.md"
 }
