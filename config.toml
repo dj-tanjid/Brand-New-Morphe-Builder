@@ -699,7 +699,7 @@ rv-brand = "Jason"
 arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "both"
-include-stock = "split" # Options 'split', 'merged', or 'disable'
+include-stock = "disable" # Options 'split', 'merged', or 'disable'
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 excluded-patches = """\
     'Package Rename' \
