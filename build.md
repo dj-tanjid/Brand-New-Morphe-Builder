@@ -1,10 +1,5 @@
-📱 » **Facebook-Messenger-SysAdminDoc** (arm64-v8a): `587.0.0.54.96`    
-📱 » **Gboard-Jason** (arm64-v8a): `18.5.4.993608717-release-arm64-v8a`    
 📱 » **Google-Maps-BearInMindCat-APK** (arm64-v8a): `26.44.06.1006895251`    
 📱 » **Google-Maps-BearInMindCat-Root** (arm64-v8a): `26.44.06.1006895251`    
-📱 » **Instagram-SysAdminDoc-APK** (arm64-v8a): `454.0.0.54.77`    
-📱 » **Instagram-SysAdminDoc-Root** (arm64-v8a): `454.0.0.54.77`    
-📱 » **Proton-VPN-HXReborn** (all): `5.21.9.0`    
 📱 » **Reddit-Morphe** (all): `2026.46.0`    
 📱 » **Waze-BearInMindCat-APK** (arm64-v8a): `5.24.5.0`    
 📱 » **Waze-BearInMindCat-Root** (arm64-v8a): `5.24.5.0`    
@@ -31,12 +26,8 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `SysAdminDoc/patches-0.30.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushMessenger/releases/tag/v0.30.0))
- ⚙️ » Patches: `jasonwu1994/patches-4.4.0-dev.2.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.4.0-dev.2))
- ⚙️ » Patches: `bearinmindcat/patches-2.9.11.mpp` ([Changelog](https://github.com/bearinmindcat/morphe-patches/releases/tag/v2.9.11))
- ⚙️ » Patches: `SysAdminDoc/patches-0.0.20.mpp` ([Changelog](https://github.com/SysAdminDoc/HushGram/releases/tag/v0.0.20))
- ⚙️ » Patches: `hxreborn/patches-1.79.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.79.0))
- ⚙️ » Patches: `MorpheApp/patches-2.3.0-dev.7.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.3.0-dev.7))
+> ⚙️ » Patches: `bearinmindcat/patches-2.10.0.mpp` ([Changelog](https://github.com/bearinmindcat/morphe-patches/releases/tag/v2.10.0))
+ ⚙️ » Patches: `MorpheApp/patches-2.3.0.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.3.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-2.2.0-all.jar`
   
