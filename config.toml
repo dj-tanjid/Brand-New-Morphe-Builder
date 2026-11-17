@@ -393,7 +393,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads-an-instagram-
 uptodown-dlurl = "https://threads.en.uptodown.com/android"
 
 [Twitter-Piko]
-enabled = false
+enabled = true
 app-name = "Twitter"
 patches-source = "github:crimera/piko"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -404,9 +404,8 @@ version = "auto"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
-    'Bring back twitter' \
-    'Browse tweet object' \
-    'Dynamic color' \
+    'NewX: Restore Twitter branding' \
+    'NewX: Browse tweet object' \
     """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter"
 uptodown-dlurl = "https://twitter.en.uptodown.com/android"
@@ -414,7 +413,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko]
-enabled = false
+enabled = true
 app-name = "X"
 patches-source = "github:crimera/piko"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -425,8 +424,7 @@ version = "auto"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
 patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
-    'Dynamic color' \
-    'Browse tweet object' \
+    'NewX: Browse tweet object' \
     """
 apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter"
 uptodown-dlurl = "https://twitter.en.uptodown.com/android"
@@ -786,7 +784,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/deepl-se/deepl-translate/"
 uptodown-dlurl = "https://deepl.en.uptodown.com/android"
 
 [Google-Maps-BearInMindCat-APK]
-enabled = true
+enabled = false
 app-name = "Google Maps"
 patches-source = "github:bearinmindcat/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -804,7 +802,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/maps/"
 uptodown-dlurl = "https://google-maps.en.uptodown.com/android"
 
 [Google-Maps-BearInMindCat-Root]
-enabled = true
+enabled = false
 app-name = "Google Maps"
 patches-source = "github:bearinmindcat/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -827,7 +825,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/maps/"
 uptodown-dlurl = "https://google-maps.en.uptodown.com/android"
 
 [Waze-BearInMindCat-APK]
-enabled = true
+enabled = false
 app-name = "Waze"
 patches-source = "github:bearinmindcat/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -852,7 +850,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/waze/"
 uptodown-dlurl = "https://waze.en.uptodown.com/android"
 
 [Waze-BearInMindCat-Root]
-enabled = true
+enabled = false
 app-name = "Waze"
 patches-source = "github:bearinmindcat/morphe-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
