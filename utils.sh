@@ -1763,6 +1763,30 @@ build_rv() {
 		p_patcher_args=("${p_patcher_args[@]//-[ei] ${microg_patch}/}")
 	fi
 
+	# === Auto-filter Legacy vs NewX patches for Twitter/X (crimera/piko) ===
+	if [[ "$pkg_name" == "com.twitter.android" ]] && grep -q "^Name: NewX:" <<<"$list_patches"; then
+		local tw_major="${version_f%%.*}"
+		local tw_patch
+		if [[ "$tw_major" =~ ^[0-9]+$ ]] && (( tw_major >= 12 )); then
+			pr "Detected Twitter/X v${version_f} (NewX): Auto-disabling legacy pre-v12 patches"
+			while IFS= read -r tw_patch; do
+				[[ -z "$tw_patch" ]] && continue
+				if [[ "$tw_patch" != NewX:* && "$tw_patch" != "Disable Play Store updates" ]]; then
+					p_patcher_args+=("-d \"${tw_patch}\"")
+				fi
+			done < <(grep "^Name: " <<<"$list_patches" | sed 's/^Name: //')
+		elif [[ "$tw_major" =~ ^[0-9]+$ ]] && (( tw_major < 12 )); then
+			pr "Detected Twitter/X v${version_f} (Legacy): Auto-disabling NewX patches"
+			while IFS= read -r tw_patch; do
+				[[ -z "$tw_patch" ]] && continue
+				if [[ "$tw_patch" == NewX:* ]]; then
+					p_patcher_args+=("-d \"${tw_patch}\"")
+				fi
+			done < <(grep "^Name: " <<<"$list_patches" | sed 's/^Name: //')
+		fi
+	fi
+	# =======================================================================
+	
 	local patcher_args patched_apk build_mode
 	local rv_brand_f
 	rv_brand_f=$(iconv -f utf-8 -t ascii//TRANSLIT <<<"${args[rv_brand]}" 2>/dev/null || echo "${args[rv_brand]}")
