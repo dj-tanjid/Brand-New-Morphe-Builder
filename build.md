@@ -1,8 +1,5 @@
-📱 » **Reddit-Morphe** (all): `2026.46.0`    
 📱 » **Twitter-Piko** (all): `12.43.0-prod.01`    
 📱 » **X-Piko** (all): `12.43.0-prod.01`    
-📱 » **YT-Music-Morphe** (arm64-v8a): `9.46.51`    
-📱 » **YouTube-Morphe** (arm64-v8a): `21.46.522`    
 
 <br>
   
@@ -24,8 +21,7 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `MorpheApp/patches-2.4.0-dev.1.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.4.0-dev.1))
- ⚙️ » Patches: `crimera/patches-3.12.0-dev.3.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.12.0-dev.3))
+> ⚙️ » Patches: `crimera/patches-3.12.0-dev.3.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.12.0-dev.3))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-2.2.0-all.jar`
   
