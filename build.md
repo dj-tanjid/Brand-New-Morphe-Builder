@@ -1,5 +1,11 @@
-📱 » **Twitter-Piko** (all): `12.43.0-prod.01`    
-📱 » **X-Piko** (all): `12.43.0-prod.01`    
+📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `587.0.0.39.55`    
+📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `587.0.0.39.55`    
+📱 » **Google-Photos-Akash** (arm64-v8a): `8.2.0.1023899193`    
+📱 » **Proton-VPN-HXReborn** (all): `5.21.9.0`    
+📱 » **Reddit-Morphe** (all): `2026.46.0`    
+📱 » **TeraBox-HXReborn** (arm64-v8a): `4.27.5`    
+📱 » **YT-Music-Morphe** (arm64-v8a): `9.46.51`    
+📱 » **YouTube-Morphe** (arm64-v8a): `21.46.522`    
 
 <br>
   
@@ -21,7 +27,10 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `crimera/patches-3.12.0-dev.3.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.12.0-dev.3))
+> ⚙️ » Patches: `SysAdminDoc/patches-0.23.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.23.0))
+ ⚙️ » Patches: `Akash-Sriram/patches-1.18.0.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.18.0))
+ ⚙️ » Patches: `hxreborn/patches-1.82.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.82.0))
+ ⚙️ » Patches: `MorpheApp/patches-2.4.0-dev.2.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.4.0-dev.2))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-2.2.0-all.jar`
   
