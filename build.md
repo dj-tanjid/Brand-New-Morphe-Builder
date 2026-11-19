@@ -1,9 +1,13 @@
-📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `587.0.0.39.55`    
-📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `587.0.0.39.55`    
-📱 » **Google-Photos-Akash** (arm64-v8a): `8.2.0.1023899193`    
-📱 » **Proton-VPN-HXReborn** (all): `5.21.9.0`    
+📱 » **Gboard-Jason** (arm64-v8a): `18.5.4.993608717-release-arm64-v8a`    
+📱 » **Google-Photos-Akash** (arm64-v8a): `7.99.0.1007655401`    
+📱 » **Instagram-SysAdminDoc-APK** (arm64-v8a): `456.0.0.53.78`    
+📱 » **Instagram-SysAdminDoc-Root** (arm64-v8a): `456.0.0.53.78`    
+📱 » **Proton-VPN-HXReborn** (all): `5.21.57.0`    
 📱 » **Reddit-Morphe** (all): `2026.46.0`    
-📱 » **TeraBox-HXReborn** (arm64-v8a): `4.27.5`    
+📱 » **TeraBox-HXReborn** (arm64-v8a): `4.28.5`    
+📱 » **Turbo-VPN-D-moniak** (all): `4.3.2.2`    
+📱 » **Twitter-Piko** (all): `12.43.0-prod.01`    
+📱 » **X-Piko** (all): `12.43.0-prod.01`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.46.51`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.46.522`    
 
@@ -27,10 +31,13 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `SysAdminDoc/patches-0.23.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.23.0))
+> ⚙️ » Patches: `jasonwu1994/patches-4.4.0-dev.3.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.4.0-dev.3))
  ⚙️ » Patches: `Akash-Sriram/patches-1.18.0.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.18.0))
- ⚙️ » Patches: `hxreborn/patches-1.82.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.82.0))
- ⚙️ » Patches: `MorpheApp/patches-2.4.0-dev.2.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.4.0-dev.2))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.0.21.mpp` ([Changelog](https://github.com/SysAdminDoc/HushGram/releases/tag/v0.0.21))
+ ⚙️ » Patches: `hxreborn/patches-1.83.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.83.0))
+ ⚙️ » Patches: `MorpheApp/patches-2.4.0-dev.5.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.4.0-dev.5))
+ ⚙️ » Patches: `SatanMerde/patches-1.1.0.mpp` ([Changelog](https://github.com/SatanMerde/D-moniakPatches-dev/releases/tag/v1.1.0))
+ ⚙️ » Patches: `crimera/patches-3.12.0-dev.4.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.12.0-dev.4))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-2.2.0-all.jar`
   
