@@ -608,6 +608,20 @@ build-mode = "apk"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/windscribe/windscribe-vpn"
 uptodown-dlurl = "https://windscribe.en.uptodown.com/android"
 
+[Turbo-VPN-D-moniak]
+enabled = true
+app-name = "Turbo VPN"
+pkg-name = "free.vpn.unblock.proxy.turbovpn"
+patches-source = "github:SatanMerde/D-moniakPatches-dev"
+cli-source = "github:MorpheApp/morphe-desktop"
+rv-brand = "D-moniak"
+# arch = "arm64-v8a"
+version = "auto" # 'auto', 'experimental', 'latest' or a version number
+build-mode = "apk"
+# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+apkmirror-dlurl = "https://www.apkmirror.com/apk/innovative-connecting/turbo-vpn-unlimited-free-vpn"
+uptodown-dlurl = "https://turbo-vpn.en.uptodown.com/android"
+
 [TeraBox-HXReborn]
 enabled = true
 app-name = "TeraBox"
