@@ -127,7 +127,7 @@ uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
 [Google-Photos-Akash]
-enabled = true
+enabled = false
 app-name = "Google Photos"
 patches-source = "github:Akash-Sriram/morphe-google-photos"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -393,7 +393,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads-an-instagram-
 uptodown-dlurl = "https://threads.en.uptodown.com/android"
 
 [Twitter-Piko]
-enabled = true
+enabled = false
 app-name = "Twitter"
 patches-source = "github:crimera/piko"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -413,7 +413,7 @@ github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.twitter.an
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 
 [X-Piko]
-enabled = true
+enabled = false
 app-name = "X"
 patches-source = "github:crimera/piko"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -494,7 +494,7 @@ uptodown-dlurl = "https://instagram.en.uptodown.com/android"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram.android"
 
 [Instagram-SysAdminDoc-APK]
-enabled = true
+enabled = false
 app-name = "Instagram"
 patches-source = "github:SysAdminDoc/HushGram"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -530,7 +530,7 @@ uptodown-dlurl = "https://instagram.en.uptodown.com/android"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.instagram.android"
 
 [Instagram-SysAdminDoc-Root]
-enabled = true
+enabled = false
 app-name = "Instagram"
 patches-source = "github:SysAdminDoc/HushGram"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -615,7 +615,7 @@ pkg-name = "free.vpn.unblock.proxy.turbovpn"
 patches-source = "github:SatanMerde/D-moniakPatches-dev"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "D-moniak"
-# arch = "arm64-v8a"
+arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
 # patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
@@ -703,7 +703,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/pyde-technologies-ltd/pokeraid-
 uptodown-dlurl = "https://pokeraid-worldwide-remote-ra.en.uptodown.com/android"
 
 [Gboard-Jason]
-enabled = true
+enabled = false
 app-name = "Gboard"
 patches-source = "github:jasonwu1994/Gboard-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
