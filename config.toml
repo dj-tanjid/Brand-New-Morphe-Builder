@@ -127,7 +127,7 @@ uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
 [Google-Photos-Akash]
-enabled = false
+enabled = true
 app-name = "Google Photos"
 patches-source = "github:Akash-Sriram/morphe-google-photos"
 cli-source = "github:MorpheApp/morphe-desktop"
@@ -609,7 +609,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/windscribe/windscribe-vpn"
 uptodown-dlurl = "https://windscribe.en.uptodown.com/android"
 
 [Turbo-VPN-D-moniak]
-enabled = true
+enabled = false
 app-name = "Turbo VPN"
 pkg-name = "free.vpn.unblock.proxy.turbovpn"
 patches-source = "github:SatanMerde/D-moniakPatches-dev"
@@ -690,10 +690,10 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/appground-io/bluetooth-keyboard
 uptodown-dlurl = "https://bluetooth-keyboard-and-mouse.en.uptodown.com/android"
 
 [PokeRaid-DanielTheManiel]
-enabled = false
+enabled = true
 app-name = "PokeRaid - for Pokémon GO Raid"
-patches-source = ["github:Dan1elTheMan1el/Morphe-Patches", "github:Nai64/Nai64Patches"]
-patches-version = ["dev", "latest"]
+patches-source = "github:Dan1elTheMan1el/Morphe-Patches"
+patches-version = "dev"
 cli-source = "github:MorpheApp/morphe-desktop"
 rv-brand = "DanielTheManiel"
 arch = "arm64-v8a"
@@ -703,7 +703,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/pyde-technologies-ltd/pokeraid-
 uptodown-dlurl = "https://pokeraid-worldwide-remote-ra.en.uptodown.com/android"
 
 [Gboard-Jason]
-enabled = false
+enabled = true
 app-name = "Gboard"
 patches-source = "github:jasonwu1994/Gboard-patches"
 cli-source = "github:MorpheApp/morphe-desktop"
