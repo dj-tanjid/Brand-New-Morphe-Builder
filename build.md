@@ -1,7 +1,8 @@
+📱 » **Gboard-Jason** (arm64-v8a): `18.5.4.993608717-release-arm64-v8a`    
+📱 » **Google-Photos-Akash** (arm64-v8a): `7.99.0.1007655401`    
+📱 » **PokeRaid-DanielTheManiel** (arm64-v8a): `0.48.9`    
 📱 » **Proton-VPN-HXReborn** (all): `5.21.57.0`    
 📱 » **Reddit-Morphe** (all): `2026.47.0`    
-📱 » **TeraBox-HXReborn** (arm64-v8a): `4.28.5`    
-📱 » **Turbo-VPN-D-moniak** (arm64-v8a): `4.3.2.2`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.46.51`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.46.522`    
 
@@ -25,9 +26,11 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `hxreborn/patches-1.84.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.84.0))
- ⚙️ » Patches: `MorpheApp/patches-2.4.0-dev.6.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.4.0-dev.6))
- ⚙️ » Patches: `SatanMerde/patches-1.1.0.mpp` ([Changelog](https://github.com/SatanMerde/D-moniakPatches-dev/releases/tag/v1.1.0))
+> ⚙️ » Patches: `jasonwu1994/patches-4.4.0.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.4.0))
+ ⚙️ » Patches: `Akash-Sriram/patches-1.18.0.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.18.0))
+ ⚙️ » Patches: `Dan1elTheMan1el/patches-1.9.0-dev.2.mpp` ([Changelog](https://github.com/Dan1elTheMan1el/Morphe-Patches/releases/tag/v1.9.0-dev.2))
+ ⚙️ » Patches: `hxreborn/patches-1.85.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.85.0))
+ ⚙️ » Patches: `MorpheApp/patches-2.4.0-dev.8.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.4.0-dev.8))
   
-> ⚙️ » CLI: `MorpheApp/morphe-desktop-2.2.0-all.jar`
+> ⚙️ » CLI: `MorpheApp/morphe-desktop-2.3.0-all.jar`
   
