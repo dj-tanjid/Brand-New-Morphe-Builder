@@ -1,7 +1,8 @@
+📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `588.0.0.42.55`    
+📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `588.0.0.42.55`    
 📱 » **Gboard-Jason** (arm64-v8a): `18.5.4.993608717-release-arm64-v8a`    
-📱 » **Google-Photos-Akash** (arm64-v8a): `7.99.0.1007655401`    
-📱 » **PokeRaid-DanielTheManiel** (arm64-v8a): `0.48.9`    
-📱 » **Proton-VPN-HXReborn** (all): `5.21.57.0`    
+📱 » **Instagram-SysAdminDoc-APK** (arm64-v8a): `456.0.0.53.78`    
+📱 » **Instagram-SysAdminDoc-Root** (arm64-v8a): `456.0.0.53.78`    
 📱 » **Reddit-Morphe** (all): `2026.47.0`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.46.51`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.46.522`    
@@ -26,11 +27,11 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `jasonwu1994/patches-4.4.0.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.4.0))
- ⚙️ » Patches: `Akash-Sriram/patches-1.18.0.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.18.0))
- ⚙️ » Patches: `Dan1elTheMan1el/patches-1.9.0-dev.2.mpp` ([Changelog](https://github.com/Dan1elTheMan1el/Morphe-Patches/releases/tag/v1.9.0-dev.2))
- ⚙️ » Patches: `hxreborn/patches-1.85.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.85.0))
- ⚙️ » Patches: `MorpheApp/patches-2.4.0-dev.8.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.4.0-dev.8))
+> ⚙️ » Patches: `SysAdminDoc/patches-0.24.0.mpp` ([Changelog](https://github.com/SysAdminDoc/Hushfacebook/releases/tag/v0.24.0))
+ ⚙️ » Patches: `jasonwu1994/patches-4.5.0-dev.2.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.5.0-dev.2))
+ ⚙️ » Patches: `SysAdminDoc/patches-0.0.22.mpp` ([Changelog](https://github.com/SysAdminDoc/HushGram/releases/tag/v0.0.22))
+ ⚙️ » Patches: `MorpheApp/patches-2.4.0-dev.9.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.4.0-dev.9))
+ ⚙️ » Patches: `hxreborn/patches-1.86.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.86.0))
   
 > ⚙️ » CLI: `MorpheApp/morphe-desktop-2.3.0-all.jar`
   
