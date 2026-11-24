@@ -2,14 +2,15 @@ name: CI
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 16 * * *"
+    - cron: "10 23 * * *"
+      timezone: "Asia/Dhaka"
 
 jobs:
   check:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6  # v6.0.1
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6.1.0
         with:
           distribution: "temurin"
           java-version: "21"
@@ -26,17 +27,33 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if ! git checkout origin/update build.md; then
-            echo "first time building!"
-            echo "SHOULD_BUILD=1" >> $GITHUB_OUTPUT
+            echo "First time building! Building all enabled apps."
+            echo "SHOULD_BUILD=1" >> "$GITHUB_OUTPUT"
+            echo "USE_UPDATE_CONFIG=false" >> "$GITHUB_OUTPUT"
           else
             UPDATE_CFG=$(./build.sh config.toml --config-update)
-            if [ "$UPDATE_CFG" ]; then
-              echo "'$UPDATE_CFG'"
-              echo "SHOULD_BUILD=1" >> $GITHUB_OUTPUT
+            if [ -n "$UPDATE_CFG" ]; then
+              printf '%s\n' "$UPDATE_CFG" > config.json
+              echo "Apps with patch updates:"
+              cat config.json
+              echo "SHOULD_BUILD=1" >> "$GITHUB_OUTPUT"
+              echo "USE_UPDATE_CONFIG=true" >> "$GITHUB_OUTPUT"
             else
-              echo "SHOULD_BUILD=0" >> $GITHUB_OUTPUT
+              echo "No patch source updates found for any enabled apps."
+              echo "SHOULD_BUILD=0" >> "$GITHUB_OUTPUT"
+              echo "USE_UPDATE_CONFIG=false" >> "$GITHUB_OUTPUT"
             fi
           fi
+
+      - name: Upload filtered config
+        if: steps.should_build.outputs.USE_UPDATE_CONFIG == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ci-update-config
+          path: |
+            config.json
+            temp/skipped
+          retention-days: 1
 
       - name: Clear older runs
         env:
@@ -46,10 +63,13 @@ jobs:
 
     outputs:
       SHOULD_BUILD: ${{ steps.should_build.outputs.SHOULD_BUILD }}
+      USE_UPDATE_CONFIG: ${{ steps.should_build.outputs.USE_UPDATE_CONFIG }}
 
   build:
     permissions: write-all
     needs: check
     uses: ./.github/workflows/build.yml
     if: ${{ needs.check.outputs.SHOULD_BUILD == 1 }}
+    with:
+      use-update-config: ${{ needs.check.outputs.USE_UPDATE_CONFIG == 'true' }}
     secrets: inherit
