@@ -200,10 +200,11 @@ get_prebuilts() {
 		
 		local cl_str=""
 		if [ "$host" = "gitlab" ]; then
-			cl_str="⚙️ » Patches: \`${org}/${name}\` ([Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name}))"
+			cl_str="⚙️ » Patches: \`${clean_src}/${name}\` ([Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name}))"
 		else
-			cl_str="⚙️ » Patches: \`${org}/${name}\` ([Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
+			cl_str="⚙️ » Patches: \`${clean_src}/${name}\` ([Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
 		fi
+		
 		if ! grep -qF "${file}|" "${TEMP_DIR}/patches_cl_map.tsv" 2>/dev/null; then
 			printf '%s|%s\n' "$file" "$cl_str" >>"${TEMP_DIR}/patches_cl_map.tsv"
 		fi
@@ -442,7 +443,7 @@ config_update() {
 						last_patches="${name_only}-${tag_name#v}.${name_ext}"
 					fi
 
-					if ! OP=$(grep -F "${org}/${last_patches}" build.md 2>/dev/null | grep -Fi "${clean_src}/"); then
+					if ! OP=$(grep -F "/${last_patches}\`" build.md 2>/dev/null | grep -Fi "${clean_src}/"); then
 						sources["$raw_src/$p_ver"]=1
 						prcfg=true
 						upped+=("$table_name")
