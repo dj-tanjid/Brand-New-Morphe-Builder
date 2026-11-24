@@ -1,11 +1,11 @@
 name: Build Modules
 on:
+  workflow_dispatch:
   workflow_call:
     inputs:
-      from_ci:
+      use-update-config:
         type: boolean
-        required: false
-        default: true
+        default: false
 
   workflow_dispatch:
 
@@ -24,6 +24,13 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
+
+      - name: Download filtered CI config
+        if: ${{ inputs.use-update-config }}
+        uses: actions/download-artifact@v8
+        with:
+          name: ci-update-config
+          path: .
 
       - name: Update config
         if: ${{ inputs.from_ci }}
