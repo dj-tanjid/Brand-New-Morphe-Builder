@@ -50,7 +50,7 @@ wpr() {
 }
 
 _clean_tmp() {
-	rm -rf ./${TEMP_DIR}/*tmp.* ./${TEMP_DIR}/*tmp_* ./${TEMP_DIR}/*/*tmp.* ./${TEMP_DIR}/*-temporary-files ./*-temporary-files
+	rm -rf ./${TEMP_DIR}/*tmp.* ./${TEMP_DIR}/*tmp_* ./${TEMP_DIR}/*/*tmp.* ./${TEMP_DIR}/*-temporary-files ./*-temporary-files ./${TEMP_DIR}/patches_cl_map.tsv
 }
 
 abort() {
@@ -197,17 +197,15 @@ get_prebuilts() {
 				tag_name=v${tag_name%.*}
 			fi
 		fi
-
-		if [[ "$grab_cl" == true ]]; then
-			local cl_str=""
-			if [ "$host" = "gitlab" ]; then
-				cl_str="⚙️ » Patches: \`${org}/${name}\` ([Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name}))"
-			else
-				cl_str="⚙️ » Patches: \`${org}/${name}\` ([Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
-			fi
-			if ! grep -qF "\`${org}/${name}\`" "${TEMP_DIR}/patches_changelog.md" 2>/dev/null; then
-				echo "$cl_str" >>"${TEMP_DIR}/patches_changelog.md"
-			fi
+		
+		local cl_str=""
+		if [ "$host" = "gitlab" ]; then
+			cl_str="⚙️ » Patches: \`${org}/${name}\` ([Changelog](https://gitlab.com/${clean_src}/-/releases/${tag_name}))"
+		else
+			cl_str="⚙️ » Patches: \`${org}/${name}\` ([Changelog](https://github.com/${clean_src}/releases/tag/${tag_name}))"
+		fi
+		if ! grep -qF "${file}|" "${TEMP_DIR}/patches_cl_map.tsv" 2>/dev/null; then
+			printf '%s|%s\n' "$file" "$cl_str" >>"${TEMP_DIR}/patches_cl_map.tsv"
 		fi
 
 		if [[ "${REMOVE_RV_INTEGRATIONS_CHECKS:-}" == true ]]; then
@@ -1772,8 +1770,6 @@ build_rv() {
 	fi
 	# =====================================================================
 
-	log "📱 » **${table}** (${arch_f}): \`${version_f}\`  "
-
 	local microg_patch
 	microg_patch=$(grep "^Name: " <<<"$list_patches" | grep -i "gmscore\|microg" || :) microg_patch=${microg_patch#*: }
 	if [[ -n "$microg_patch" && "${p_patcher_args[*]}" =~ "$microg_patch" ]]; then
@@ -1922,6 +1918,17 @@ build_rv() {
 		popd >/dev/null || :
 		pr "Built ${table} (root): '${BUILD_DIR}/${module_output}'"
 	done
+
+	log "📱 » **${table}** (${arch_f}): \`${version_f}\`  "
+	if [[ -f "${TEMP_DIR}/patches_cl_map.tsv" ]]; then
+		local pj cl_str
+		for pj in ${args[ptjar]}; do
+			cl_str=$(awk -F'|' -v k="$pj" '$1 == k { sub(/^[^|]*\|/, ""); print; exit }' "${TEMP_DIR}/patches_cl_map.tsv")
+			if [[ -n "$cl_str" ]] && ! grep -qFx "$cl_str" "${TEMP_DIR}/patches_changelog.md" 2>/dev/null; then
+				echo "$cl_str" >>"${TEMP_DIR}/patches_changelog.md"
+			fi
+		done
+	fi
 }
 
 list_args() { tr -d '\t\r' <<<"$1" | tr -s ' ' | sed 's/" "/"\n"/g' | sed 's/\([^"]\)"\([^"]\)/\1'\''\2/g' | grep -v '^$' || :; }
