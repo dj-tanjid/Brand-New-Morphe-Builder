@@ -444,12 +444,12 @@ config_update() {
 						last_patches="${name_only}-${tag_name#v}.${name_ext}"
 					fi
 
-					if ! OP=$(grep -F -m1 "${org}/${last_patches}" build.md 2>/dev/null); then
+					if ! OP=$(grep -F "${org}/${last_patches}" build.md 2>/dev/null | grep -Fi "${clean_src}/"); then
 						sources["$raw_src/$p_ver"]=1
 						prcfg=true
 						upped+=("$table_name")
 					else
-						echo "$OP" >>"$TEMP_DIR"/skipped
+						echo "${OP%%$'\n'*}" >>"$TEMP_DIR"/skipped
 					fi
 				fi
 			fi
