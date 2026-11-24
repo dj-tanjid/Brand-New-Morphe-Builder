@@ -389,35 +389,53 @@ config_update() {
 				if [ "${sources["$raw_src/$p_ver"]}" = 1 ]; then upped+=("$table_name"); fi
 			else
 				sources["$raw_src/$p_ver"]=0
-				local last_patches="" tag_name=""
+				local resp="" rel_json="" matches="" last_patches="" tag_name=""
+				local target_ver="$p_ver"
+
 				if [ "$host" = "gitlab" ]; then
 					local project_enc="${clean_src//\//%2F}"
 					local gl_rel="https://gitlab.com/api/v4/projects/${project_enc}/releases"
-					if [ "$p_ver" = "dev" ]; then
-						last_patches=$(req "$gl_rel" - | jq -e -r '.[0]') || continue
-					elif [ "$p_ver" = "latest" ]; then
-						last_patches=$(req "$gl_rel/permalink/latest" -) || continue
-					else
-						last_patches=$(req "$gl_rel/${p_ver}" -) || continue
+					if [ "$target_ver" = "dev" ]; then
+						resp=$(req "$gl_rel" -) || continue
+						target_ver=$(jq -e -r '.[].tag_name' <<<"$resp" | get_highest_ver) || continue
 					fi
-					tag_name=$(jq -r '.tag_name // empty' <<<"$last_patches") || continue
-					if ! last_patches=$(jq -e -r '.assets.links[]? | select(.name | (endswith("asc") or endswith("json")) | not) | .name' <<<"$last_patches"); then
-						continue
+					if [ "$target_ver" = "latest" ]; then
+						rel_json=$(req "$gl_rel/permalink/latest" -) || continue
+					else
+						rel_json=$(req "$gl_rel/${target_ver}" -) || continue
+					fi
+					tag_name=$(jq -r '.tag_name // empty' <<<"$rel_json") || continue
+					matches=$(jq -e '.assets.links // [] | map(select(.name | endswith(".mpp")))' <<<"$rel_json" 2>/dev/null) || matches="[]"
+					if [[ "$(jq 'length' <<<"$matches")" -eq 0 ]]; then
+						matches=$(jq -e '.assets.links // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$rel_json" 2>/dev/null || jq -e '.assets // []' <<<"$rel_json") || continue
 					fi
 				else
 					local rv_rel="https://api.github.com/repos/${clean_src}/releases"
-					if [ "$p_ver" = "dev" ]; then
-						last_patches=$(gh_req "$rv_rel" - | jq -e -r '.[0]') || continue
-					elif [ "$p_ver" = "latest" ]; then
-						last_patches=$(gh_req "$rv_rel/latest" -) || continue
-					else
-						last_patches=$(gh_req "$rv_rel/tags/${p_ver}" -) || continue
+					if [ "$target_ver" = "dev" ]; then
+						resp=$(gh_req "$rv_rel" -) || continue
+						target_ver=$(jq -e -r '.[].tag_name' <<<"$resp" | get_highest_ver) || continue
 					fi
-					tag_name=$(jq -r '.tag_name' <<<"$last_patches") || continue
-					if ! last_patches=$(jq -e -r '.assets[] | select(.name | (endswith("asc") or endswith("json")) | not) | .name' <<<"$last_patches"); then
-						continue
+					if [ "$target_ver" = "latest" ]; then
+						rel_json=$(gh_req "$rv_rel/latest" -) || continue
+					else
+						rel_json=$(gh_req "$rv_rel/tags/${target_ver}" -) || continue
+					fi
+					tag_name=$(jq -r '.tag_name // empty' <<<"$rel_json") || continue
+					matches=$(jq -e '.assets // [] | map(select(.name | endswith(".mpp")))' <<<"$rel_json" 2>/dev/null) || matches="[]"
+					if [[ "$(jq 'length' <<<"$matches")" -eq 0 ]]; then
+						matches=$(jq -e '.assets // [] | map(select(.name | (endswith("asc") or endswith("json")) | not))' <<<"$rel_json" 2>/dev/null) || continue
 					fi
 				fi
+
+				if [[ "$(jq 'length' <<<"$matches")" -gt 1 ]]; then
+					local matches_new
+					matches_new=$(jq -e 'map(select(.name | contains("-dev") | not))' <<<"$matches" 2>/dev/null) || matches_new="[]"
+					if [[ "$(jq 'length' <<<"$matches_new")" -eq 1 ]]; then
+						matches=$matches_new
+					fi
+				fi
+
+				last_patches=$(jq -r '.[0].name // empty' <<<"$matches")
 
 				if [ -n "$last_patches" ]; then
 					if [[ ! "$last_patches" =~ [0-9] ]]; then
@@ -426,7 +444,7 @@ config_update() {
 						last_patches="${name_only}-${tag_name#v}.${name_ext}"
 					fi
 
-					if ! OP=$(grep -m1 "^Patches: ${org}/${last_patches}" build.md 2>/dev/null); then
+					if ! OP=$(grep -F -m1 "${org}/${last_patches}" build.md 2>/dev/null); then
 						sources["$raw_src/$p_ver"]=1
 						prcfg=true
 						upped+=("$table_name")
