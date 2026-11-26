@@ -1,9 +1,5 @@
-📱 » **Facebook-Messenger-SysAdminDoc** (arm64-v8a): `588.1.0.66.98`    
-📱 » **Facebook-SysAdminDoc-APK** (arm64-v8a): `588.0.0.42.55`    
-📱 » **Facebook-SysAdminDoc-Root** (arm64-v8a): `588.0.0.42.55`    
 📱 » **Gboard-Jason** (arm64-v8a): `18.5.4.993608717-release-arm64-v8a`    
-📱 » **Proton-VPN-HXReborn** (all): `5.21.57.0`    
-📱 » **Reddit-Morphe** (all): `2026.47.0`    
+📱 » **Reddit-Morphe** (all): `2026.48.0`    
 📱 » **YT-Music-Morphe** (arm64-v8a): `9.47.51`    
 📱 » **YouTube-Morphe** (arm64-v8a): `21.47.483-SECONDARY`    
 
@@ -19,21 +15,21 @@
   
 Patches and CLI Sources :
   
-> ⚙️ » Patches: `SysAdminDoc/HushMessenger/patches-0.31.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushMessenger/releases/tag/v0.31.0))
- ⚙️ » Patches: `SysAdminDoc/HushFacebook/patches-0.25.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushFacebook/releases/tag/v0.25.0))
- ⚙️ » Patches: `jasonwu1994/Gboard-patches/patches-4.5.0-dev.7.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.5.0-dev.7))
- ⚙️ » Patches: `hxreborn/morphe-patches/patches-1.88.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.88.0))
- ⚙️ » Patches: `MorpheApp/morphe-patches/patches-2.4.0-dev.12.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.4.0-dev.12))
+> ⚙️ » Patches: `jasonwu1994/Gboard-patches/patches-4.5.0.mpp` ([Changelog](https://github.com/jasonwu1994/Gboard-patches/releases/tag/v4.5.0))
+ ⚙️ » Patches: `MorpheApp/morphe-patches/patches-2.4.0.mpp` ([Changelog](https://github.com/MorpheApp/morphe-patches/releases/tag/v2.4.0))
   
-> ⚙️ » CLI: `MorpheApp/morphe-desktop-2.3.0-all.jar`
+> ⚙️ » CLI: `MorpheApp/morphe-desktop-2.4.0-all.jar`
   
 
 Skipped:  
 > ⚙️ » Patches: `rushiranpise/morphe-patches/patches-1.23.1.mpp` ([Changelog](https://github.com/rushiranpise/morphe-patches/releases/tag/v1.23.1))
  ⚙️ » Patches: `VenusIsJaded/Venus-Patches/patches-1.21.1.mpp` ([Changelog](https://github.com/VenusIsJaded/Venus-Patches/releases/tag/v1.21.1))
+> ⚙️ » Patches: `SysAdminDoc/HushMessenger/patches-0.31.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushMessenger/releases/tag/v0.31.0))
+ ⚙️ » Patches: `SysAdminDoc/HushFacebook/patches-0.25.0.mpp` ([Changelog](https://github.com/SysAdminDoc/HushFacebook/releases/tag/v0.25.0))
  ⚙️ » Patches: `bearinmindcat/morphe-patches/patches-2.10.0.mpp` ([Changelog](https://github.com/bearinmindcat/morphe-patches/releases/tag/v2.10.0))
  ⚙️ » Patches: `Akash-Sriram/morphe-google-photos/patches-1.18.0.mpp` ([Changelog](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.18.0))
  ⚙️ » Patches: `SysAdminDoc/patches-0.0.22.mpp` ([Changelog](https://github.com/SysAdminDoc/HushGram/releases/tag/v0.0.22))  
  ⚙️ » Patches: `Akshayykadam/Pixel-Camera/morphe-patches-pixelcamera-1.1.3.mpp` ([Changelog](https://github.com/Akshayykadam/Pixel-Camera/releases/tag/1.1.3))
+ ⚙️ » Patches: `hxreborn/morphe-patches/patches-1.88.0.mpp` ([Changelog](https://github.com/hxreborn/morphe-patches/releases/tag/v1.88.0))
  ⚙️ » Patches: `SysAdminDoc/HushThreads/patches-0.0.18.mpp` ([Changelog](https://github.com/SysAdminDoc/HushThreads/releases/tag/v0.0.18))
- ⚙️ » Patches: `crimera/piko/patches-3.12.0-dev.6.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.12.0-dev.6))  
+ ⚙️ » Patches: `crimera/piko/patches-3.12.0-dev.6.mpp` ([Changelog](https://github.com/crimera/piko/releases/tag/v3.12.0-dev.6))    
