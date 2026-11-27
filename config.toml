@@ -141,7 +141,7 @@ included-patches = """\
     'Spoof features' \
     'Official package name' \
     """
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos"
 uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
@@ -246,7 +246,7 @@ version = "auto" # 'auto', 'experimental', 'latest' or a version number
 # version = "573.0.0.37.74"
 # version-code = "475019344"
 build-mode = "apk"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'AMOLED black theme' \
     'Default comment order' \
@@ -279,7 +279,7 @@ version = "auto" # 'auto', 'experimental', 'latest' or a version number
 # version = "573.0.0.37.74"
 # version-code = "475019344"
 build-mode = "module"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'AMOLED black theme' \
     'Default comment order' \
@@ -347,7 +347,7 @@ include-stock = "split" # Options 'split', 'merged', or 'disable'
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 version-code = "347415284"
 build-mode = "both"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'Material You theme' \
     """
@@ -381,7 +381,7 @@ arch = "arm64-v8a"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "both"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'Disable video autoplay' \
     'Disable screenshot detection' \
@@ -578,7 +578,7 @@ rv-brand = "Rushi"
 # arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/cloudflare/1-1-1-1-faster-safer-internet"
 uptodown-dlurl = "https://1-1-1-1.en.uptodown.com/android"
 
@@ -591,7 +591,7 @@ rv-brand = "HXReborn"
 # arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/proton-technologies-ag/protonvpn-secure-and-free-vpn"
 uptodown-dlurl = "https://protonvpn.en.uptodown.com/android"
 
@@ -604,7 +604,7 @@ rv-brand = "Rushi"
 # arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/windscribe/windscribe-vpn"
 uptodown-dlurl = "https://windscribe.en.uptodown.com/android"
 
@@ -618,7 +618,7 @@ rv-brand = "D-moniak"
 arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/innovative-connecting/turbo-vpn-unlimited-free-vpn"
 uptodown-dlurl = "https://turbo-vpn.en.uptodown.com/android"
 
@@ -633,7 +633,7 @@ version = "auto" # 'auto', 'experimental', 'latest' or a version number
 # version = "4.26.5"
 # version-code = "699"
 build-mode = "apk"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/flextech-inc/terabox-cloud-storage-cloud-backup-data-backup"
 uptodown-dlurl = "https://terabox.en.uptodown.com/android"
 
@@ -647,7 +647,7 @@ arch = "both"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/ookla/speedtest"
 uptodown-dlurl = "https://speedtest-net-mobile.en.uptodown.com/android"
 
@@ -660,7 +660,7 @@ rv-brand = "Rushi"
 arch = "all"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/yablio/send-files-to-tv/"
 uptodown-dlurl = "https://send-files-to-tv.en.uptodown.com/android"
 
@@ -673,7 +673,7 @@ rv-brand = "Rushi"
 arch = "both"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/apkmirror/apkmirror-installer-official/"
 
 [Bluetooth-Keyboard-Mouse-Rushi]
@@ -685,7 +685,7 @@ rv-brand = "Rushi"
 arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/appground-io/bluetooth-keyboard-mouse-2/"
 uptodown-dlurl = "https://bluetooth-keyboard-and-mouse.en.uptodown.com/android"
 
@@ -734,7 +734,7 @@ rv-brand = "Akshayykadam"
 version = "auto"
 build-mode = "apk"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/camera/"
 uptodown-dlurl = "https://google-camera.en.uptodown.com/android"
 
@@ -750,7 +750,7 @@ rv-brand = "Akshayykadam"
 version = "auto"
 build-mode = "apk"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 excluded-patches = """\
     '10x Viewfinder Quick Zoom' \
     """
@@ -767,7 +767,7 @@ rv-brand = "SatanMerde"
 arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'AMOLED Dark Theme - Claude AI (Experimental)' \
     'Bypass Input Length & Upload Limits - Claude AI (Experimental)' \
@@ -787,7 +787,7 @@ arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-# patches-version = "dev" # Options 'latest', 'dev', or A spcific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A spcific version tag
 included-patches = """\
     'Block Ads & Promo Screens - DeepL (Experimental)' \
     'Unlock Pro & Formality - DeepL (Experimental)' \
@@ -807,7 +807,7 @@ arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "apk"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 excluded-patches = """\
     'Legacy icon' \
     'Rectangle shapes' \
@@ -825,7 +825,7 @@ arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "module"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 excluded-patches = """\
     'Legacy icon' \
     'Rectangle shapes' \
@@ -849,7 +849,7 @@ arch = "arm64-v8a"
 version = "5.24.5.0"
 build-mode = "apk"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'All moods' \
     'Alert distances' \
@@ -874,7 +874,7 @@ arch = "arm64-v8a"
 version = "5.24.5.0"
 build-mode = "module"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 included-patches = """\
     'All moods' \
     'Alert distances' \
@@ -902,7 +902,7 @@ arch = "arm64-v8a"
 version = "auto" # 'auto', 'experimental', 'latest' or a version number
 build-mode = "both"
 include-stock = "split" # Options 'split', 'merged', or 'disable'
-# patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
+patches-version = "dev" # Options 'latest', 'dev', or A specific version tag
 apkmirror-dlurl = "https://www.apkmirror.com/apk/discord/discord-chat-for-gamers/"
 github-dlurl = "https://github.com/dj-tanjid/AppRepo/releases/tag/com.discord"
 uptodown-dlurl = "https://discord-chat-for-gamers.en.uptodown.com/android"
